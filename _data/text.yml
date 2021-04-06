@@ -96,7 +96,7 @@ es: &DEFAULT_ES
   older: "Antiguo"
   back_to_top: "Volver arriba"
   search_placeholder_text: "Ingrese su término de búsqueda ..."
-  powered_by: "Energizado por"
+  powered_by: "Hecho con"
 es-ES:
   <<: *DEFAULT_ES
 es-CL:
