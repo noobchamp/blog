@@ -19,7 +19,7 @@ skin: "/assets/css/skins/light.css"
 locale: es-ES
 title: "My Awesome Site"
 description: "It really is the best."
-baseurl: # the subpath of your site, e.g. "/blog"
+baseurl: /blog # the subpath of your site, e.g. "/blog"
 url: https://noobchamp.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 logo: /images/pancho.jpg # path of site logo, e.g. "/images/logo.png"
 date_format: "%d-%m-%Y" #"%B %-d, %Y"
