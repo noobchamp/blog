@@ -1,9 +1,22 @@
 ---
-layout: post
-title:  "Welcome to Jekyll!"
-date:   2021-04-05 19:45:58 +0200
-categories: jekyll update
+title:  "Jekyll: Crea tu web/blog en pocos minutos con Jekyll"
+image: 
+  path: /images/jekyll-logo.png
+  thumbnail: /images/jekyll-logo-thumbnail.png
+  caption: "Photo from [Jekyllrb](https://jekyllrb.com/)"
+author: joseoliva
+categories: 
+  - Jekyll
+  - Ruby
+show_excerpts: true
+tags: 
+  - Jekyll
+  - Ruby
+  - Github
 ---
+
+# ¿Qué es Jekyll?
+
 `ANA MOLA`
 You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 

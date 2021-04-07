@@ -17,11 +17,11 @@ theme: jekyll-theme-so-simple
 # remote_theme: mmistakes/so-simple-theme
 skin: "/assets/css/skins/light.css"
 locale: es-ES
-title: "My Awesome Site"
-description: "It really is the best."
+title: "José Oliva "
+description: "Mi blog personal"
 baseurl: # the subpath of your site, e.g. "/blog"
 url: https://noobchamp.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-logo: /images/pancho.jpg # path of site logo, e.g. "/images/logo.png"
+logo: /images/pancho.png # path of site logo, e.g. "/images/logo.png"
 date_format: "%d-%m-%Y" #"%B %-d, %Y"
 read_time: true # reading time estimates, e.g. true
 words_per_minute: 200 # 200
@@ -58,8 +58,8 @@ feed:
 search_full_content: false # can have performance implications for large sites
 
 # Taxonomy pages
-# category_archive_path: "/categories/#"
-# tag_archive_path: "/tags/#"
+category_archive_path: "/categories/#"
+tag_archive_path: "/tags/#"
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

@@ -1,5 +1,4 @@
 # Sample Authors
-# Remove file or replace with your own
 
 Billy Rick:
   name: Billy Rick
@@ -14,3 +13,17 @@ Cornelius Fiddlebone:
   name: Cornelius Fiddlebone
   picture: /images/bio-photo.jpg
   twitter: corneliusfiddlebone
+
+joseoliva:
+  name: José Oliva
+  picture: /images/joseoliva.jpg
+  links:
+    - title: Linkedin
+      url: https://www.linkedin.com/in/joseaoliva/
+      icon: fab fa-linkedin
+    - title: Github
+      url: https://github.com/noobchamp
+      icon: fab fa-github
+    - title: Instagram
+      url: https://www.instagram.com/oliva_ja/
+      icon: fab fa-instagram
