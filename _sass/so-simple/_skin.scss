@@ -270,14 +270,16 @@ td {
    ========================================================================== */
 
 code.highlighter-rouge {
-  color: $base05;
-  background-color: $base00;
+  padding: .25em .5em;
+  color: $base0f;
+  background-color: $base0g;
+  border-radius: 3px;
 }
 
 div.highlighter-rouge,
 figure.highlight {
   color: $base05;
-  background-color: $base00;
+  background-color: $base0h;
 }
 
 .highlight table {

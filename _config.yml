@@ -15,14 +15,14 @@
 # in the templates via {{ site.myvariable }}.
 theme: jekyll-theme-so-simple
 # remote_theme: mmistakes/so-simple-theme
-skin: "/assets/css/skins/light.css"
+skin: "/assets/css/skins/default.css"
 locale: es-ES
-title: "José Oliva "
-description: "Mi blog personal"
+title: "Hola, soy José Oliva"
+description: "Y este es mi blog personal"
 baseurl: # the subpath of your site, e.g. "/blog"
 url: https://noobchamp.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-logo: /images/pancho.png # path of site logo, e.g. "/images/logo.png"
-date_format: "%d-%m-%Y" #"%B %-d, %Y"
+logo: /images/joseoliva.jpg # path of site logo, e.g. "/images/logo.png"
+date_format: "%d de %B %Y" #"%B %-d, %Y"
 read_time: true # reading time estimates, e.g. true
 words_per_minute: 200 # 200
 mathjax:
@@ -30,13 +30,13 @@ mathjax:
   combo:  # "tex-svg" (default), "tex-mml-chtml", etc.: docs.mathjax.org/en/latest/web/components/combined.html
   tags:  # "none", "ams" (default), "all"
 google_fonts:
-  - name: "Source Sans Pro"
+  - name: "Noticia Text"
     weights: "400,400i,700,700i"
   - name: "Lora"
     weights: "400,400i,700,700i"
 google_analytics: G-6YJ8R3FHNG # Google Analytics id, e.g. "UA-NNNNNNNN-N"
 disqus:
-  shortname: # Disqus shortname, e.g. "my_disqus_shortname"
+  shortname: noobchamp-github-io # Disqus shortname, e.g. "my_disqus_shortname"
 twitter:
   username: # site's Twitter username, e.g. "mmistakes"
 

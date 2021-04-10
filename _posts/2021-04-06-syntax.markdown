@@ -9,6 +9,18 @@ elements:
 # last_modified_at: 2018-02-01T10:16:49-05:00
 ---
 
+| Objeto            |           ¿Cómo?               |
+|:------------------|:------------------------------:|
+|   Salto de línea  |   Doble espacio                |
+| [Link](noobchamp.github.io) | \[texto](http://example.com) |
+| `Destacar` | \`palabra(s)` |
+| ---<cite>Cita</cite> | ---\<cite>Cita</cite>
+| _enfatizar_ | \_enfatizar_ | 
+| **Negrita** | \**Negrita** |
+
+https://www.markdownguide.org/basic-syntax/
+Salto de línea (doble espacio).  
+Link
 A variety of common HTML elements to demonstrate the theme's stylesheet and verify they have been styled appropriately.
 
 # Header one
