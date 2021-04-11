@@ -35,7 +35,7 @@ google_fonts:
   - name: "Lora"
     weights: "400,400i,700,700i"
 google_analytics: G-8L0LM5E7J2 # Google Analytics id, e.g. "UA-NNNNNNNN-N"
-  v4: True # Version google Analytics starts with G-XXXXXXXXXX
+  v4: true # Version google Analytics starts with G-XXXXXXXXXX
 disqus:
   shortname: noobchamp-github-io # Disqus shortname, e.g. "my_disqus_shortname"
 twitter:
