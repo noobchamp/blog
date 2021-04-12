@@ -90,4 +90,6 @@ jobs:
 Al realizar nuevamente los comandos git y subir el archivo podremos ver los cambios en la pestaña "actions" de nuestro proyecto.  
 Y no me voy a enrollar más sobre como funciona el archivo, si estás interesado házmelo saber mediante comentarios y poder subir otro artículo más dedicado a la integración contínua.  
 
+También podéis dirigiros al repositorio original [joshlarsen](https://github.com/joshlarsen/jekyll4-deploy-gh-pages/blob/master/readme.md){: .link} para leer la documentación completa.
+
 Espero que te haya servido de ayuda.
