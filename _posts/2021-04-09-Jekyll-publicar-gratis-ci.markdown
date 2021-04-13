@@ -6,7 +6,6 @@ image:
 author: bowie
 categories: 
   - Jekyll
-  - Ruby
 show_excerpts: true
 tags: 
   - Jekyll
