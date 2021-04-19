@@ -26,7 +26,7 @@ date_format: "%d de %B %Y" #"%B %-d, %Y"
 read_time: true # reading time estimates, e.g. true
 words_per_minute: 200 # 200
 mathjax:
-  enable: true # MathJax equations, e.g. true, false (default)
+  enable: false # MathJax equations, e.g. true, false (default)
   combo:  # "tex-svg" (default), "tex-mml-chtml", etc.: docs.mathjax.org/en/latest/web/components/combined.html
   tags:  # "none", "ams" (default), "all"
 google_fonts:
