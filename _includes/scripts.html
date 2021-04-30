@@ -14,6 +14,9 @@
   <script src="{{ '/assets/js/custom.js' | relative_url }}"></script>
   
 {%- endif -%}
+{% if site.google_fonts %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family={%- for font in site.google_fonts -%}{{ font.name | replace: ' ', '+' }}{% if font.weights %}:{% endif %}{{ font.weights | remove: ' ' }}{% if forloop.last != true %}|{% endif %}{%- endfor -%}">
+{% endif %}
 
 {% if site.mathjax == true or site.mathjax.enable == true %}
 <!-- MathJax -->

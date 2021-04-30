@@ -91,6 +91,6 @@ Estamos en un entorno local de desarrollo pero la idea es tener a usuarios en cu
 Esto abre un mundo de posibilidades ya que tener un nuevo cliente en cualquier parte y si tuvieras algún problema con la IP no te va a importar ya que no necesitarás re-configurar los terminales. También ahorramos un pequeño coste por pagar IP fija en algunos casos.  
 
 
-En el siguiente post daremos una vuelta por la configuración de FreeSwitch para echar un simple vistazo y haremos algunos cambios.  
+En el siguiente post habrá un poco de teoría sobre FreeSwitch para entender el funcionamiento un poquito mejor.  
 
 ¡Nos vemos!
