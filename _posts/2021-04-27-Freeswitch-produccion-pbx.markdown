@@ -1,8 +1,8 @@
 ---
 title:  "FreeSwitch: Instalación sobre Debian 10 Buster"
 image: 
-  path: /images/freeswitch/freeswitch.jpeg
-  thumbnail: /images/freeswitch/freeswitch-thumbnail.jpeg
+  path: /images/freeswitch/freeswitch.webp
+  thumbnail: /images/freeswitch/freeswitch-thumbnail.webp
 author: yoko
 categories: 
   - FreeSwitch
@@ -67,7 +67,7 @@ fs_cli
 <cite>Evidentemente tenemos que ser root o lanzar como "sudo"</cite>
 
 Si todo es correcto veremos lo siguiente:
-![center-aligned-image](/images/freeswitch/fs-cli.jpeg){: .align-center}
+![center-aligned-image](/images/freeswitch/fs-cli.webp){: .align-center}
 
 ## Configuración y primera llamada
 Ya es posible realizar nuestra primera llamada. Es necesario tener instalado algún dispositivo SIP.  

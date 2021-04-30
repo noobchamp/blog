@@ -29,7 +29,7 @@ Como idea, puedes incluirlo en un script para cuando recibes acceso a un servido
 ## Vamos al grano
 Hay decenas de páginas web para hacer esta tarea más sencilla. Si quieres seguir mi ejemplo entra en [bashrcgenerator](http://bashrcgenerator.com).  
 
-![center-aligned-image](/images/bashrcgenerator.jpeg){: .align-center}
+![center-aligned-image](/images/bashrcgenerator.webp){: .align-center}
 
 
  
@@ -47,6 +47,6 @@ Tras esto tienes que salir y volver a entrar o simplemente usa el comando:
 ```
 source ~/.bashrc
 ```
-![right-aligned-image](/images/bashrc.jpeg){: .align-right}
+![right-aligned-image](/images/bashrc.webp){: .align-right}
 ¡Espero que te sirva de algo!
 Saludos.

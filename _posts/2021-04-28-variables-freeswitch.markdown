@@ -1,7 +1,7 @@
 ---
 title:  "FreeSwitch: Variables"
 image: 
-  path: /images/freeswitch/freeswitch.jpeg
+  path: /images/freeswitch/freeswitch.webp
 author: yoko
 categories: 
   - FreeSwitch

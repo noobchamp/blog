@@ -1,8 +1,8 @@
 ---
 title:  "Jekyll: Publicar tu blog gratis en Github e integración contínua (CI)"
 image: 
-  path: /images/jekyll-logo.png
-  thumbnail: /images/jekyll-logo-thumbnail.png
+  path: /images/jekyll-logo.webp
+  thumbnail: /images/jekyll-logo-thumbnail.webp
 author: bowie
 categories: 
   - Jekyll
@@ -34,7 +34,7 @@ git push
 Y comprobamos en nuestra cuenta que los cambios que hemos realizado en nuestro proyecto local como nuestro primer post `¡Adiós al Covid!`.
 
 ## Crear una nueva rama (branch)
-![right-aligned-image](/images/new-branch.png){: .align-right}
+![right-aligned-image](/images/new-branch.webp){: .align-right}
 En la pestaña "Master" hacemos click y ponemos en el cuadro de diálogo `gh-pages`, luego a "crear rama a partir de Master". Esta rama es la que vamos a indicar a Github que vamos a publicar.  
 Así es, no vas a publicar rama principal sino una rama creada a partir de la "Master" y en los siguientes pasos vamos a ver como actualizarla cada vez que realizamos un push.    
 
@@ -45,7 +45,7 @@ Ahora vamos a la _configuración del proyecto_ y lo renombramos cono "usuario.gi
 Ve a la pestaña "envioroments" y crea uno nuevo. Puedes ponerle de nombre "gh-page"
 
 ## Pages
-![right-aligned-image](/images/pages.png){: .align-left}
+![right-aligned-image](/images/pages.webp){: .align-left}
 Por último nos vamos a la pestaña "pages" y configuramos la rama a usar `gh-pages`.  
 
 ## Test

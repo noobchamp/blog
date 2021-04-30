@@ -1,9 +1,8 @@
 ---
 title:  "Jekyll: Crea tu web/blog en pocos minutos con Jekyll"
 image: 
-  path: /images/jekyll-logo.png
-  thumbnail: /images/jekyll-logo-thumbnail.png
-  #caption: "Photo from [Xinii](https://xinii.org/)"
+  path: /images/jekyll-logo.webp
+  thumbnail: /images/jekyll-logo-thumbnail.webp
 author: pancho
 categories: 
   - Jekyll
@@ -94,12 +93,12 @@ Pinchamos sobre el enlace o abrimos nuestro navegador con al url `localhost:4000
 ### ¡Listo!, ya tienes creado tu sitio
 
 <figure class="align-center">
-  <a href="#"><img src="{{ '/images/new-site.png' }}" alt="Jekyll"></a>
+  <a href="#"><img src="{{ '/images/new-site.webp' }}" alt="Jekyll"></a>
   <figcaption>127.0.0.1:4000</figcaption>
 </figure>  
 
 # Primer post y configuración inicial
-![right-aligned-image](/images/tree-directory-jekyll.png){: .align-right}
+![right-aligned-image](/images/tree-directory-jekyll.webp){: .align-right}
 En ese punto ya tenemos corriendo el servidor en local, con un primer post de ejemplo. 
 El árbol de directorio debe ser similar al de la imagen de la derecha.  
 En principio vamos a fijarnos en el directorio `_post`, el archivo `_config.yml` y el archivo `about.markdown`. Estos dos últimos están ubicados en la raíz del proyecto.  

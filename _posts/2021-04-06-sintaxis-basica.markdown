@@ -2,8 +2,8 @@
 title: "Markdown: Sintáxis básica"
 author: pancho
 image: 
-  path: /images/markdown.png
-  thumbnail: /images/markdown-thumbnail.png
+  path: /images/markdown.webp
+  thumbnail: /images/markdown-thumbnail.webp
 categories:
   - Jekyll
 tags:

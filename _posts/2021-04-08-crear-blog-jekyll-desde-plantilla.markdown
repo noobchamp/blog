@@ -1,8 +1,8 @@
 ---
 title:  "Jekyll: Crea tu blog Jekyll desde una plantilla"
 image: 
-  path: /images/jekyll-logo.png
-  thumbnail: /images/jekyll-logo-thumbnail.png
+  path: /images/jekyll-logo.webp
+  thumbnail: /images/jekyll-logo-thumbnail.webp
 author: yoko
 categories: 
   - Jekyll
@@ -38,7 +38,7 @@ Si quieres seguir los mismos pasos pincha en el enlace.
 ### Realizar un fork
 Cuando estemos en el repositorio de la plantilla que hayas elegido, en la esquina superior derecha, bajo tu foto de perfil de Github verás lo siguiente:  
 
-![center-aligned-image](/images/fork.png){: .align-center}
+![center-aligned-image](/images/fork.webp){: .align-center}
 
 Presiona sobre `FORK` y el repositorio se copiará automáticamente como un repositorio tuyo.
 

@@ -21,7 +21,7 @@ title: "Hola, soy José Oliva"
 description: "Y este es mi blog personal"
 baseurl: # the subpath of your site, e.g. "/blog"
 url: https://noobchamp.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-logo: /images/joseoliva.jpg # path of site logo, e.g. "/images/logo.png"
+logo: /images/joseoliva.webp # path of site logo, e.g. "/images/logo.png"
 date_format: "%d de %B %Y" #"%B %-d, %Y"
 read_time: true # reading time estimates, e.g. true
 words_per_minute: 200 # 200

@@ -1,6 +1,6 @@
 pancho:
   name: Pancho
-  picture: /images/pancho.png
+  picture: /images/pancho.webp
   links:
     - title: Linkedin
       url: https://www.linkedin.com/in/joseaoliva/
@@ -14,7 +14,7 @@ pancho:
 
 yoko:
   name: Yoko
-  picture: /images/yoko.jpg
+  picture: /images/yoko.webp
   links:
     - title: Linkedin
       url: https://www.linkedin.com/in/joseaoliva/
@@ -28,7 +28,7 @@ yoko:
 
 bowie:
   name: Bowie
-  picture: /images/bowie.jpg
+  picture: /images/bowie.webp
   links:
     - title: Linkedin
       url: https://www.linkedin.com/in/joseaoliva/
