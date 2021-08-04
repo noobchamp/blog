@@ -19,6 +19,7 @@ Cuando instalamos Red Hat 8 y/o CentOS 8 en VirtualBox siempre tenemos el inconv
 El propósito de este mini tutorial es instalar rápidamente Guest Addiction en RHEL 8 rápidamente.
 
 ## Comandos
+Antes de ejecutar nada, la máquina debe tener `SELINUX` en modo _permissive_ o _disabled_
 ```bash
 yum groupinstall "Development Tools"
 yum install -y kernel-devel elfutils-libelf-devel
