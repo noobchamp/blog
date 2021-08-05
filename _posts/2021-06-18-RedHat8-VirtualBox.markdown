@@ -22,7 +22,7 @@ El propósito de este mini tutorial es instalar rápidamente Guest Addiction en 
 Antes de ejecutar nada, la máquina debe tener `SELINUX` en modo _permissive_ o _disabled_
 ```bash
 yum groupinstall "Development Tools"
-yum install -y kernel-devel elfutils-libelf-devel
+yum install -y kernel-devel elfutils-libelf elfutils-libelf-devel
 ```
 
 ## Instalar Guest Additions
