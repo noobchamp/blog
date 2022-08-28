@@ -39,3 +39,18 @@ bowie:
     - title: Instagram
       url: https://www.instagram.com/oliva_ja/
       icon: fab fa-instagram
+
+teemo:
+  name: Teemo
+  picture: /images/teemo.webp
+  links:
+    - title: Linkedin
+      url: https://www.linkedin.com/in/joseaoliva/
+      icon: fab fa-linkedin
+    - title: Github
+      url: https://github.com/noobchamp
+      icon: fab fa-github
+    - title: Instagram
+      url: https://www.instagram.com/teemo__dachshund/
+      icon: fab fa-instagram
+
