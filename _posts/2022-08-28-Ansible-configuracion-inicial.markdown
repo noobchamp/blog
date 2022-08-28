@@ -1,6 +1,6 @@
 ---
 title:  "Ansible - Configuración Inicial"
-author: yoko
+author: teemo
 categories: 
   - Ansible
   - Linux
