@@ -2,6 +2,7 @@
 title:  "VirtualBox Guest Addittions en Red Hat 8 y CentOS 8"
 image: 
   path: /images/redhat8.webp
+  thumbnail: /images/vbox.webp
 author: pancho
 categories: 
   - RHEL

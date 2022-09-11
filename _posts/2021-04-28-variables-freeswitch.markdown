@@ -2,6 +2,7 @@
 title:  "FreeSwitch: Variables"
 image: 
   path: /images/freeswitch/freeswitch.webp
+  thumbnail: /images/freeswitch/freeswitch-thumbnail.webp
 author: yoko
 categories: 
   - FreeSwitch

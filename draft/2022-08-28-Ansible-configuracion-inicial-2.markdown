@@ -2,6 +2,7 @@
 title:  "Ansible - Tutorial rápido completo 2/2"
 image: 
   path: /images/ansible.webp
+  thumbnail: /images/ansible-thumbnail.webp
 author: teemo
 categories: 
   - Ansible
