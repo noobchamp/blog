@@ -1,8 +1,5 @@
 ---
 title:  "VirtualBox Guest Addittions en Red Hat 8 y CentOS 8"
-image: 
-  path: /images/redhat8.webp
-  thumbnail: /images/vbox.webp
 author: pancho
 categories: 
   - RHEL
@@ -15,6 +12,7 @@ tags:
   - Guest Additions
 date: 2021-06-18 20:30:40 +0200
 ---
+![center-aligned-image](/images/vbox.webp){: .align-center}
 # Introducción
 Cuando instalamos Red Hat 8 y/o CentOS 8 en VirtualBox siempre tenemos el inconveniente de que la vista no se ajusta a la ventana.  
 El propósito de este mini tutorial es instalar rápidamente Guest Addiction en RHEL 8 rápidamente.

@@ -1,8 +1,5 @@
 ---
 title:  "Ansible - Tutorial rápido completo 1/2"
-image: 
-  path: /images/ansible.webp
-  thumbnail: /images/ansible-thumbnail.webp
 author: teemo
 categories: 
   - Ansible
@@ -14,6 +11,7 @@ tags:
   - Ansible
 date: 2022-08-28 9:00:00 +0000
 ---
+![center-aligned-image](/images/ansible.webp){: .align-center}
 # Introducción
 `Ansible` es un herramienta de automatización. No me extenderé en explicar lo que es pero si diré que es muy útil y cada vez es mas usado por administradores sobre todo para automatizar tareas repetitivas o hacer inspección de todos los servidores.  
 
