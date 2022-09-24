@@ -118,6 +118,7 @@ Hay varias soluciones, la más simple que sería usar _mkpasswd_ o _openssl_ par
 El propósito del `vault` era no depender de estas cosas, por tanto hay que modificar el playbook para indicarle que vamos a usar el playbook y que la contraseña será una variable
 
 ```yml
+{% raw %}
 ---
 - hosts: micluster
   vars_files:
@@ -131,6 +132,7 @@ El propósito del `vault` era no depender de estas cosas, por tanto hay que modi
         generate_ssh_key: yes
         ssh_key_bits: 2048
         ssh_key_file: .ssh/id_rsa
+{% endraw %}
 ```
 > Como se aprecia, mediante una tubería hemos cifrado a SHA-512 el texto plano que teníamos en el vault.
 
