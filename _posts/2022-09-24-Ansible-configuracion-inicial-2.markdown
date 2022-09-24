@@ -9,7 +9,7 @@ tags:
   - Red Hat
   - CentOS
   - Ansible
-date: 2022-08-28 9:00:00 +0000
+date: 2022-09-24 13:45:00 +0000
 ---
 ![center-aligned-image](/images/ansible.webp){: .align-center}
 # Introducción
