@@ -54,7 +54,7 @@ Para resumir, me he creado mi usuario _oliva_ y he craeado /home/oliva/miansible
 all:
   hosts:
   children:
-    cluster:
+    micluster:
       hosts:
         nodo1:
           ansible_host: 10.0.0.11
@@ -122,7 +122,7 @@ Funciona con el mismo usuario en origen a no ser que se especifique bien por lí
 all:
   hosts:
   children:
-    cluster:
+    micluster:
       hosts:
         nodo1:
           ansible_host: 10.0.0.11
