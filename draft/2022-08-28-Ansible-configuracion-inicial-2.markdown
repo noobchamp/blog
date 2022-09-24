@@ -113,8 +113,10 @@ changed: [nodo1]
 PLAY RECAP *************************************************************************************************************************************************************************************
 nodo1                      : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
+
 Hay varias soluciones, la más simple que sería usar _mkpasswd_ o _openssl_ para generar una clave SHA-512.
 El propósito del `vault` era no depender de estas cosas, por tanto hay que modificar el playbook para indicarle que vamos a usar el playbook y que la contraseña será una variable
+
 ```yml
 ---
 - hosts: micluster
