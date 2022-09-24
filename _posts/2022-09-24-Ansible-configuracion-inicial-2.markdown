@@ -13,9 +13,10 @@ date: 2022-09-24 13:45:00 +0000
 ---
 ![center-aligned-image](/images/ansible.webp){: .align-center}
 # Introducción
-En el anterior post vimos lo básico de `Ansible`. Aunque con nuestro inventario podemos lanzar prácticamente cualquier módulo por línea de comandos.
+En el [anterior post](https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/) vimos lo básico de `Ansible`. Aunque con nuestro inventario podemos lanzar prácticamente cualquier módulo por línea de comandos, lo ideal es hacer una estructura y usar todo lo disponible a nuestro alcance.
 
-Ahora vamos a ver playbooks, handlers, tags, roles y ansible-galaxy. Estas cosas son las que hacen que `ansible` sea tan útil. Vamos a ver cada uno y entremedias veremos otras cosillas como el vault, al final va a ser un revuelto pero la cosa es ver cómo trabajan juntos puesto que por separado no es eficiente.
+Ahora vamos a ver playbooks, handlers, tags, collections, vault, roles y ansible-galaxy. Estas cosas son las que hacen que `ansible` sea tan útil. 
+Vamos a ver cada uno y entremedias veremos otras cosillas como el vault, al final va a ser un revuelto pero la cosa es ver cómo trabajan juntos puesto que por separado no es eficiente.
 
 > Las opciones de los comandos se han explicado en el anterior post.
 > Recuerda que la opción `-C` va a simular la ejecución pero no la llevará a cabo.
@@ -24,7 +25,7 @@ Ahora vamos a ver playbooks, handlers, tags, roles y ansible-galaxy. Estas cosas
 # Playbook
 Un playbook nos sirver para ejecutar específicas tareas sobre específicos servidores. Por supuesto tiene sintaxis yamel.
 
-Mejor vamos a explicar con un ejemplo, vamos a crear el primer playbook. Como vimos anteriormente todo lo hacemos como root pero vamos a crear el usuario ansible y copiar la rsa a cada máquina. 
+Mejor vamos a explicar con un ejemplo, vamos a crear el primer playbook. Como vimos anteriormente todo lo hacemos como root pero vamos a crear el usuario ansible y copiar la _rsa_ a cada máquina. 
 
 ```yml
 ---
@@ -55,7 +56,7 @@ PLAY RECAP *********************************************************************
 nodo1                      : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
 Como vemos en el playbook, no tenemos clave para este usuario, en Linux se puede crear el usuario pero no proporcionar contraseña.
-Esa es la línea que tenemos comentada, pero como no queremos pasar contraseñas en texto plano vamos a la siguiente cuestión
+Esa es la línea que tenemos comentada, pero como no queremos pasar contraseñas en texto plano vamos a la siguiente cuestión.
 
 ## Vault
 No es más que un gestor de contraseñas (por así llamarlo). Se usa para cifrar las claves y no enviarlas en texto plano. Además te permite poder subir tu proyecto incluida las contraseñas puesto que usa una _contraseña maestra_.
@@ -67,7 +68,7 @@ New Vault password:
 Confirm New Vault password: 
 # En mi caso he puesto secreto123, sera la contraseña maestra
 ```
-Directamente entra en el editor vi (puedes cambiarlo), si no sabes salir pulsa esc y :wq.  
+Directamente entra en el editor vi (puedes cambiarlo), si no sabes salir pulsa _esc_ y _:wq_.  
 He agregado la entrada:
 
 ```yml
@@ -116,9 +117,8 @@ nodo1                      : ok=2    changed=1    unreachable=0    failed=0    s
 
 Hay varias soluciones, la más simple que sería usar _mkpasswd_ o _openssl_ para generar una clave SHA-512.
 El propósito del `vault` era no depender de estas cosas, por tanto hay que modificar el playbook para indicarle que vamos a usar el playbook y que la contraseña será una variable
-
-```yml
 {% raw %}
+```yml
 ---
 - hosts: micluster
   vars_files:
@@ -132,8 +132,8 @@ El propósito del `vault` era no depender de estas cosas, por tanto hay que modi
         generate_ssh_key: yes
         ssh_key_bits: 2048
         ssh_key_file: .ssh/id_rsa
-{% endraw %}
 ```
+{% endraw %}
 > Como se aprecia, mediante una tubería hemos cifrado a SHA-512 el texto plano que teníamos en el vault.
 
 Puesto que vamos a usar el vault ahora el comando es distinto, puesto que tenemos que indicar que la contraseña maestra para abrirlo
@@ -157,7 +157,7 @@ En estos momentos nos planteamos ciertas preguntas.
 La respuesta es crear roles. A modo de hacer nuestro Ansible _modular_.
 Vemos que estamos creando un cluster y vamos a tener que añadir tareas relativas a ellos. Pero la cuestión, no todo van a ser las mismas tareas, los mismos SO, los mismos elementos en general...
 
-Lo ideal es hacer roles que realicen tareas generales que puedan valer para cualquier servidor. Por ejemplo: En nuestro caso haremos un rol para englobar las tareas relacionadas con SSH. Posteriormente podríamos crear otro rol para crear clúster Pacemaker, otro para servidores web...
+Lo ideal es hacer `roles` que realicen tareas generales que puedan valer para cualquier servidor. Por ejemplo: En nuestro caso haremos un rol para englobar las tareas relacionadas con SSH. Posteriormente podríamos crear otro rol para crear clúster Pacemaker, otro para servidores web...
 
 Vamos a crear el primer rol, se puede hacer manualmente o mediante el comando `ansible-galaxy`
 
@@ -185,8 +185,8 @@ drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 vars
 > Aqui vemos el árbol creado en la carpeta _ssh_ el cual es nuestro rol para tareas de SSH.
 
 ¿Te suena _tasks_? Son las tareas que ejecutamos en el playbook, ahora van en este archivo. Por tanto vamos a copiar el contenido del playbook, en la sección _tasks_ aquí
-```yml
 {% raw %}
+```yml
 # tasks file for ssh
 - name: Crear el usuario ansible
   user:
@@ -196,8 +196,8 @@ drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 vars
     generate_ssh_key: yes
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
-{% endraw %}
 ```
+{% endraw %}
 Mientras que el playbook _crearusuario.yml_ quedará asi
 ```yml
 ---
@@ -215,8 +215,8 @@ Ejecutamos de nuevo
 
 ## TAGS
 Necesitamos al menos agregar una segunda tarea para entender los tags.
-```yml
 {% raw %}
+```yml
 ---
 # tasks file for ssh
 - name: Instalar la última versión de ssh
@@ -234,8 +234,8 @@ Necesitamos al menos agregar una segunda tarea para entender los tags.
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
   tags: usuarios
-{% endraw %}
 ```
+{% endraw %}
 Si volvemos a ejecutar, vamos a ver que se ejecutaran naturalmente ambas tareas.
 Podemos especificar dentro del rol que tareas queremos especificar. Como sabemos que ya está instalado SSH vamos a decirle que ejecute solamente la tarea de crear el usuario ansible.
 Usa el parámetro _-t_ para indicar los tags.
