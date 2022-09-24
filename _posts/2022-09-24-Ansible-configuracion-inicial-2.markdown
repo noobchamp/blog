@@ -186,6 +186,7 @@ drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 vars
 
 ¿Te suena _tasks_? Son las tareas que ejecutamos en el playbook, ahora van en este archivo. Por tanto vamos a copiar el contenido del playbook, en la sección _tasks_ aquí
 ```yml
+{% raw %}
 # tasks file for ssh
 - name: Crear el usuario ansible
   user:
@@ -195,6 +196,7 @@ drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 vars
     generate_ssh_key: yes
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
+{% endraw %}
 ```
 Mientras que el playbook _crearusuario.yml_ quedará asi
 ```yml
@@ -214,6 +216,7 @@ Ejecutamos de nuevo
 ## TAGS
 Necesitamos al menos agregar una segunda tarea para entender los tags.
 ```yml
+{% raw %}
 ---
 # tasks file for ssh
 - name: Instalar la última versión de ssh
@@ -231,6 +234,7 @@ Necesitamos al menos agregar una segunda tarea para entender los tags.
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
   tags: usuarios
+{% endraw %}
 ```
 Si volvemos a ejecutar, vamos a ver que se ejecutaran naturalmente ambas tareas.
 Podemos especificar dentro del rol que tareas queremos especificar. Como sabemos que ya está instalado SSH vamos a decirle que ejecute solamente la tarea de crear el usuario ansible.
