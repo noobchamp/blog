@@ -394,5 +394,5 @@ Si cambiamos el archivo de configuración de SSH necesitaremos reiniciar el serv
 
 En la [página oficial](https://docs.ansible.com/ansible/latest/user_guide/playbooks_handlers.html) podemos ver un ejemplo muy claro.
 
-¡Nos vemos en el siguiente post!
+¡Adiós!
 

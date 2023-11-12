@@ -138,4 +138,4 @@ Como se puede ver, la sintaxis de yame hace que según la identación, pueda est
 En la siguiente parte vamos a ver los playbooks, roles, tags, handlers...
 Además empezaremos a trabajar con ansible-galaxy.
 
-¡Nos vemos en el siguiente post!
+¡Adiós!
