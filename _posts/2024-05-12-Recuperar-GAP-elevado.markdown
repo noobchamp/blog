@@ -1,6 +1,6 @@
 ---
 title:  "Oracle - Recuperar un GAP elevado 'STANDBY'"
-author: ekko
+author: Ekko
 categories: 
   - Oracle
   - Rman
