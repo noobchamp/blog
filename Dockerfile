@@ -4,5 +4,5 @@ FROM ruby:3.3
 RUN gem install bundler
 
 ADD entrypoint.sh /entrypoint.sh
-
+RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
