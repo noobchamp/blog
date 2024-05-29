@@ -1,0 +1,147 @@
+---
+title:  "Montar un VDO o disco de deduplicación"
+author: pancho
+categories: 
+  - RHEL
+  - CentOS
+show_excerpts: true
+tags: 
+  - Red Hat
+  - CentOS
+date: 2024-05-29 16:00:00 +0000
+---
+## Montar un VDO o disco de deduplicación
+
+### ¿Qué es?
+
+Virtual Data Optimizer (VDO) proporciona una reducción de datos en línea para Linux en forma de deduplicación, compresión y thin provisioning.
+[Documentación español](https://access.redhat.com/documentation/es-es/red_hat_enterprise_linux/8/html-single/deduplicating_and_compressing_storage/index).
+Los mejores casos para montar este tipo de dispositivo, son el almacenamiento de datos que van a contener los mismos bloques una y otra vez, o explicado de otra forma, los archivos que contienen son similares unos de otros.
+Pongamos un ejemplo simple: Todos los días realizo un backup de mysql completo que ocupa 5Gb. Las bases de datos suelen cambiar poco diariamente, por lo que si hoy ocupa 5Gb, mañana será de unos 5,2Gb (todo esto es un ejemplo).
+Por lo tanto, la mayoría de bloques serán exactamente los mismos, el sistema entenderá que hay un bloques duplicados y no los tendrá en cuenta.
+Esto no es así exactamente ni mucho menos, pero estoy intentado hacerte entender de manera muy simple como funciona para que lo entiendas.
+
+Con esta tecnología lo que tenemos es un ahorro de datos, que dependiendo de lo que almacenemos, será mejor o peor, pero nos va a ahorrar mucho espacio.
+
+### Objetivos
+
+* KVM
+* LVM
+* NFS/SAMBA o CIFS
+* iSCSI
+
+### Requisitos
+
+#### RAM
+
+VDO requiere una cantidad fija de 38 MB de RAM y varias cantidades variables:
+
+* 1.15 MB de RAM por cada 1 MB de tamaño de caché de mapa de bloques configurado. La caché del mapa de bloques requiere un mínimo de 150 MB de RAM.
+* 1.6 MB de RAM por cada 1 TB de espacio lógico.
+* 268 MB de RAM por cada 1 TB de almacenamiento físico gestionado por el volumen.
+
+### Instalación y creación
+
+Instalamos lo paquetes necesatios para el funcionamiento.
+
+```bash
+yum install lvm2 vdo kmod-kvdo
+```
+
+En mi caso, voy a crear un disco para backups.
+¿En qué consiste cada parámetro?
+
+* name: Pues el nombre que quieras dar al volumen, como si le llamas "Pepe"
+* device: El dispositivo, o sea, el disco. En mi caso estoy destinando un disco nuevo completo (vdb). He insertado un disco de 200Gb.
+* vdoLogicalSize: El tamaño lógico. Y aquí viene la cuestión existencial... Resulta que mi disco es de 200Gb, según la documentación, es capaz de multiplicar x10 su tamaño lógico. Yo nunca he llegado a obtener esos ratios ni tan siquiera con archivos muy muy similares. Aún así, es muy factible tener un x5 para lo que voy a usarlo. No te preocupes si necesitas ampliar posteriormente tanto parte física como lógica. Esta vez, voy a ser cauto y le voy a proporcionar un x3, o lo que es lo mismo 600Gb. Hay documentación muy interesante hablando de esto, del tamaño de slabs y cosas así...
+
+```bash
+# Crear un volúmen
+vdo create \
+--name=vdo-backup \
+--device=/dev/vdb \
+--vdoLogicalSize=600G
+```
+
+Nos responderá algo como...
+
+```bash
+Creating VDO vdo-backup
+      The VDO volume can address 196 GB in 98 data slabs, each 2 GB.
+      It can grow to address at most 16 TB of physical storage in 8192 slabs.
+      If a larger maximum size might be needed, use bigger slabs.
+Starting VDO vdo-backup
+Starting compression on VDO vdo-backup
+VDO instance 2 volume is ready at /dev/mapper/vdo-backup
+```
+
+Voy a darle formato, lo quiero como XFS. el `-K` le indica que no intente descartar bloques (total es nuevo).
+
+```bash
+mkfs.xfs -K /dev/mapper/vdo-backup
+udevadm settle
+# para ext4
+#mkfs.xfs -E nodiscard /dev/mapper/vdo-backup
+# el comando udevadm settle registra los cambios del sistema con espera activa
+#Comprobamos que el dispositivo es correcto
+lsblk
+```
+
+Montar el voluen manualmente, para probar:
+
+```bash
+mkdir /backup/
+mount /dev/mapper/vdo-backup /backup
+umount /backup
+```
+
+Puesto que no devuelve ningún error lo voy a añadir al `fstab` para que arranque
+
+```bash
+# Si no usais vim, estáis perdiendo el tiempo...
+vim /etc/fstab
+/dev/mapper/vdo-backup /backup  xfs  defaults,x-systemd.automount,nofail  0 2
+# Probamos para que no tengamos sustos en un reinicio
+mount -a
+# Si ejecutas "df -h" verás que el sistema ya tiene ocupación (eso es parte de lo que toma VDO para sus índices y sus cosas)
+```
+
+Ahora necesitamos tener activo `fstrim`, que descartará los bloques sin uso periódicamente un vez a la semana. Aunque si tienes mucha actividad puedes configurarlo para más frecuencia o ejecutarlo vía cron.
+
+```bash
+systemctl enable --now fstrim.timer
+systemctl status fstrim.timer
+fstrim.timer - Discard unused blocks once a week
+   Loaded: loaded (/usr/lib/systemd/system/fstrim.timer; enabled; vendor preset: disabled)
+   Active: active (waiting) since Wed 2023-05-17 13:24:41 CEST; 3min 15s ago
+  Trigger: Mon 2023-05-22 01:20:46 CEST; 4 days left
+     Docs: man:fstrim
+
+May 17 13:24:41 localhost.localdomain systemd[1]: Started Discard unused blocks once a week.
+```
+
+Para el que se lo pregunte, no necesitas "discard" en el fstab.
+Puedes ver incluso, cuando fstrim.timer va a ejecutar el servicio
+
+```bash
+systemctl list-timers fstrim.timer
+```
+
+Ahora viene la "pena" de todo esto. Tendrás que monitorizar este sistema de archivos dos veces. Si ejecutas el comando
+
+```bash
+vdostats --human-readable
+Device                    Size      Used Available Use% Space saving%
+/dev/mapper/vdo-backup    200.0G      4.1G    195.9G   2%           99%
+
+# Te devuelve el espacio físico del dispositivo "el real"
+# si ejecutas un df -h, verás el tamaño que hemos indicado "lógico" y por tanto, para tu sistema operativo, ese FS tiene 600Gb.
+df -h /backup 
+S.ficheros             Tamaño Usados  Disp Uso% Montado en
+/dev/mapper/vdo-backup   600G   4,3G  596G   1% /backup
+```
+
+Entonces, es posible que se llene uno u otro, eso dependerá del tamaño lógico que hemos aplciado y de claro está, ficheros que tengamos almacenados, si son o no más propensos a compresión.
+
+Diría que eso es todo.
+¡¡Nos vemos!!

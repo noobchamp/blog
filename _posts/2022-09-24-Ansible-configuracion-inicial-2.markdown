@@ -12,20 +12,22 @@ tags:
 date: 2022-09-24 11:45:00 +0000
 ---
 ![center-aligned-image](/images/ansible.webp){: .align-center}
-# Introducción
+
+## Introducción
+
 En el [anterior post](https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/) vimos lo básico de `Ansible`. Aunque con nuestro inventario podemos lanzar prácticamente cualquier módulo por línea de comandos, lo ideal es hacer una estructura y usar todo lo disponible a nuestro alcance.
 
-Ahora vamos a ver playbooks, handlers, tags, collections, vault, roles y ansible-galaxy. Estas cosas son las que hacen que `ansible` sea tan útil. 
+Ahora vamos a ver playbooks, handlers, tags, collections, vault, roles y ansible-galaxy. Estas cosas son las que hacen que `ansible` sea tan útil.
 Vamos a ver cada uno y entremedias veremos otras cosillas como el vault, al final va a ser un revuelto pero la cosa es ver cómo trabajan juntos puesto que por separado no es eficiente.
 
 > Las opciones de los comandos se han explicado en el anterior post.
 > Recuerda que la opción `-C` va a simular la ejecución pero no la llevará a cabo.
 
+## Playbook
 
-# Playbook
 Un playbook nos sirver para ejecutar específicas tareas sobre específicos servidores. Por supuesto tiene sintaxis yamel.
 
-Mejor vamos a explicar con un ejemplo, vamos a crear el primer playbook. Como vimos anteriormente todo lo hacemos como root pero vamos a crear el usuario ansible y copiar la _rsa_ a cada máquina. 
+Mejor vamos a explicar con un ejemplo, vamos a crear el primer playbook. Como vimos anteriormente todo lo hacemos como root pero vamos a crear el usuario ansible y copiar la _rsa_ a cada máquina.
 
 ```yml
 ---
@@ -40,7 +42,9 @@ Mejor vamos a explicar con un ejemplo, vamos a crear el primer playbook. Como vi
         ssh_key_bits: 2048
         ssh_key_file: .ssh/id_rsa
 ```
+
 Y comprobamos que pasaría (lanzamos a un solo nodo):
+
 ```bash
 [root@ansible miansible]# ansible-playbook crearusuario.yml -i inventory.yml -l nodo1 -C
 
@@ -55,26 +59,32 @@ changed: [nodo1]
 PLAY RECAP *************************************************************************************************************************************************************************************
 nodo1                      : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
+
 Como vemos en el playbook, no tenemos clave para este usuario, en Linux se puede crear el usuario pero no proporcionar contraseña.
 Esa es la línea que tenemos comentada, pero como no queremos pasar contraseñas en texto plano vamos a la siguiente cuestión.
 
 ## Vault
+
 No es más que un gestor de contraseñas (por así llamarlo). Se usa para cifrar las claves y no enviarlas en texto plano. Además te permite poder subir tu proyecto incluida las contraseñas puesto que usa una _contraseña maestra_.
 
 Primero vamos a crear el archivo
+
 ```bash
 [root@ansible miansible]# ansible-vault create vault.yml
 New Vault password: 
 Confirm New Vault password: 
 # En mi caso he puesto secreto123, sera la contraseña maestra
 ```
+
 Directamente entra en el editor vi (puedes cambiarlo), si no sabes salir pulsa _esc_ y _:wq_.  
 He agregado la entrada:
 
 ```yml
 ansible_usuario: ans1bl3_p4ss
 ```
+
 Comprobamos que ahora está encriptado
+
 ```bash
 [root@ansible miansible]# cat vault.yml 
 $ANSIBLE_VAULT;1.1;AES256
@@ -84,7 +94,9 @@ $ANSIBLE_VAULT;1.1;AES256
 3163366363313865350a633634633464353637643233353237366164363033386537356137653466
 35356530636132356431626239393663613461346165396530343666626431336632
 ```
+
 Ahora si podemos añadir una contraseña, por ejemplo
+
 ```yml
 ---
 - hosts: micluster
@@ -98,7 +110,9 @@ Ahora si podemos añadir una contraseña, por ejemplo
         ssh_key_bits: 2048
         ssh_key_file: .ssh/id_rsa
 ```
+
 Esto nos va a reportar un problema
+
 ```bash
 [root@ansible miansible]# ansible-playbook crearusuario.yml -i inventory.yml -l nodo1 -C
 
@@ -118,6 +132,7 @@ nodo1                      : ok=2    changed=1    unreachable=0    failed=0    s
 Hay varias soluciones, la más simple que sería usar _mkpasswd_ o _openssl_ para generar una clave SHA-512.
 El propósito del `vault` era no depender de estas cosas, por tanto hay que modificar el playbook para indicarle que vamos a usar el playbook y que la contraseña será una variable
 {% raw %}
+
 ```yml
 ---
 - hosts: micluster
@@ -133,10 +148,12 @@ El propósito del `vault` era no depender de estas cosas, por tanto hay que modi
         ssh_key_bits: 2048
         ssh_key_file: .ssh/id_rsa
 ```
+
 {% endraw %}
 > Como se aprecia, mediante una tubería hemos cifrado a SHA-512 el texto plano que teníamos en el vault.
 
 Puesto que vamos a usar el vault ahora el comando es distinto, puesto que tenemos que indicar que la contraseña maestra para abrirlo
+
 ```bash
 [root@ansible miansible]# ansible-playbook crearusuario.yml -i inventory.yml -l nodo1 -C --ask-vault-pass
 Vault password: 
@@ -146,9 +163,11 @@ PLAY [micluster]
 ...
 nodo1                      : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
+
 Dirás que es un peñazo tener que poner la contraseña o que hace que lanzar una tarea automática sea imposible puesto que un prompt nos va a pedir la contraseña. Explora la opción `--vault-password-file ~/.vault_pass.txt` en la que podemos tener un archivo con los permisos correctos en el sitio correcto para que sea accesible por quien queremos.
 
-# Roles
+## Roles
+
 En estos momentos nos planteamos ciertas preguntas.
 ¿Para cada cierto tipo de acción necesitamos un playbook?
 ¿Qué ocurre si no quiero ejecutar un playbook completo, solo una parte?
@@ -162,6 +181,7 @@ Lo ideal es hacer `roles` que realicen tareas generales que puedan valer para cu
 Vamos a crear el primer rol, se puede hacer manualmente o mediante el comando `ansible-galaxy`
 
 ## Ansible Galaxy
+
 Etiquetado para compartir con la comunidad roles y colecciones entre otros pero además nos va a permitir crear nuestras estructuras.
 
 ```bash
@@ -182,10 +202,12 @@ drwxrwxr-x.  2 oliva oliva   39 Sep 22 20:51 tests
 -rw-rw-r--.  1 oliva oliva  539 Sep 22 20:51 .travis.yml
 drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 vars
 ```
+
 > Aqui vemos el árbol creado en la carpeta _ssh_ el cual es nuestro rol para tareas de SSH.
 
 ¿Te suena _tasks_? Son las tareas que ejecutamos en el playbook, ahora van en este archivo. Por tanto vamos a copiar el contenido del playbook, en la sección _tasks_ aquí
 {% raw %}
+
 ```yml
 # tasks file for ssh
 - name: Crear el usuario ansible
@@ -197,8 +219,10 @@ drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 vars
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
 ```
+
 {% endraw %}
 Mientras que el playbook _crearusuario.yml_ quedará asi
+
 ```yml
 ---
 - hosts: micluster
@@ -207,15 +231,20 @@ Mientras que el playbook _crearusuario.yml_ quedará asi
   roles:
     - ssh
 ```
-Ejecutamos de nuevo 
+
+Ejecutamos de nuevo
+
 ```bash
 [root@ansible miansible]# ansible-playbook crearusuario.yml -i inventory.yml -l nodo1 -C --ask-vault-pass 
 ```
-### Y vemos que se completa correctamente. ¡Ya estamos trabajando con nuestro primer rol!
+
+### Y vemos que se completa correctamente. ¡Ya estamos trabajando con nuestro primer rol
 
 ## TAGS
+
 Necesitamos al menos agregar una segunda tarea para entender los tags.
 {% raw %}
+
 ```yml
 ---
 # tasks file for ssh
@@ -235,6 +264,7 @@ Necesitamos al menos agregar una segunda tarea para entender los tags.
     ssh_key_file: .ssh/id_rsa
   tags: usuarios
 ```
+
 {% endraw %}
 Si volvemos a ejecutar, vamos a ver que se ejecutaran naturalmente ambas tareas.
 Podemos especificar dentro del rol que tareas queremos especificar. Como sabemos que ya está instalado SSH vamos a decirle que ejecute solamente la tarea de crear el usuario ansible.
@@ -256,17 +286,20 @@ changed: [nodo1] => {"changed": true}
 PLAY RECAP ******************************************************************************************************************************************************************************************************************
 nodo1                      : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
+
 > También puedes hacer el efecto contrario _--skip-tags_
 
 No hay manera fácil, por así decirlo, de incluirlo en el playbook. Hay formas pero son más complejas.
 Esto es una de las cosas, bajo mi punto de vista, están un poco verdes.
 
 ## Collections
+
 Las coleciones son contenidos que pueden ser playbooks, roles, módulos y plugins.
 Básicamente se ha creado una comunidad para ahorrarte tareas como las que hasta ahora estamos haciendo (muy normales, nada específico).
 Toda la info se encuentra en la [página oficial de Ansible](https://galaxy.ansible.com).
 
 Vamos a hacer una pequeña prueba, vamos a instalar un motd de [GoKEV](https://galaxy.ansible.com/gokev/motd-splash)
+
 ```bash
 [root@ansible miansible]# ansible-galaxy install gokev.motd-splash -p /home/oliva/miansible/
 Starting galaxy role install process
@@ -290,8 +323,10 @@ drwxr-xr-x.  2 root root   22 Sep 23 21:00 vars
 drwxr-xr-x.  8 root root  105 Sep 23 21:00 vm-reboot
 drwxr-xr-x.  8 root root  120 Sep 23 21:00 vmware-provision
 ```
+
 En el _readme_ indica que puedes incluiir el rol `gokev.motd-splash` en un playbook.
 Añadimos a nuestro playbook
+
 ```yml
 ---
 - hosts: micluster
@@ -303,7 +338,9 @@ Añadimos a nuestro playbook
   vars:
     motd_template_file: templates/motd_redhat
 ```
+
 Y ejecutamos con --diff para contemplar las diferencias de las plantillas
+
 ```bash
 [root@ansible miansible]# ansible-playbook crearusuario.yml -i inventory.yml -l nodo1 -C --diff --ask-vault-pass 
 Vault password: 
@@ -388,6 +425,7 @@ nodo1                      : ok=5    changed=3    unreachable=0    failed=0    s
 ```
 
 ## Handlers
+
 Te va a permitir realizar una acción en cadena, es decir, si algo ha cambiado, se reinicia el servicio, pero no lo hará si no hay un cambio.
 
 Si cambiamos el archivo de configuración de SSH necesitaremos reiniciar el servicio para que los cambios sean efectivos. Por tanto, es necesario reiniciar.
@@ -395,4 +433,3 @@ Si cambiamos el archivo de configuración de SSH necesitaremos reiniciar el serv
 En la [página oficial](https://docs.ansible.com/ansible/latest/user_guide/playbooks_handlers.html) podemos ver un ejemplo muy claro.
 
 ¡Adiós!
-
