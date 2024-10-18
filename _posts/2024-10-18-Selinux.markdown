@@ -22,6 +22,8 @@ date: 2024-10-18 19:00:00 +0000
 - **Tipos**: Categorías de objetos y procesos (ej: `httpd_sys_content_t`, `var_lib_t`).
 - **Usuarios**: Representan las entidades que interactúan con el sistema (ej: `system_u` para el sistema, `user_u` para usuarios normales).
 
+> [!CAUTION]
+> No es recomendable activar selinux en modo "Enforcing" en producción. Primero prueba en modo "Permissive".
 ---
 
 ## 2. Modos de Operación
