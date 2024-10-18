@@ -186,4 +186,4 @@ SELinux es una herramienta poderosa para la seguridad en sistemas Linux, proporc
 
 ## Recursos Adicionales
 - [Documentación Oficial de SELinux](https://selinuxproject.org/page/Main_Page)
-- [Guía de SELinux en RHEL](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/understanding_and_using_selinux/index)
+- [Guía de SELinux en RHEL](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html-single/using_selinux/index)
