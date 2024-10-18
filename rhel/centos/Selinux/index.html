@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
+  <head><!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8L0LM5E7J2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8L0LM5E7J2');
+</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+
+  
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Introducción a Selinux, breve resumen | Hola, soy José Oliva</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Introducción a Selinux, breve resumen" />
+<meta name="author" content="Teemo" />
+<meta property="og:locale" content="es_ES" />
+<meta name="description" content="Iniciación con SELinux" />
+<meta property="og:description" content="Iniciación con SELinux" />
+<link rel="canonical" href="https://noobchamp.github.io/rhel/centos/Selinux/" />
+<meta property="og:url" content="https://noobchamp.github.io/rhel/centos/Selinux/" />
+<meta property="og:site_name" content="Hola, soy José Oliva" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-10-18T19:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Introducción a Selinux, breve resumen" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Teemo" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Teemo"},"dateModified":"2024-10-18T19:00:00+00:00","datePublished":"2024-10-18T19:00:00+00:00","description":"Iniciación con SELinux","headline":"Introducción a Selinux, breve resumen","mainEntityOfPage":{"@type":"WebPage","@id":"https://noobchamp.github.io/rhel/centos/Selinux/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://noobchamp.github.io/images/joseoliva.webp"},"name":"Teemo"},"url":"https://noobchamp.github.io/rhel/centos/Selinux/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  <script>
+    /* Cut the mustard */
+    if ( 'querySelector' in document && 'addEventListener' in window ) {
+      document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + 'js';
+    }
+  </script>
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/skins/default.css">
+  <!-- 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+   --><link rel="alternate" type="application/atom+xml" title="Hola, soy José Oliva" href="/atom.xml">
+<!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+<link rel="manifest" href="/images/favicon/site.webmanifest">
+<link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+</head>
+
+  <body class="layout--post  introducción-a-selinux-breve-resumen">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Saltar enlaces</h2>
+  <ul>
+    <li><a href="#primary-nav" class="screen-reader-shortcut">Saltar a la navegación primaria</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Saltar al contenido</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Saltar al pie de página</a></li>
+  </ul>
+</nav>
+
+    
+  <div class="navigation-wrapper">
+    <a href="#menu-toggle" id="menu-toggle">Menú</a>
+    <nav id="primary-nav" class="site-nav animated drop">
+      <ul><li><a href="/">Home</a></li><li><a href="/posts/">Posts</a></li><li><a href="/categories/">Categories</a></li><li><a href="/tags/">Tags</a></li><li><a href="/search/">Search</a></li></ul>
+    </nav>
+  </div><!-- /.navigation-wrapper -->
+
+
+    <header class="masthead">
+  <div class="wrap">
+    
+      <a href="/" class="site-logo" rel="home" title="Hola, soy José Oliva">
+        <img src="/images/joseoliva.webp" class="site-logo-img animated fadeInDown" alt="Hola, soy José Oliva">
+      </a>
+    
+    
+    
+      
+        <div class="site-title animated fadeIn"><a href="/">Hola, soy José Oliva</a></div>
+      
+      <p class="site-description animated fadeIn" itemprop="description">Y este es mi blog personal</p>
+    
+  </div>
+</header><!-- /.masthead -->
+
+
+    <main id="main" class="main-content" aria-label="Content">
+  <article class="h-entry">
+    
+
+    <div class="page-wrapper">
+      <header class="page-header">
+        
+        
+          <h1 id="page-title" class="page-title p-name">Introducción a Selinux, breve resumen
+</h1>
+        
+      </header>
+
+      <div class="page-sidebar">
+        <div class="page-author h-card p-author"><img src="/images/teemo.webp" class="author-avatar u-photo" alt="Teemo"><div class="author-info"><div class="author-name">
+        <em>por</em> <span class="p-name">Teemo</span>
+      </div><ul class="author-links"><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.linkedin.com/in/joseaoliva/"><i class="fab fa-linkedin fa-lg" title="Linkedin"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://github.com/noobchamp"><i class="fab fa-github fa-lg" title="Github"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.instagram.com/teemo__dachshund/"><i class="fab fa-instagram fa-lg" title="Instagram"></i></a>
+          </li></ul>
+
+<span class="read-time">3 minuto(s) de lectura</span>
+
+    <time class="page-date dt-published" datetime="2024-10-18T19:00:00+00:00"><a class="u-url" href="">18 de October 2024</a>
+</time>
+
+  </div>
+</div>
+
+        
+  <h3 class="page-taxonomies-title">Categorías</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a class="p-category" href="/categories/#centos" title="Páginas archivadas bajo CentOS">CentOS</a></li><li class="page-taxonomy"><a class="p-category" href="/categories/#rhel" title="Páginas archivadas bajo RHEL">RHEL</a></li>
+  </ul>
+
+
+        
+  <h3 class="page-taxonomies-title">Etiquetas</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a href="/tags/#centos" title="Páginas etiquetadas CentOS" rel="tag">CentOS</a></li><li class="page-taxonomy"><a href="/tags/#red-hat" title="Páginas etiquetadas Red Hat" rel="tag">Red Hat</a></li>
+  </ul>
+
+
+      </div>
+
+      <div class="page-content">
+        <div class="e-content">
+          <h1 id="iniciación-con-selinux">Iniciación con SELinux</h1>
+
+<h2 id="1-introducción-a-selinux">1. Introducción a SELinux</h2>
+<ul>
+  <li><strong>SELinux (Security-Enhanced Linux)</strong>: Módulo de seguridad para controlar el acceso a recursos en un sistema Linux. Proporciona un mecanismo de control de acceso obligatorio (MAC).</li>
+  <li><strong>Objetivo</strong>: Proteger el sistema y las aplicaciones contra accesos no autorizados, asegurando que los procesos y usuarios solo realicen las acciones para las que están autorizados.</li>
+</ul>
+
+<h3 id="conceptos-clave">Conceptos Clave</h3>
+<ul>
+  <li><strong>Políticas</strong>: Conjuntos de reglas que determinan cómo se deben gestionar los accesos a los recursos del sistema. SELinux utiliza políticas predeterminadas, pero se pueden crear personalizadas.</li>
+  <li><strong>Tipos</strong>: Categorías de objetos y procesos (ej: <code class="language-plaintext highlighter-rouge">httpd_sys_content_t</code>, <code class="language-plaintext highlighter-rouge">var_lib_t</code>).</li>
+  <li><strong>Usuarios</strong>: Representan las entidades que interactúan con el sistema (ej: <code class="language-plaintext highlighter-rouge">system_u</code> para el sistema, <code class="language-plaintext highlighter-rouge">user_u</code> para usuarios normales).</li>
+</ul>
+
+<blockquote>
+  <p>[!CAUTION]
+No es recomendable activar selinux en modo “Enforcing” en producción. Primero prueba en modo “Permissive”.
+—</p>
+</blockquote>
+
+<h2 id="2-modos-de-operación">2. Modos de Operación</h2>
+<p>SELinux tiene tres modos de operación:</p>
+
+<ul>
+  <li><strong>Enforcing</strong>: Aplica políticas y bloquea accesos no permitidos. Este es el modo recomendado para entornos de producción.</li>
+  <li><strong>Permissive</strong>: Solo registra violaciones sin bloquear accesos, útil para depuración.</li>
+  <li><strong>Disabled</strong>: SELinux desactivado, no se aplican políticas.</li>
+</ul>
+
+<h3 id="comandos-útiles">Comandos Útiles</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Verificar estado de SELinux</span>
+sestatus
+
+<span class="c"># Cambiar a modo permisivo</span>
+<span class="nb">sudo </span>setenforce 0
+
+<span class="c"># Cambiar a modo enforcing</span>
+<span class="nb">sudo </span>setenforce 1
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-contextos-de-seguridad">3. Contextos de Seguridad</h2>
+<p>Los contextos de seguridad en SELinux son una combinación de cuatro partes:</p>
+
+<ul>
+  <li><strong>Usuario</strong>: Representa el usuario de SELinux (ej: <code class="language-plaintext highlighter-rouge">system_u</code>).</li>
+  <li><strong>Rol</strong>: Rol de seguridad del proceso (generalmente <code class="language-plaintext highlighter-rouge">object_r</code> para objetos).</li>
+  <li><strong>Tipo</strong>: Tipo de acceso (ej: <code class="language-plaintext highlighter-rouge">httpd_sys_content_t</code>).</li>
+  <li><strong>Nivel</strong>: (opcional) Niveles de seguridad para control de acceso multinivel.</li>
+</ul>
+
+<h3 id="visualización-de-contextos">Visualización de Contextos</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Listar contextos de archivos</span>
+<span class="nb">ls</span> <span class="nt">-Z</span> /ruta/al/directorio
+
+<span class="c"># Listar contextos de procesos</span>
+ps <span class="nt">-Z</span>
+</code></pre></div></div>
+
+<h3 id="cambiar-contextos">Cambiar Contextos</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Cambiar contexto de un archivo</span>
+<span class="nb">chcon</span> <span class="nt">-t</span> httpd_sys_content_t /ruta/al/archivo
+
+<span class="c"># Persistir cambios de contexto</span>
+semanage fcontext <span class="nt">-a</span> <span class="nt">-t</span> httpd_sys_content_t <span class="s2">"/ruta(/.*)?"</span>
+restorecon <span class="nt">-Rv</span> /ruta
+</code></pre></div></div>
+
+<h3 id="ejemplo">Ejemplo</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Cambiar el contexto de un archivo en el directorio de Apache</span>
+<span class="nb">chcon</span> <span class="nt">-t</span> httpd_sys_content_t /var/www/html/archivo.html
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4-auditoría-en-selinux">4. Auditoría en SELinux</h2>
+<p>SELinux registra eventos y violaciones de políticas en logs ubicados en <code class="language-plaintext highlighter-rouge">/var/log/audit/audit.log</code>. La auditoría es esencial para comprender por qué se producen ciertas denegaciones.</p>
+
+<h3 id="comandos-útiles-1">Comandos Útiles</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Buscar eventos de denegación</span>
+ausearch <span class="nt">-m</span> avc
+
+<span class="c"># Explicar la razón de la denegación</span>
+ausearch <span class="nt">-m</span> avc <span class="nt">-ts</span> today | audit2why
+
+<span class="c"># Generar una política a partir de eventos de denegación</span>
+ausearch <span class="nt">-m</span> avc <span class="nt">-ts</span> today | audit2allow <span class="nt">-M</span> mi_modulo
+</code></pre></div></div>
+
+<h3 id="ejemplo-1">Ejemplo</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Buscar y explicar por qué Apache no puede acceder a un archivo</span>
+ausearch <span class="nt">-m</span> avc <span class="nt">-ts</span> today | audit2why
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5-booleanos-en-selinux">5. Booleanos en SELinux</h2>
+<p>Los booleanos son configuraciones que permiten ajustar el comportamiento de las políticas en SELinux.</p>
+
+<h3 id="ejemplo-de-booleano">Ejemplo de Booleano</h3>
+<p>Habilitar el acceso de Apache a contenido en el directorio de usuarios:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Listar booleanos disponibles</span>
+getsebool <span class="nt">-a</span>
+
+<span class="c"># Activar un booleano específico</span>
+setsebool <span class="nt">-P</span> httpd_enable_homedirs on
+</code></pre></div></div>
+
+<h3 id="importante">Importante</h3>
+<ul>
+  <li>Usar la opción <code class="language-plaintext highlighter-rouge">-P</code> para hacer cambios persistentes a través de reinicios.</li>
+</ul>
+
+<hr />
+
+<h2 id="6-creación-de-políticas-personalizadas">6. Creación de Políticas Personalizadas</h2>
+<p>Crear políticas personalizadas permite ajustar SELinux a las necesidades específicas de tu entorno.</p>
+
+<h3 id="estructura-de-un-archivo-de-política">Estructura de un Archivo de Política</h3>
+<pre><code class="language-te">module mi_aplicacion 1.0;
+
+require {
+    type var_lib_t;
+    class dir { read write search open };
+}
+
+# Permitir acceso a directorios
+allow unconfined_t var_lib_t:dir { read write search open };
+</code></pre>
+
+<h3 id="pasos-para-crear-una-política">Pasos para Crear una Política</h3>
+<ol>
+  <li><strong>Escribir la política</strong> en un archivo <code class="language-plaintext highlighter-rouge">.te</code>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano mi_aplicacion.te
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Compilar</strong> el archivo:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>checkmodule <span class="nt">-M</span> <span class="nt">-m</span> <span class="nt">-o</span> mi_aplicacion.mod mi_aplicacion.te
+semodule_package <span class="nt">-o</span> mi_aplicacion.pp <span class="nt">-m</span> mi_aplicacion.mod
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Instalar</strong> la política:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>semodule <span class="nt">-i</span> mi_aplicacion.pp
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Verificar instalación</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>semodule <span class="nt">-l</span> | <span class="nb">grep </span>mi_aplicacion
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="7-diagnóstico-de-problemas">7. Diagnóstico de Problemas</h2>
+<p>Es fundamental para resolver problemas de acceso en sistemas SELinux.</p>
+
+<h3 id="verificar-políticas-cargadas">Verificar Políticas Cargadas</h3>
+<p>Para ver las políticas activas y su impacto:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>semodule <span class="nt">-l</span>
+</code></pre></div></div>
+
+<h3 id="eliminar-políticas-problemáticas">Eliminar Políticas Problemáticas</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Eliminar un módulo de política</span>
+<span class="nb">sudo </span>semodule <span class="nt">-r</span> nombre_del_modulo
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+<p>SELinux es una herramienta poderosa para la seguridad en sistemas Linux, proporcionando control de acceso granular a recursos del sistema. Comprender sus componentes y comandos básicos te permitirá gestionar y proteger mejor tus sistemas.</p>
+
+<hr />
+
+<h2 id="recursos-adicionales">Recursos Adicionales</h2>
+<ul>
+  <li><a href="https://selinuxproject.org/page/Main_Page">Documentación Oficial de SELinux</a></li>
+  <li><a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html-single/using_selinux/index">Guía de SELinux en RHEL</a></li>
+</ul>
+
+        </div>
+
+        
+          <div class="page-share">
+  <a href="https://twitter.com/intent/tweet?text=Introducci%C3%B3n+a+Selinux%2C+breve+resumen%20https%3A%2F%2Fnoobchamp.github.io%2Frhel%2Fcentos%2FSelinux%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--twitter btn--small"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i> <span>Tweet</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fnoobchamp.github.io%2Frhel%2Fcentos%2FSelinux%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--linkedin btn--small"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> <span>LinkedIn</span></a>
+  <a href="https://reddit.com/submit?title=Introducci%C3%B3n+a+Selinux%2C+breve+resumen&url=https%3A%2F%2Fnoobchamp.github.io%2Frhel%2Fcentos%2FSelinux%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--reddit btn--small"><i class="fab fa-fw fa-reddit" aria-hidden="true"></i> <span>Reddit</span></a>
+</div>
+
+        
+
+        
+          
+  <div class="page-comments">
+    <div id="disqus_thread"></div>
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://noobchamp.github.io/rhel/centos/Selinux/';
+        this.page.identifier = 'https://noobchamp.github.io/rhel/centos/Selinux/';
+      };
+
+      (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://noobchamp-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+
+
+        
+
+        <nav class="page-pagination" role="navigation">
+  
+    <a class="page-previous" href="/rhel/centos/disco-vdo/">
+      <h4 class="page-pagination-label">Anterior</h4>
+      <span class="page-pagination-title">
+        <i class="fas fa-arrow-left"></i> Montar un VDO o disco de deduplicación
+
+      </span>
+    </a>
+  
+
+  
+</nav>
+
+      </div>
+    </div>
+  </article>
+</main>
+
+
+    <footer id="footer" class="site-footer">
+  <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+<div class="social-icons"><a class="social-icon" href="/atom.xml"><i class="fas fa-rss-square fa-2x" title="Feed"></i></a></div><div class="copyright">
+    
+      <p>&copy; 2024 Hola, soy José Oliva. Hecho con <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/mmistakes/so-simple-theme" rel="nofollow">So Simple</a>.</p>
+    
+  </div>
+</footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+  <script src="/assets/js/custom.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+
+
+
+  </body>
+</html>

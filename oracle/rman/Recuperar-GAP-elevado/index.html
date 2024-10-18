@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
+  <head><!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8L0LM5E7J2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8L0LM5E7J2');
+</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+
+  
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Oracle - Recuperar un GAP elevado ‘STANDBY’ | Hola, soy José Oliva</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Oracle - Recuperar un GAP elevado ‘STANDBY’" />
+<meta name="author" content="Ekko" />
+<meta property="og:locale" content="es_ES" />
+<meta name="description" content="Recuperar GAP elevado" />
+<meta property="og:description" content="Recuperar GAP elevado" />
+<link rel="canonical" href="https://noobchamp.github.io/oracle/rman/Recuperar-GAP-elevado/" />
+<meta property="og:url" content="https://noobchamp.github.io/oracle/rman/Recuperar-GAP-elevado/" />
+<meta property="og:site_name" content="Hola, soy José Oliva" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-05-12T19:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Oracle - Recuperar un GAP elevado ‘STANDBY’" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Ekko" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Ekko"},"dateModified":"2024-05-12T19:00:00+00:00","datePublished":"2024-05-12T19:00:00+00:00","description":"Recuperar GAP elevado","headline":"Oracle - Recuperar un GAP elevado ‘STANDBY’","mainEntityOfPage":{"@type":"WebPage","@id":"https://noobchamp.github.io/oracle/rman/Recuperar-GAP-elevado/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://noobchamp.github.io/images/joseoliva.webp"},"name":"Ekko"},"url":"https://noobchamp.github.io/oracle/rman/Recuperar-GAP-elevado/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  <script>
+    /* Cut the mustard */
+    if ( 'querySelector' in document && 'addEventListener' in window ) {
+      document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + 'js';
+    }
+  </script>
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/skins/default.css">
+  <!-- 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+   --><link rel="alternate" type="application/atom+xml" title="Hola, soy José Oliva" href="/atom.xml">
+<!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+<link rel="manifest" href="/images/favicon/site.webmanifest">
+<link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+</head>
+
+  <body class="layout--post  oracle-recuperar-un-gap-elevado-standby">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Saltar enlaces</h2>
+  <ul>
+    <li><a href="#primary-nav" class="screen-reader-shortcut">Saltar a la navegación primaria</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Saltar al contenido</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Saltar al pie de página</a></li>
+  </ul>
+</nav>
+
+    
+  <div class="navigation-wrapper">
+    <a href="#menu-toggle" id="menu-toggle">Menú</a>
+    <nav id="primary-nav" class="site-nav animated drop">
+      <ul><li><a href="/">Home</a></li><li><a href="/posts/">Posts</a></li><li><a href="/categories/">Categories</a></li><li><a href="/tags/">Tags</a></li><li><a href="/search/">Search</a></li></ul>
+    </nav>
+  </div><!-- /.navigation-wrapper -->
+
+
+    <header class="masthead">
+  <div class="wrap">
+    
+      <a href="/" class="site-logo" rel="home" title="Hola, soy José Oliva">
+        <img src="/images/joseoliva.webp" class="site-logo-img animated fadeInDown" alt="Hola, soy José Oliva">
+      </a>
+    
+    
+    
+      
+        <div class="site-title animated fadeIn"><a href="/">Hola, soy José Oliva</a></div>
+      
+      <p class="site-description animated fadeIn" itemprop="description">Y este es mi blog personal</p>
+    
+  </div>
+</header><!-- /.masthead -->
+
+
+    <main id="main" class="main-content" aria-label="Content">
+  <article class="h-entry">
+    
+
+    <div class="page-wrapper">
+      <header class="page-header">
+        
+        
+          <h1 id="page-title" class="page-title p-name">Oracle - Recuperar un GAP elevado ‘STANDBY’
+</h1>
+        
+      </header>
+
+      <div class="page-sidebar">
+        <div class="page-author h-card p-author"><img src="/images/ekko.webp" class="author-avatar u-photo" alt="Ekko"><div class="author-info"><div class="author-name">
+        <em>por</em> <span class="p-name">Ekko</span>
+      </div><ul class="author-links"><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.linkedin.com/in/joseaoliva/"><i class="fab fa-linkedin fa-lg" title="Linkedin"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://github.com/noobchamp"><i class="fab fa-github fa-lg" title="Github"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.instagram.com/oliva_ja/"><i class="fab fa-instagram fa-lg" title="Instagram"></i></a>
+          </li></ul>
+
+<span class="read-time">2 minuto(s) de lectura</span>
+
+    <time class="page-date dt-published" datetime="2024-05-12T19:00:00+00:00"><a class="u-url" href="">12 de May 2024</a>
+</time>
+
+  </div>
+</div>
+
+        
+  <h3 class="page-taxonomies-title">Categorías</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a class="p-category" href="/categories/#oracle" title="Páginas archivadas bajo Oracle">Oracle</a></li><li class="page-taxonomy"><a class="p-category" href="/categories/#rman" title="Páginas archivadas bajo Rman">Rman</a></li>
+  </ul>
+
+
+        
+  <h3 class="page-taxonomies-title">Etiquetas</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a href="/tags/#oracle" title="Páginas etiquetadas Oracle" rel="tag">Oracle</a></li><li class="page-taxonomy"><a href="/tags/#rman" title="Páginas etiquetadas rman" rel="tag">rman</a></li>
+  </ul>
+
+
+      </div>
+
+      <div class="page-content">
+        <div class="e-content">
+          <h2 id="recuperar-gap-elevado">Recuperar GAP elevado</h2>
+
+<p>En primer lugar, vamos a comprobar que el GAP es realmente alto como para tomar esta alternativa:
+<code class="language-plaintext highlighter-rouge">STANDBY</code></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="n">thread</span><span class="o">#</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">sequence</span><span class="o">#</span><span class="p">)</span> <span class="nv">"Last Standby Seq Received"</span> <span class="k">from</span> <span class="n">v</span><span class="err">$</span><span class="n">archived_log</span> <span class="n">val</span><span class="p">,</span> <span class="n">v</span><span class="err">$</span><span class="k">database</span> <span class="n">vdb</span> <span class="k">where</span> <span class="n">val</span><span class="p">.</span><span class="n">resetlogs_change</span><span class="o">#</span> <span class="o">=</span> <span class="n">vdb</span><span class="p">.</span><span class="n">resetlogs_change</span><span class="o">#</span> <span class="k">group</span> <span class="k">by</span> <span class="n">thread</span><span class="o">#</span> <span class="k">order</span> <span class="k">by</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">thread</span><span class="o">#</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">sequence</span><span class="o">#</span><span class="p">)</span> <span class="nv">"Last Standby Seq Applied"</span> <span class="k">from</span> <span class="n">v</span><span class="err">$</span><span class="n">archived_log</span> <span class="n">val</span><span class="p">,</span> <span class="n">v</span><span class="err">$</span><span class="k">database</span> <span class="n">vdb</span> <span class="k">where</span> <span class="n">val</span><span class="p">.</span><span class="n">resetlogs_change</span><span class="o">#</span> <span class="o">=</span> <span class="n">vdb</span><span class="p">.</span><span class="n">resetlogs_change</span><span class="o">#</span> <span class="k">and</span> <span class="n">val</span><span class="p">.</span><span class="n">applied</span> <span class="k">in</span> <span class="p">(</span><span class="s1">'YES'</span><span class="p">,</span><span class="s1">'IN-MEMORY'</span><span class="p">)</span> <span class="k">group</span> <span class="k">by</span> <span class="n">thread</span><span class="o">#</span> <span class="k">order</span> <span class="k">by</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">PROCESS</span><span class="p">,</span> <span class="n">STATUS</span><span class="p">,</span> <span class="n">THREAD</span><span class="o">#</span><span class="p">,</span> <span class="n">SEQUENCE</span><span class="o">#</span><span class="p">,</span> <span class="n">BLOCK</span><span class="o">#</span><span class="p">,</span> <span class="n">BLOCKS</span> <span class="k">from</span> <span class="n">V</span><span class="err">$</span><span class="n">MANAGED_STANDBY</span> <span class="k">where</span> <span class="n">SEQUENCE</span><span class="o">#</span> <span class="o">&gt;</span><span class="mi">0</span> <span class="k">order</span> <span class="k">by</span> <span class="n">SEQUENCE</span><span class="o">#</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Em los resultados mostrá que el último aplicado con el último recibido es muy alto, por lo que tenemos un GAP como demuestra el proceso MRP0 <strong>“MRP0 WAIT_FOR_GAP 1 XXXX  0 0”</strong>. Por tanto vamos a resolver la situación haciendo un backup desde la secuencia en la que se encuentra ahora la <em>STANDBY</em> en la <em>PRIMARIA</em> para restablecer la situación.</p>
+<blockquote>
+  <p>The system change number (SCN) is Oracle’s clock - every time we commit, the clock increments. The SCN just marks a consistent point in time in the database.</p>
+</blockquote>
+
+<p>Se comprueba el SCN que se ha quedado en la standby
+<code class="language-plaintext highlighter-rouge">STANDBY</code></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="n">to_char</span><span class="p">(</span><span class="n">current_scn</span><span class="p">)</span> <span class="k">from</span> <span class="n">v</span><span class="err">$</span><span class="k">database</span><span class="p">;</span>
+<span class="c1">-- Por ejemplo 123456789</span>
+</code></pre></div></div>
+
+<p>Para el ejercicio voy a crear un directorio específico con suficiente espacio (que tenga los permisos adecuado), por ejemplo /backup/GAP_BACKUP.
+Ahora en la primaria, hacemos un backup desde el SCN que hemos obtenido con <strong>RMAN</strong>.
+<code class="language-plaintext highlighter-rouge">PRIMARY</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RMAN&gt; run <span class="o">{</span>
+2&gt; allocate channel c1 <span class="nb">type </span>disk format <span class="s1">'/backup/GAP_BACKUP/%U.bkp'</span><span class="p">;</span>
+3&gt; backup incremental from scn 123456789 database<span class="p">;</span>
+4&gt; <span class="o">}</span>
+</code></pre></div></div>
+
+<p>También tenemos que hacer una copia del controlfile para la stadby en la primaria.
+<code class="language-plaintext highlighter-rouge">PRIMARY</code></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">database</span> <span class="k">create</span> <span class="n">standby</span> <span class="n">controlfile</span> <span class="k">as</span> <span class="s1">'/backup/GAP_BACKUP/ctl_standby.ctl'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Copiamos los ficheros al servidor de destino, previamente he creado una carpeta en el servidor de destino llamada /backup/GAP_RECOVER. Por tanto copiará el/los archivos <em>.bkp</em> y el <em>ctl_standby.ctl</em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp /backup/GAP_BACKUP/<span class="k">*</span> oracle@serverSTANDBY:/backup/GAP_RECOVER/
+</code></pre></div></div>
+
+<p>Ahora vamos realizamos las operaciones de restore en la standby.
+<code class="language-plaintext highlighter-rouge">STANDBY</code>
+Paramos la BBDD</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Localizamos el controlfile actual (o lo normal es que tengas varios)</span>
+<span class="k">SHOW</span> <span class="k">PARAMETER</span> <span class="n">control_files</span><span class="p">;</span>
+<span class="c1">-- Por ejemplo lo tenemos ubicado en /u01/oradata/control01.ctl y /u02/oradata/control02.ctl</span>
+<span class="c1">-- Para la BBDD</span>
+<span class="n">shutdown</span> <span class="k">immediate</span><span class="p">;</span>
+<span class="c1">-- Levantar sin montar</span>
+<span class="n">startup</span> <span class="n">nomount</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Ahora movemos los controlfile y copiamos con el que hemos traído desde el servidor de la <em>PRIMARIA</em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mv</span> /u01/oradata/control01.ctl /u01/oradata/control01.ctl.<span class="si">$(</span><span class="nb">date</span> +<span class="s2">"%Y-%m-%d"</span><span class="si">)</span>
+<span class="nb">mv</span> /u02/oradata/control02.ctl /u02/oradata/control02.ctl.<span class="si">$(</span><span class="nb">date</span> +<span class="s2">"%Y-%m-%d"</span><span class="si">)</span>
+<span class="nb">cp</span> /backup/GAP_RECOVER/ctl_standby.ctl /u01/oradata/control01.ctl
+<span class="nb">cp </span>backup/GAP_RECOVER/ctl_standby.ctl /u02/oradata/control02.ctl
+</code></pre></div></div>
+
+<p>Montar nuevamente</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">database</span> <span class="n">mount</span> <span class="n">standby</span> <span class="k">database</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>El próximo paso es recuperar desde <strong>RMAN</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Indicamos la ubicación</span>
+rman target /
+RMAN&gt; catalog start with <span class="s1">'/backup/GAP_RECOVER'</span><span class="p">;</span>
+<span class="c"># Iniciar el restore</span>
+RMAN&gt; recover database<span class="p">;</span>
+...
+Se ha finalizado recover a las...
+</code></pre></div></div>
+
+<p>En este punto hemos resuelto el GAP, ahora solo tenemos que volver a indicar que inicie el proceso</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">database</span> <span class="n">recover</span> <span class="n">managed</span> <span class="n">standby</span> <span class="k">database</span> <span class="k">disconnect</span> <span class="k">from</span> <span class="k">session</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Podemos comprobar si está aplicando logs desde la consulta que hicimos al principio <em>“Last Standby Seq Received” “Last Standby Seq Applied”</em>.</p>
+
+<p>También podemos probar a rotar en la <em>PRIMARIA</em> para comprobar que la secuencia continúa recibiendo/aplicando
+<code class="language-plaintext highlighter-rouge">PRIMARY</code></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">system</span> <span class="n">switch</span> <span class="n">logfile</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Y de nuevo comprobar la secuencia en <em>STANDBY</em></p>
+
+<p>¡Nos vemos!</p>
+
+        </div>
+
+        
+          <div class="page-share">
+  <a href="https://twitter.com/intent/tweet?text=Oracle+-+Recuperar+un+GAP+elevado+%27STANDBY%27%20https%3A%2F%2Fnoobchamp.github.io%2Foracle%2Frman%2FRecuperar-GAP-elevado%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--twitter btn--small"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i> <span>Tweet</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fnoobchamp.github.io%2Foracle%2Frman%2FRecuperar-GAP-elevado%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--linkedin btn--small"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> <span>LinkedIn</span></a>
+  <a href="https://reddit.com/submit?title=Oracle+-+Recuperar+un+GAP+elevado+%27STANDBY%27&url=https%3A%2F%2Fnoobchamp.github.io%2Foracle%2Frman%2FRecuperar-GAP-elevado%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--reddit btn--small"><i class="fab fa-fw fa-reddit" aria-hidden="true"></i> <span>Reddit</span></a>
+</div>
+
+        
+
+        
+          
+  <div class="page-comments">
+    <div id="disqus_thread"></div>
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://noobchamp.github.io/oracle/rman/Recuperar-GAP-elevado/';
+        this.page.identifier = 'https://noobchamp.github.io/oracle/rman/Recuperar-GAP-elevado/';
+      };
+
+      (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://noobchamp-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+
+
+        
+
+        <nav class="page-pagination" role="navigation">
+  
+    <a class="page-previous" href="/rhel/linux/rhel-localrepo/">
+      <h4 class="page-pagination-label">Anterior</h4>
+      <span class="page-pagination-title">
+        <i class="fas fa-arrow-left"></i> Red Hat - Instalar un repositorio local
+
+      </span>
+    </a>
+  
+
+  
+    <a class="page-next" href="/rhel/centos/disco-vdo/">
+      <h4 class="page-pagination-label">Siguiente</h4>
+      <span class="page-pagination-title">
+        Montar un VDO o disco de deduplicación
+ <i class="fas fa-arrow-right"></i>
+      </span>
+    </a>
+  
+</nav>
+
+      </div>
+    </div>
+  </article>
+</main>
+
+
+    <footer id="footer" class="site-footer">
+  <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+<div class="social-icons"><a class="social-icon" href="/atom.xml"><i class="fas fa-rss-square fa-2x" title="Feed"></i></a></div><div class="copyright">
+    
+      <p>&copy; 2024 Hola, soy José Oliva. Hecho con <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/mmistakes/so-simple-theme" rel="nofollow">So Simple</a>.</p>
+    
+  </div>
+</footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+  <script src="/assets/js/custom.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+
+
+
+  </body>
+</html>

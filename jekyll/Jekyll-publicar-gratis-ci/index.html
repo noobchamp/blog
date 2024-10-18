@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
+  <head><!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8L0LM5E7J2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8L0LM5E7J2');
+</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+
+  
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Jekyll: Publicar tu blog gratis en Github e integración contínua (CI) | Hola, soy José Oliva</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Jekyll: Publicar tu blog gratis en Github e integración contínua (CI)" />
+<meta name="author" content="Bowie" />
+<meta property="og:locale" content="es_ES" />
+<meta name="description" content="Introducción En el artículo anterior vimos como crear una un blog haciendo un fork en el repositorio del creador. Además iniciamos el sitio web en un entorno local e hicimos algunos ajustes, además creamos un nuevo post. Veremos que cuando creemos el sitio, cada vez que creemos un nuevo post no se va a actualizar en Github. Para ello contamos con un script que va a reconstruir el sitio para cada pushque lancemos." />
+<meta property="og:description" content="Introducción En el artículo anterior vimos como crear una un blog haciendo un fork en el repositorio del creador. Además iniciamos el sitio web en un entorno local e hicimos algunos ajustes, además creamos un nuevo post. Veremos que cuando creemos el sitio, cada vez que creemos un nuevo post no se va a actualizar en Github. Para ello contamos con un script que va a reconstruir el sitio para cada pushque lancemos." />
+<link rel="canonical" href="https://noobchamp.github.io/jekyll/Jekyll-publicar-gratis-ci/" />
+<meta property="og:url" content="https://noobchamp.github.io/jekyll/Jekyll-publicar-gratis-ci/" />
+<meta property="og:site_name" content="Hola, soy José Oliva" />
+<meta property="og:image" content="https://noobchamp.github.io/images/jekyll-logo.webp" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-04-09T10:00:40+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://noobchamp.github.io/images/jekyll-logo.webp" />
+<meta property="twitter:title" content="Jekyll: Publicar tu blog gratis en Github e integración contínua (CI)" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Bowie" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bowie"},"dateModified":"2021-04-09T10:00:40+00:00","datePublished":"2021-04-09T10:00:40+00:00","description":"Introducción En el artículo anterior vimos como crear una un blog haciendo un fork en el repositorio del creador. Además iniciamos el sitio web en un entorno local e hicimos algunos ajustes, además creamos un nuevo post. Veremos que cuando creemos el sitio, cada vez que creemos un nuevo post no se va a actualizar en Github. Para ello contamos con un script que va a reconstruir el sitio para cada pushque lancemos.","headline":"Jekyll: Publicar tu blog gratis en Github e integración contínua (CI)","image":{"thumbnail":"/images/jekyll-logo-thumbnail.webp","url":"https://noobchamp.github.io/images/jekyll-logo.webp","@type":"imageObject"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://noobchamp.github.io/jekyll/Jekyll-publicar-gratis-ci/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://noobchamp.github.io/images/joseoliva.webp"},"name":"Bowie"},"url":"https://noobchamp.github.io/jekyll/Jekyll-publicar-gratis-ci/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  <script>
+    /* Cut the mustard */
+    if ( 'querySelector' in document && 'addEventListener' in window ) {
+      document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + 'js';
+    }
+  </script>
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/skins/default.css">
+  <!-- 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+   --><link rel="alternate" type="application/atom+xml" title="Hola, soy José Oliva" href="/atom.xml">
+<!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+<link rel="manifest" href="/images/favicon/site.webmanifest">
+<link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+</head>
+
+  <body class="layout--post  jekyll-publicar-tu-blog-gratis-en-github-e-integración-contínua-ci">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Saltar enlaces</h2>
+  <ul>
+    <li><a href="#primary-nav" class="screen-reader-shortcut">Saltar a la navegación primaria</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Saltar al contenido</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Saltar al pie de página</a></li>
+  </ul>
+</nav>
+
+    
+  <div class="navigation-wrapper">
+    <a href="#menu-toggle" id="menu-toggle">Menú</a>
+    <nav id="primary-nav" class="site-nav animated drop">
+      <ul><li><a href="/">Home</a></li><li><a href="/posts/">Posts</a></li><li><a href="/categories/">Categories</a></li><li><a href="/tags/">Tags</a></li><li><a href="/search/">Search</a></li></ul>
+    </nav>
+  </div><!-- /.navigation-wrapper -->
+
+
+    <header class="masthead">
+  <div class="wrap">
+    
+      <a href="/" class="site-logo" rel="home" title="Hola, soy José Oliva">
+        <img src="/images/joseoliva.webp" class="site-logo-img animated fadeInDown" alt="Hola, soy José Oliva">
+      </a>
+    
+    
+    
+  </div>
+</header><!-- /.masthead -->
+
+
+    <main id="main" class="main-content" aria-label="Content">
+  <article class="h-entry">
+    
+  
+  
+  
+
+  <div class="page-image">
+    <img src="/images/jekyll-logo.webp" class="entry-feature-image u-photo" alt="Jekyll: Publicar tu blog gratis en Github e integración contínua (CI)" >
+    
+  </div>
+
+
+    <div class="page-wrapper">
+      <header class="page-header">
+        
+        
+          <h1 id="page-title" class="page-title p-name">Jekyll: Publicar tu blog gratis en Github e integración contínua (CI)
+</h1>
+        
+      </header>
+
+      <div class="page-sidebar">
+        <div class="page-author h-card p-author"><img src="/images/bowie.webp" class="author-avatar u-photo" alt="Bowie"><div class="author-info"><div class="author-name">
+        <em>por</em> <span class="p-name">Bowie</span>
+      </div><ul class="author-links"><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.linkedin.com/in/joseaoliva/"><i class="fab fa-linkedin fa-lg" title="Linkedin"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://github.com/noobchamp"><i class="fab fa-github fa-lg" title="Github"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.instagram.com/oliva_ja/"><i class="fab fa-instagram fa-lg" title="Instagram"></i></a>
+          </li></ul>
+
+<span class="read-time">2 minuto(s) de lectura</span>
+
+    <time class="page-date dt-published" datetime="2021-04-09T10:00:40+00:00"><a class="u-url" href="">09 de April 2021</a>
+</time>
+
+  </div>
+</div>
+
+        
+  <h3 class="page-taxonomies-title">Categorías</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a class="p-category" href="/categories/#jekyll" title="Páginas archivadas bajo Jekyll">Jekyll</a></li>
+  </ul>
+
+
+        
+  <h3 class="page-taxonomies-title">Etiquetas</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a href="/tags/#github" title="Páginas etiquetadas Github" rel="tag">Github</a></li><li class="page-taxonomy"><a href="/tags/#jekyll" title="Páginas etiquetadas Jekyll" rel="tag">Jekyll</a></li><li class="page-taxonomy"><a href="/tags/#ruby" title="Páginas etiquetadas Ruby" rel="tag">Ruby</a></li>
+  </ul>
+
+
+      </div>
+
+      <div class="page-content">
+        <div class="e-content">
+          <h1 id="introducción">Introducción</h1>
+<p>En el <a href="/jekyll/crear-blog-jekyll-desde-plantilla/" class="link">artículo anterior</a> vimos como crear una un blog haciendo un fork en el repositorio del creador.  Además iniciamos el sitio web en un entorno local e hicimos algunos ajustes, además creamos un nuevo post.<br />
+Veremos que cuando creemos el sitio, cada vez que creemos un nuevo post no se va a actualizar en Github. Para ello contamos con un script que va a reconstruir el sitio para cada <code class="language-plaintext highlighter-rouge">push</code>que lancemos.</p>
+
+<h2 id="requisitos">Requisitos</h2>
+<ul>
+  <li>Tener cuenta en Github</li>
+  <li>Conocimientos básicos de Git</li>
+  <li>Un poco de ilusión</li>
+</ul>
+
+<h2 id="pasos-previos">Pasos previos.</h2>
+<p>Dentro la raíz de nuestro repositorio <code class="language-plaintext highlighter-rouge">agusmakmun.github.io</code> (en nuestro caso puesto que creamos la plantilla a partir de este repositorio) vamos a realizar <code class="language-plaintext highlighter-rouge">git push</code>.<br />
+Comprobamos que en nuestro proyecto LOCAL, en el archivo _config.yml situado en la raíz tiene la <code class="language-plaintext highlighter-rouge">URL</code> configurada como <code class="language-plaintext highlighter-rouge">username.github.io</code>.<br />
+Ahora vamos a actualizar nuestro repositorio, simplemente en el terminal ejecutamos los comandos:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add <span class="nb">.</span>
+git commit <span class="nt">-m</span> <span class="s2">"primer commint"</span>  
+git push
+</code></pre></div></div>
+<p>Y comprobamos en nuestra cuenta que los cambios que hemos realizado en nuestro proyecto local como nuestro primer post <code class="language-plaintext highlighter-rouge">¡Adiós al Covid!</code>.</p>
+
+<h2 id="crear-una-nueva-rama-branch">Crear una nueva rama (branch)</h2>
+<p><img src="/images/new-branch.webp" alt="right-aligned-image" class="align-right" />
+En la pestaña “Master” hacemos click y ponemos en el cuadro de diálogo <code class="language-plaintext highlighter-rouge">gh-pages</code>, luego a “crear rama a partir de Master”. Esta rama es la que vamos a indicar a Github que vamos a publicar.<br />
+Así es, no vas a publicar rama principal sino una rama creada a partir de la “Master” y en los siguientes pasos vamos a ver como actualizarla cada vez que realizamos un push.</p>
+
+<h2 id="configuración">Configuración</h2>
+<p>Ahora vamos a la <em>configuración del proyecto</em> y lo renombramos cono “usuario.github.io”, es decir, cambiamos el nombre de “agusmakmun” a tu nombre de usuario.</p>
+
+<h2 id="envioroments">Envioroments</h2>
+<p>Ve a la pestaña “envioroments” y crea uno nuevo. Puedes ponerle de nombre “gh-page”</p>
+
+<h2 id="pages">Pages</h2>
+<p><img src="/images/pages.webp" alt="right-aligned-image" class="align-left" />
+Por último nos vamos a la pestaña “pages” y configuramos la rama a usar <code class="language-plaintext highlighter-rouge">gh-pages</code>.</p>
+
+<h2 id="test">Test</h2>
+<p>En estos momentos tu sitio web debe estar actualizado y deberías poder acceder a la URL <code class="language-plaintext highlighter-rouge">username.github.io</code>.</p>
+
+<p><em>Éxito</em> -&gt; Puedes ver blog creado con Jekyll publicado en internet al alcance de cualquier interesado.
+<em>Fracaso</em> -&gt; Puede que no hayas realizado un paso bien. Repito los pasos.
+<em>Ni blanco ni negro</em> -&gt; Tu sitio web se visualiza pero no tiene formato [CSS]. En este caso comprueba que en el archivo <code class="language-plaintext highlighter-rouge">_config.yml</code> no tienes configurado la opción <code class="language-plaintext highlighter-rouge">baseurl</code>. A no ser que tu proyecto esté en un subdirectorio como “/blog”.<br />
+*[CSS]: Cascading Style Sheets</p>
+
+<h1 id="integración-contínua">Integración contínua</h1>
+<p>En estos momentos si creamos un nuevo post en nuestro proyecto local y hacemos “push” para actualizar nuestro repositorio. Vamos a comprobar que nuestro sitio <code class="language-plaintext highlighter-rouge">username.github.io</code> no se actualiza.</p>
+
+<p>Tienes que crear una carpeta dentro de tu proyecto llamada <code class="language-plaintext highlighter-rouge">.github</code> –<cite>con el “.” punto delante</cite>. Dentro de ella creamos otra carpeta llamada <code class="language-plaintext highlighter-rouge">workflos</code>y dentro de esta carpeta creamos el archivo <code class="language-plaintext highlighter-rouge">main.yml</code>.</p>
+
+<div class="language-liquid highlighter-rouge"><div class="highlight"><pre class="highlight"><code>on:
+  push:
+    branches:
+      - master
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub Checkout
+        uses: actions/checkout@v1
+      - name: Bundler Cache
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: $<span class="cp">{{</span><span class="w"> </span><span class="nv">runner</span><span class="p">.</span><span class="nv">os</span><span class="w"> </span><span class="cp">}}</span>-gems-$<span class="cp">{{</span><span class="w"> </span><span class="nv">hashFiles</span>('**/Gemfile.lock')<span class="w"> </span><span class="cp">}}</span>
+          restore-keys: |
+            $<span class="cp">{{</span><span class="w"> </span><span class="nv">runner</span><span class="p">.</span><span class="nv">os</span><span class="w"> </span><span class="cp">}}</span>-gems-
+      - name: Build &amp; Deploy to GitHub Pages
+        uses: joshlarsen/jekyll4-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: $<span class="cp">{{</span><span class="w"> </span><span class="nv">secrets</span><span class="p">.</span><span class="nv">GITHUB_TOKEN</span><span class="w"> </span><span class="cp">}}</span>
+          GITHUB_REPOSITORY: $<span class="cp">{{</span><span class="w"> </span><span class="nv">secrets</span><span class="p">.</span><span class="nv">GITHUB_REPOSITORY</span><span class="w"> </span><span class="cp">}}</span>
+          GITHUB_ACTOR: $<span class="cp">{{</span><span class="w"> </span><span class="nv">secrets</span><span class="p">.</span><span class="nv">GITHUB_ACTOR</span><span class="w"> </span><span class="cp">}}</span>   
+</code></pre></div></div>
+<p>Al realizar nuevamente los comandos git y subir el archivo podremos ver los cambios en la pestaña “actions” de nuestro proyecto.<br />
+Y no me voy a enrollar más sobre como funciona el archivo, si estás interesado házmelo saber mediante comentarios y poder subir otro artículo más dedicado a la integración contínua.</p>
+
+<p>También podéis dirigiros al repositorio original <a href="https://github.com/joshlarsen/jekyll4-deploy-gh-pages/blob/master/readme.md" class="link">joshlarsen</a> para leer la documentación completa.</p>
+
+<p>Espero que te haya servido de ayuda.</p>
+
+        </div>
+
+        
+          <div class="page-share">
+  <a href="https://twitter.com/intent/tweet?text=Jekyll%3A+Publicar+tu+blog+gratis+en+Github+e+integraci%C3%B3n+cont%C3%ADnua+%28CI%29%20https%3A%2F%2Fnoobchamp.github.io%2Fjekyll%2FJekyll-publicar-gratis-ci%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--twitter btn--small"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i> <span>Tweet</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fnoobchamp.github.io%2Fjekyll%2FJekyll-publicar-gratis-ci%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--linkedin btn--small"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> <span>LinkedIn</span></a>
+  <a href="https://reddit.com/submit?title=Jekyll%3A+Publicar+tu+blog+gratis+en+Github+e+integraci%C3%B3n+cont%C3%ADnua+%28CI%29&url=https%3A%2F%2Fnoobchamp.github.io%2Fjekyll%2FJekyll-publicar-gratis-ci%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--reddit btn--small"><i class="fab fa-fw fa-reddit" aria-hidden="true"></i> <span>Reddit</span></a>
+</div>
+
+        
+
+        
+          
+  <div class="page-comments">
+    <div id="disqus_thread"></div>
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://noobchamp.github.io/jekyll/Jekyll-publicar-gratis-ci/';
+        this.page.identifier = 'https://noobchamp.github.io/jekyll/Jekyll-publicar-gratis-ci/';
+      };
+
+      (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://noobchamp-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+
+
+        
+
+        <nav class="page-pagination" role="navigation">
+  
+    <a class="page-previous" href="/jekyll/crear-blog-jekyll-desde-plantilla/">
+      <h4 class="page-pagination-label">Anterior</h4>
+      <span class="page-pagination-title">
+        <i class="fas fa-arrow-left"></i> Jekyll: Crea tu blog Jekyll desde una plantilla
+
+      </span>
+    </a>
+  
+
+  
+    <a class="page-next" href="/linux/prompt-linux-personalizado/">
+      <h4 class="page-pagination-label">Siguiente</h4>
+      <span class="page-pagination-title">
+        Prompt: Personaliza el prompt de tu Linux
+ <i class="fas fa-arrow-right"></i>
+      </span>
+    </a>
+  
+</nav>
+
+      </div>
+    </div>
+  </article>
+</main>
+
+
+    <footer id="footer" class="site-footer">
+  <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+<div class="social-icons"><a class="social-icon" href="/atom.xml"><i class="fas fa-rss-square fa-2x" title="Feed"></i></a></div><div class="copyright">
+    
+      <p>&copy; 2024 Hola, soy José Oliva. Hecho con <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/mmistakes/so-simple-theme" rel="nofollow">So Simple</a>.</p>
+    
+  </div>
+</footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+  <script src="/assets/js/custom.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+
+
+
+  </body>
+</html>

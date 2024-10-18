@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
+  <head><!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8L0LM5E7J2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8L0LM5E7J2');
+</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+
+  
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Red Hat - Instalar un repositorio local | Hola, soy José Oliva</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Red Hat - Instalar un repositorio local" />
+<meta name="author" content="Teemo" />
+<meta property="og:locale" content="es_ES" />
+<meta name="description" content="Introducción Tener un servidor conectado a Red Hat, no siempre es posible o no queremos subscribirlo por varios motivos: Nos encontramos en una red sin acceso a internet. Se trata de una máquina virtual o pruebas. La velocidad de red tiene poco caudal. Nos gusta la aventura…" />
+<meta property="og:description" content="Introducción Tener un servidor conectado a Red Hat, no siempre es posible o no queremos subscribirlo por varios motivos: Nos encontramos en una red sin acceso a internet. Se trata de una máquina virtual o pruebas. La velocidad de red tiene poco caudal. Nos gusta la aventura…" />
+<link rel="canonical" href="https://noobchamp.github.io/rhel/linux/rhel-localrepo/" />
+<meta property="og:url" content="https://noobchamp.github.io/rhel/linux/rhel-localrepo/" />
+<meta property="og:site_name" content="Hola, soy José Oliva" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-11T11:45:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Red Hat - Instalar un repositorio local" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Teemo" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Teemo"},"dateModified":"2023-11-11T11:45:00+00:00","datePublished":"2023-11-11T11:45:00+00:00","description":"Introducción Tener un servidor conectado a Red Hat, no siempre es posible o no queremos subscribirlo por varios motivos: Nos encontramos en una red sin acceso a internet. Se trata de una máquina virtual o pruebas. La velocidad de red tiene poco caudal. Nos gusta la aventura…","headline":"Red Hat - Instalar un repositorio local","mainEntityOfPage":{"@type":"WebPage","@id":"https://noobchamp.github.io/rhel/linux/rhel-localrepo/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://noobchamp.github.io/images/joseoliva.webp"},"name":"Teemo"},"url":"https://noobchamp.github.io/rhel/linux/rhel-localrepo/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  <script>
+    /* Cut the mustard */
+    if ( 'querySelector' in document && 'addEventListener' in window ) {
+      document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + 'js';
+    }
+  </script>
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/skins/default.css">
+  <!-- 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+   --><link rel="alternate" type="application/atom+xml" title="Hola, soy José Oliva" href="/atom.xml">
+<!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+<link rel="manifest" href="/images/favicon/site.webmanifest">
+<link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+</head>
+
+  <body class="layout--post  red-hat-instalar-un-repositorio-local">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Saltar enlaces</h2>
+  <ul>
+    <li><a href="#primary-nav" class="screen-reader-shortcut">Saltar a la navegación primaria</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Saltar al contenido</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Saltar al pie de página</a></li>
+  </ul>
+</nav>
+
+    
+  <div class="navigation-wrapper">
+    <a href="#menu-toggle" id="menu-toggle">Menú</a>
+    <nav id="primary-nav" class="site-nav animated drop">
+      <ul><li><a href="/">Home</a></li><li><a href="/posts/">Posts</a></li><li><a href="/categories/">Categories</a></li><li><a href="/tags/">Tags</a></li><li><a href="/search/">Search</a></li></ul>
+    </nav>
+  </div><!-- /.navigation-wrapper -->
+
+
+    <header class="masthead">
+  <div class="wrap">
+    
+      <a href="/" class="site-logo" rel="home" title="Hola, soy José Oliva">
+        <img src="/images/joseoliva.webp" class="site-logo-img animated fadeInDown" alt="Hola, soy José Oliva">
+      </a>
+    
+    
+    
+      
+        <div class="site-title animated fadeIn"><a href="/">Hola, soy José Oliva</a></div>
+      
+      <p class="site-description animated fadeIn" itemprop="description">Y este es mi blog personal</p>
+    
+  </div>
+</header><!-- /.masthead -->
+
+
+    <main id="main" class="main-content" aria-label="Content">
+  <article class="h-entry">
+    
+
+    <div class="page-wrapper">
+      <header class="page-header">
+        
+        
+          <h1 id="page-title" class="page-title p-name">Red Hat - Instalar un repositorio local
+</h1>
+        
+      </header>
+
+      <div class="page-sidebar">
+        <div class="page-author h-card p-author"><img src="/images/teemo.webp" class="author-avatar u-photo" alt="Teemo"><div class="author-info"><div class="author-name">
+        <em>por</em> <span class="p-name">Teemo</span>
+      </div><ul class="author-links"><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.linkedin.com/in/joseaoliva/"><i class="fab fa-linkedin fa-lg" title="Linkedin"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://github.com/noobchamp"><i class="fab fa-github fa-lg" title="Github"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.instagram.com/teemo__dachshund/"><i class="fab fa-instagram fa-lg" title="Instagram"></i></a>
+          </li></ul>
+
+<span class="read-time">3 minuto(s) de lectura</span>
+
+    <time class="page-date dt-published" datetime="2023-11-11T11:45:00+00:00"><a class="u-url" href="">11 de November 2023</a>
+</time>
+
+  </div>
+</div>
+
+        
+  <h3 class="page-taxonomies-title">Categorías</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a class="p-category" href="/categories/#linux" title="Páginas archivadas bajo Linux">Linux</a></li><li class="page-taxonomy"><a class="p-category" href="/categories/#rhel" title="Páginas archivadas bajo RHEL">RHEL</a></li>
+  </ul>
+
+
+        
+  <h3 class="page-taxonomies-title">Etiquetas</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a href="/tags/#red-hat" title="Páginas etiquetadas Red Hat" rel="tag">Red Hat</a></li>
+  </ul>
+
+
+      </div>
+
+      <div class="page-content">
+        <div class="e-content">
+          <p><img src="/images/redhat8.webp" alt="center-aligned-image" class="align-center" /></p>
+<h1 id="introducción">Introducción</h1>
+<p>Tener un servidor conectado a Red Hat, no siempre es posible o no queremos subscribirlo por varios motivos:</p>
+<ul>
+  <li>Nos encontramos en una red sin acceso a internet.</li>
+  <li>Se trata de una máquina virtual o pruebas.</li>
+  <li>La velocidad de red tiene poco caudal.</li>
+  <li>Nos gusta la aventura…</li>
+</ul>
+
+<p>Podemos instalar un repositorio local, o bien teniendo un servidor que <code class="language-plaintext highlighter-rouge">SI</code> esté subscrito o desde un <code class="language-plaintext highlighter-rouge">CD oficial</code>.
+¿Cuál es la diferencia? Evidentemente, teniendo un cd como repositorio, no tenemos actualizaciones de paquetes, sin embargo, no será necesario hacer un pago en Red Hat.
+El inconveniente de todo esto, será la cantidad de espacio que vamos a necestar, que dependerá de cuántas versiones querramos tener.</p>
+
+<p><cite>Desarrollado a través de <a href="https://access.redhat.com/solutions/7019225">Red Hat</a>.</cite></p>
+
+<h2 id="preparando-el-terreno">Preparando el terreno</h2>
+<h3 id="subscripción-a-red-hat">Subscripción a Red Hat</h3>
+<p>Por supuesto, tienes que tener cuenta en RHEL. No es necesario previo pago, puede obtener una licencia de pruebas o un sadbox.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Aunque la versión no tiene por qué ser la última, podríamos tener un 8.1 y descargar cualquier versión 8.X</span>
+root@repository:~#
+<span class="nb">cat</span> /etc/os-release
+<span class="nv">NAME</span><span class="o">=</span><span class="s2">"Red Hat Enterprise Linux"</span>
+<span class="nv">VERSION</span><span class="o">=</span><span class="s2">"8.8 (Ootpa)"</span>
+<span class="nv">ID</span><span class="o">=</span><span class="s2">"rhel"</span>
+<span class="nv">ID_LIKE</span><span class="o">=</span><span class="s2">"fedora"</span>
+<span class="nv">VERSION_ID</span><span class="o">=</span><span class="s2">"8.8"</span>
+<span class="nv">PLATFORM_ID</span><span class="o">=</span><span class="s2">"platform:el8"</span>
+<span class="nv">PRETTY_NAME</span><span class="o">=</span><span class="s2">"Red Hat Enterprise Linux 8.8 (Ootpa)"</span>
+<span class="nv">ANSI_COLOR</span><span class="o">=</span><span class="s2">"0;31"</span>
+<span class="nv">CPE_NAME</span><span class="o">=</span><span class="s2">"cpe:/o:redhat:enterprise_linux:8::baseos"</span>
+<span class="nv">HOME_URL</span><span class="o">=</span><span class="s2">"https://www.redhat.com/"</span>
+<span class="nv">DOCUMENTATION_URL</span><span class="o">=</span><span class="s2">"https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8"</span>
+<span class="nv">BUG_REPORT_URL</span><span class="o">=</span><span class="s2">"https://bugzilla.redhat.com/"</span>
+<span class="nv">REDHAT_BUGZILLA_PRODUCT</span><span class="o">=</span><span class="s2">"Red Hat Enterprise Linux 8"</span>
+<span class="nv">REDHAT_BUGZILLA_PRODUCT_VERSION</span><span class="o">=</span>8.8
+<span class="nv">REDHAT_SUPPORT_PRODUCT</span><span class="o">=</span><span class="s2">"Red Hat Enterprise Linux"</span>
+<span class="nv">REDHAT_SUPPORT_PRODUCT_VERSION</span><span class="o">=</span><span class="s2">"8.8"</span>
+
+<span class="c"># Registro en RHEL</span>
+root@repository:~#
+subscription-manager register
+Registering to: subscription.rhsm.redhat.com:443/subscription
+Username: oliva_rh
+Password: <span class="k">******</span>
+The system has been registered with ID: 3aa74c4f-2e84-439e-aa37-xxxxxxxxxxxx
+The registered system name is: repository
+
+<span class="c"># Aquí vemos el acceso a cualquier versión de la 8</span>
+root@repository:~#
+subscription-manager release <span class="nt">--list</span>
++-------------------------------------------+
+          Available Releases
++-------------------------------------------+
+8
+8.0
+8.1
+8.2
+8.3
+8.4
+8.5
+8.6
+8.7
+8.8
+
+<span class="c"># Por el momento no hemos definido ninguna</span>
+root@repository:~#
+subscription-manager release <span class="nt">--show</span>
+Release not <span class="nb">set</span>
+</code></pre></div></div>
+<p>Por otro lado, tampoco hemos habilitado ningún repositorio.
+Podemos listar todos los <code class="language-plaintext highlighter-rouge">repositorios</code> disponibles.
+Habilitaremos los que nos interese…
+En mi caso, pondré dos básicos:</p>
+<ul>
+  <li>rhel-8-for-x86_64-baseos-rpms</li>
+  <li>rhel-8-for-x86_64-appstream-rpms</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@repository:~#
+subscription-manager repos <span class="nt">--list</span> | more
++----------------------------------------------------------+
+    Available Repositories <span class="k">in</span> /etc/yum.repos.d/redhat.repo
++----------------------------------------------------------+
+Repo ID:   rhel-atomic-7-cdk-3.10-rpms
+Repo Name: Red Hat Container Development Kit 3.10 /<span class="o">(</span>RPMs<span class="o">)</span>
+Repo URL:  https://cdn.redhat.com/content/dist/rhel/atomic/7/7Server/<span class="nv">$basearch</span>/cdk/3.10/os
+Enabled:   0
+
+Repo ID:   rhocp-4.9-for-rhel-8-x86_64-source-rpms
+Repo Name: Red Hat OpenShift Container Platform 4.9 <span class="k">for </span>RHEL 8 x86_64 <span class="o">(</span>Source RPMs<span class="o">)</span>
+Repo URL:  https://cdn.redhat.com/content/dist/layered/rhel8/x86_64/rhocp/4.9/source/SRPMS
+Enabled:   0
+<span class="c"># Y un largo etc ...</span>
+
+root@repository:~#
+subscription-manager repos <span class="nt">--enable</span><span class="o">=</span>rhel-8-for-x86_64-baseos-rpms
+Repository <span class="s1">'rhel-8-for-x86_64-baseos-rpms'</span> is enabled <span class="k">for </span>this system.
+root@repository:~#
+subscription-manager repos <span class="nt">--enable</span><span class="o">=</span>rhel-8-for-x86_64-appstream-rpms
+Repository <span class="s1">'rhel-8-for-x86_64-appstream-rpms'</span> is enabled <span class="k">for </span>this system.
+root@repository:~#
+subscription-manager repos <span class="nt">--list</span>
+<span class="nt">--list</span>           <span class="nt">--list-disabled</span>  <span class="nt">--list-enabled</span>
+
+<span class="c"># Listar los repositorios habilitados</span>
+root@repository:~#
+subscription-manager repos <span class="nt">--list-enabled</span>
++----------------------------------------------------------+
+    Available Repositories <span class="k">in</span> /etc/yum.repos.d/redhat.repo
++----------------------------------------------------------+
+Repo ID:   rhel-8-for-x86_64-appstream-rpms
+Repo Name: Red Hat Enterprise Linux 8 <span class="k">for </span>x86_64 - AppStream <span class="o">(</span>RPMs<span class="o">)</span>
+Repo URL:  https://cdn.redhat.com/content/dist/rhel8/<span class="nv">$releasever</span>/x86_64/appstream/os
+Enabled:   1
+
+Repo ID:   rhel-8-for-x86_64-baseos-rpms
+Repo Name: Red Hat Enterprise Linux 8 <span class="k">for </span>x86_64 - BaseOS <span class="o">(</span>RPMs<span class="o">)</span>
+Repo URL:  https://cdn.redhat.com/content/dist/rhel8/<span class="nv">$releasever</span>/x86_64/baseos/os
+Enabled:   1
+</code></pre></div></div>
+
+<h3 id="servidor-httphttps">Servidor http/https</h3>
+<p>Vamos a necesitar un servidor web, en mi caso, voy a usar <code class="language-plaintext highlighter-rouge">Caddy</code>.
+Puedes usar el mítico httpd o el que te de la gana.
+Lo voy a colocar todo en la ruta <em>/var/www/repo</em>.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@repository:~#
+dnf <span class="nb">install </span>caddy
+
+<span class="c"># Habilitar y iniciar el servicio Caddy</span>
+systemctl <span class="nb">enable </span>caddy
+systemctl start caddy
+
+<span class="c"># Verificar el estado del servicio Caddy</span>
+systemctl status caddy
+
+<span class="c"># Configurar sitio</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> /var/www/repo
+<span class="nb">echo</span> <span class="s1">':8080 {
+&gt;   root  * /var/www/repo
+&gt;   file_server {
+      browse
+    }
+&gt; }'</span> <span class="o">&gt;</span> /etc/caddy/Caddyfile.d/repos.caddyfile
+systemctl reload caddy
+</code></pre></div></div>
+
+<h2 id="descarga-de-repositorios">Descarga de repositorios</h2>
+<p>Ahora simplemente vamos a establecer la versión con <code class="language-plaintext highlighter-rouge">subscription-manager</code> y descargar a nuestra ruta local <em>/var/www/repo</em>.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>subscription-manager release <span class="nt">--set</span><span class="o">=</span>8.7 <span class="o">&amp;&amp;</span> <span class="nb">rm</span> <span class="nt">-rf</span> /var/cache/dnf
+<span class="c"># Vamos a crear una carpeta para la versión 8.8 y otra para la versión 8.7</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> /var/www/repo/8.8
+<span class="nb">mkdir</span> <span class="nt">-p</span> /var/www/repo/8.7
+
+<span class="c"># Instalar reposync</span>
+yum <span class="nb">install</span> <span class="nt">-y</span> yum-utils
+<span class="c">#Empezamos a descargar para la versión 8.8</span>
+subscription-manager release <span class="nt">--set</span><span class="o">=</span>8.8 <span class="o">&amp;&amp;</span> <span class="nb">rm</span> <span class="nt">-rf</span> /var/cache/dnf 
+reposync <span class="nt">-p</span> /var/www/repo/8.8 <span class="nt">--download-metadata</span> <span class="nt">--repoid</span><span class="o">=</span>rhel-8-for-x86_64-baseos-rpms
+reposync <span class="nt">-p</span> /var/www/repo/8.8 <span class="nt">--download-metadata</span> <span class="nt">--repoid</span><span class="o">=</span>rhel-8-for-x86_64-appstream-rpms
+<span class="c"># Para la versión 8.7</span>
+subscription-manager release <span class="nt">--set</span><span class="o">=</span>8.7 <span class="o">&amp;&amp;</span> <span class="nb">rm</span> <span class="nt">-rf</span> /var/cache/dnf 
+reposync <span class="nt">-p</span> /var/www/repo/8.7 <span class="nt">--download-metadata</span> <span class="nt">--repoid</span><span class="o">=</span>rhel-8-for-x86_64-baseos-rpms
+reposync <span class="nt">-p</span> /var/www/repo/8.7 <span class="nt">--download-metadata</span> <span class="nt">--repoid</span><span class="o">=</span>rhel-8-for-x86_64-appstream-rpms
+</code></pre></div></div>
+<p>Entonces nos quedará algo así
+<img src="/images/repo.webp" alt="center-aligned-image" class="align-center" /></p>
+
+<h2 id="clientes">CLientes</h2>
+<p>A la hora de configurar otros servidores para que puedan descargar paquetes desde este repositorio, crearemos el archivo _/etc/yum.repos.d/mi_repositorio.repo</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>repo-id]
+<span class="nv">baseurl</span><span class="o">=</span>http://X.X.X.X/version
+<span class="nv">gpgcheck</span><span class="o">=</span>0
+<span class="nv">enabled</span><span class="o">=</span>1
+<span class="c"># Example</span>
+<span class="o">[</span>rhel-8-for-x86_64-baseos-rpms]
+<span class="nv">baseurl</span><span class="o">=</span>http://192.168.1.2/8.8
+<span class="nv">gpgcheck</span><span class="o">=</span>0
+<span class="nv">enabled</span><span class="o">=</span>1
+<span class="c"># etc...</span>
+</code></pre></div></div>
+<h1 id="automatización">Automatización</h1>
+<p>La forma más sencilla, es tener una tarea en cron que lo haga cada cierto periodo.
+Simplemente es agregar a tu cron, los comandos que hemos visto anteriormente.</p>
+
+<p>¡Adiós!</p>
+
+
+        </div>
+
+        
+          <div class="page-share">
+  <a href="https://twitter.com/intent/tweet?text=Red+Hat+-+Instalar+un+repositorio+local%20https%3A%2F%2Fnoobchamp.github.io%2Frhel%2Flinux%2Frhel-localrepo%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--twitter btn--small"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i> <span>Tweet</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fnoobchamp.github.io%2Frhel%2Flinux%2Frhel-localrepo%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--linkedin btn--small"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> <span>LinkedIn</span></a>
+  <a href="https://reddit.com/submit?title=Red+Hat+-+Instalar+un+repositorio+local&url=https%3A%2F%2Fnoobchamp.github.io%2Frhel%2Flinux%2Frhel-localrepo%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--reddit btn--small"><i class="fab fa-fw fa-reddit" aria-hidden="true"></i> <span>Reddit</span></a>
+</div>
+
+        
+
+        
+          
+  <div class="page-comments">
+    <div id="disqus_thread"></div>
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://noobchamp.github.io/rhel/linux/rhel-localrepo/';
+        this.page.identifier = 'https://noobchamp.github.io/rhel/linux/rhel-localrepo/';
+      };
+
+      (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://noobchamp-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+
+
+        
+
+        <nav class="page-pagination" role="navigation">
+  
+    <a class="page-previous" href="/ansible/linux/Ansible-configuracion-inicial-2/">
+      <h4 class="page-pagination-label">Anterior</h4>
+      <span class="page-pagination-title">
+        <i class="fas fa-arrow-left"></i> Ansible - Tutorial rápido completo 2/2
+
+      </span>
+    </a>
+  
+
+  
+    <a class="page-next" href="/oracle/rman/Recuperar-GAP-elevado/">
+      <h4 class="page-pagination-label">Siguiente</h4>
+      <span class="page-pagination-title">
+        Oracle - Recuperar un GAP elevado ‘STANDBY’
+ <i class="fas fa-arrow-right"></i>
+      </span>
+    </a>
+  
+</nav>
+
+      </div>
+    </div>
+  </article>
+</main>
+
+
+    <footer id="footer" class="site-footer">
+  <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+<div class="social-icons"><a class="social-icon" href="/atom.xml"><i class="fas fa-rss-square fa-2x" title="Feed"></i></a></div><div class="copyright">
+    
+      <p>&copy; 2024 Hola, soy José Oliva. Hecho con <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/mmistakes/so-simple-theme" rel="nofollow">So Simple</a>.</p>
+    
+  </div>
+</footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+  <script src="/assets/js/custom.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+
+
+
+  </body>
+</html>

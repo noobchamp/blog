@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
+  <head><!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8L0LM5E7J2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8L0LM5E7J2');
+</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+
+  
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Ansible - Tutorial rápido completo 1/2 | Hola, soy José Oliva</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Ansible - Tutorial rápido completo 1/2" />
+<meta name="author" content="Teemo" />
+<meta property="og:locale" content="es_ES" />
+<meta name="description" content="Introducción Ansible es un herramienta de automatización. No me extenderé en explicar lo que es pero si diré que es muy útil y cada vez es mas usado por administradores sobre todo para automatizar tareas repetitivas o hacer inspección de todos los servidores." />
+<meta property="og:description" content="Introducción Ansible es un herramienta de automatización. No me extenderé en explicar lo que es pero si diré que es muy útil y cada vez es mas usado por administradores sobre todo para automatizar tareas repetitivas o hacer inspección de todos los servidores." />
+<link rel="canonical" href="https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/" />
+<meta property="og:url" content="https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/" />
+<meta property="og:site_name" content="Hola, soy José Oliva" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-08-28T09:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Ansible - Tutorial rápido completo 1/2" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Teemo" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Teemo"},"dateModified":"2022-08-28T09:00:00+00:00","datePublished":"2022-08-28T09:00:00+00:00","description":"Introducción Ansible es un herramienta de automatización. No me extenderé en explicar lo que es pero si diré que es muy útil y cada vez es mas usado por administradores sobre todo para automatizar tareas repetitivas o hacer inspección de todos los servidores.","headline":"Ansible - Tutorial rápido completo 1/2","mainEntityOfPage":{"@type":"WebPage","@id":"https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://noobchamp.github.io/images/joseoliva.webp"},"name":"Teemo"},"url":"https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  <script>
+    /* Cut the mustard */
+    if ( 'querySelector' in document && 'addEventListener' in window ) {
+      document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + 'js';
+    }
+  </script>
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/skins/default.css">
+  <!-- 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+   --><link rel="alternate" type="application/atom+xml" title="Hola, soy José Oliva" href="/atom.xml">
+<!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+<link rel="manifest" href="/images/favicon/site.webmanifest">
+<link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+</head>
+
+  <body class="layout--post  ansible-tutorial-rápido-completo-1-2">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Saltar enlaces</h2>
+  <ul>
+    <li><a href="#primary-nav" class="screen-reader-shortcut">Saltar a la navegación primaria</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Saltar al contenido</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Saltar al pie de página</a></li>
+  </ul>
+</nav>
+
+    
+  <div class="navigation-wrapper">
+    <a href="#menu-toggle" id="menu-toggle">Menú</a>
+    <nav id="primary-nav" class="site-nav animated drop">
+      <ul><li><a href="/">Home</a></li><li><a href="/posts/">Posts</a></li><li><a href="/categories/">Categories</a></li><li><a href="/tags/">Tags</a></li><li><a href="/search/">Search</a></li></ul>
+    </nav>
+  </div><!-- /.navigation-wrapper -->
+
+
+    <header class="masthead">
+  <div class="wrap">
+    
+      <a href="/" class="site-logo" rel="home" title="Hola, soy José Oliva">
+        <img src="/images/joseoliva.webp" class="site-logo-img animated fadeInDown" alt="Hola, soy José Oliva">
+      </a>
+    
+    
+    
+      
+        <div class="site-title animated fadeIn"><a href="/">Hola, soy José Oliva</a></div>
+      
+      <p class="site-description animated fadeIn" itemprop="description">Y este es mi blog personal</p>
+    
+  </div>
+</header><!-- /.masthead -->
+
+
+    <main id="main" class="main-content" aria-label="Content">
+  <article class="h-entry">
+    
+
+    <div class="page-wrapper">
+      <header class="page-header">
+        
+        
+          <h1 id="page-title" class="page-title p-name">Ansible - Tutorial rápido completo 1/2
+</h1>
+        
+      </header>
+
+      <div class="page-sidebar">
+        <div class="page-author h-card p-author"><img src="/images/teemo.webp" class="author-avatar u-photo" alt="Teemo"><div class="author-info"><div class="author-name">
+        <em>por</em> <span class="p-name">Teemo</span>
+      </div><ul class="author-links"><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.linkedin.com/in/joseaoliva/"><i class="fab fa-linkedin fa-lg" title="Linkedin"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://github.com/noobchamp"><i class="fab fa-github fa-lg" title="Github"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.instagram.com/teemo__dachshund/"><i class="fab fa-instagram fa-lg" title="Instagram"></i></a>
+          </li></ul>
+
+<span class="read-time">3 minuto(s) de lectura</span>
+
+    <time class="page-date dt-published" datetime="2022-08-28T09:00:00+00:00"><a class="u-url" href="">28 de August 2022</a>
+</time>
+
+  </div>
+</div>
+
+        
+  <h3 class="page-taxonomies-title">Categorías</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a class="p-category" href="/categories/#ansible" title="Páginas archivadas bajo Ansible">Ansible</a></li><li class="page-taxonomy"><a class="p-category" href="/categories/#linux" title="Páginas archivadas bajo Linux">Linux</a></li>
+  </ul>
+
+
+        
+  <h3 class="page-taxonomies-title">Etiquetas</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a href="/tags/#ansible" title="Páginas etiquetadas Ansible" rel="tag">Ansible</a></li><li class="page-taxonomy"><a href="/tags/#centos" title="Páginas etiquetadas CentOS" rel="tag">CentOS</a></li><li class="page-taxonomy"><a href="/tags/#red-hat" title="Páginas etiquetadas Red Hat" rel="tag">Red Hat</a></li>
+  </ul>
+
+
+      </div>
+
+      <div class="page-content">
+        <div class="e-content">
+          <p><img src="/images/ansible.webp" alt="center-aligned-image" class="align-center" /></p>
+<h1 id="introducción">Introducción</h1>
+<p><code class="language-plaintext highlighter-rouge">Ansible</code> es un herramienta de automatización. No me extenderé en explicar lo que es pero si diré que es muy útil y cada vez es mas usado por administradores sobre todo para automatizar tareas repetitivas o hacer inspección de todos los servidores.</p>
+
+<p>En mis inicios de la informática, cada vez que instalabamos un servidor, inmediatamente pasábamos un script (con variables) para definir el hostname, la red, instalar los servicios básicos o los habituales de la organización, etc.. 
+Posteriormente incluso otros para la monitorización, u otros elementos que no eran comunes, como por ejemplo si se trataba de un servidor de aplicaciones.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Ansible</code> nos facilita estas tareas mediante plantillas y además nos permite controlar la ejecución, ya sea por fallos, entender qué va a ocurrir u otros factores donde antes “te la jugabas”.</p>
+
+<p>Está basado en <code class="language-plaintext highlighter-rouge">python</code> :heart: y en este tutorial descubrirás que además de poder personalizar cada tarea hasta el más mínimo detalle, vas a poder simplemente instalar otros “módulos” que van a evitar que tengas que picar todo el código tú solo.</p>
+
+<h2 id="escenario">Escenario</h2>
+<p>Por el momento, como somos <em>gente molona</em> vamos a trabajar como root. Luego ya veremos…</p>
+
+<ul>
+  <li>VirtualBox</li>
+  <li>Máquina virtual Ansible: Centos 8.5.2 (puedes usar Red Hat ya que Centos a muerto :disappointed:)</li>
+  <li>IP Ansible 10.0.0.5: He creado una red interna nat. En un capítulo siguiente veremos para qué pero puedes usar el puente o el nat normal para tener acceso a internet.</li>
+  <li>Máquina virtual nodo1, nodo2, nodo3: Centos 8.5.2 Clonadas desde una plantilla</li>
+  <li>IP nodoX: 10.0.0.1X</li>
+  <li>No olvides tener todo actualizado
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum clean all <span class="o">&amp;&amp;</span> yum update <span class="nt">-y</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="instalar-ansible">Instalar ansible</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible ~]# yum <span class="nb">install </span>python39
+<span class="o">[</span>root@ansible ~]# pip3 <span class="nb">install </span>ansible
+<span class="o">[</span>root@ansible ~]# pip3 <span class="nb">install </span>argcomplete
+<span class="c"># Vamos a generar ya la clave ssh para copiarla a otro servidor, cuando proceda.</span>
+<span class="c"># Le das a INTRO (todo por defecto)</span>
+<span class="o">[</span>root@ansible ~]# ssh-keygen <span class="nt">-t</span> rsa <span class="nt">-b</span> 4096
+</code></pre></div></div>
+
+<h1 id="ansible">Ansible</h1>
+<p>¡Ahora si! 
+Ansible por defecto te indica que el archivo de inventario es en /etc/ansible/hosts.
+Vamos a pasar de esto y hacer nuestro propio ansible, nuestro propio inventario en yamel.
+Para resumir, me he creado mi usuario <em>oliva</em> y he craeado /home/oliva/miansible.yml (aun seguimos como root):</p>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">all</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span>
+  <span class="na">children</span><span class="pi">:</span>
+    <span class="na">micluster</span><span class="pi">:</span>
+      <span class="na">hosts</span><span class="pi">:</span>
+        <span class="na">nodo1</span><span class="pi">:</span>
+          <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.11</span>
+        <span class="na">nodo2</span><span class="pi">:</span>
+          <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.12</span>
+        <span class="na">nodo3</span><span class="pi">:</span>
+          <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.13</span>
+</code></pre></div></div>
+<p>Estas entradas como se puede ver, es para crear un cluster de 3 nodos, al que invocaremos con el nombre <code class="language-plaintext highlighter-rouge">cluster</code>. Posteriormente seguiremos aumentando este inventario.</p>
+
+<p>Por tanto debemos tener las entradas correspondientes en /etc/hosts:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1   localhost localhost.localdomain ansible
+10.0.0.11   nodo1.micluster nodo1
+10.0.0.12   nodo2.micluster nodo2
+10.0.0.13   nodo3.micluster nodo3
+</code></pre></div></div>
+<h3 id="vamos-a-hacernos-amigos-de-los-nodos-copiamos-la-clave-ssh-para-que-no-pida-contraseña">Vamos a hacernos <em>amigos</em> de los nodos, copiamos la clave ssh para que no pida contraseña</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible ~]# ssh-copy-id root@nodo2
+/usr/bin/ssh-copy-id: INFO: Source of key<span class="o">(</span>s<span class="o">)</span> to be installed: <span class="s2">"/root/.ssh/id_rsa.pub"</span>
+The authenticity of host <span class="s1">'nodo2 (10.0.0.12)'</span> can<span class="s1">'t be established.
+ECDSA key fingerprint is SHA256:VZ5ZJ4xh0PEgUe1twpgZEU0dsjtTSzWey5tVajSx1nA.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@nodo2'</span>s password:
+
+Number of key<span class="o">(</span>s<span class="o">)</span> added: 1
+
+Now try logging into the machine, with:   <span class="s2">"ssh 'root@nodo2'"</span>
+and check to make sure that only the key<span class="o">(</span>s<span class="o">)</span> you wanted were added.
+</code></pre></div></div>
+<p>Esto para los 3 nodos evidentemente…</p>
+
+<p>Y ahora vamos a hacer la primera prueba, un ping a todos. He apagado el nodo2 para probar:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible ~]# ansible all <span class="nt">-m</span> ping <span class="nt">-i</span> /home/oliva/miansible/inventory.yml
+nodo1 | SUCCESS <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"ansible_facts"</span>: <span class="o">{</span>
+        <span class="s2">"discovered_interpreter_python"</span>: <span class="s2">"/usr/libexec/platform-python"</span>
+    <span class="o">}</span>,
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"ping"</span>: <span class="s2">"pong"</span>
+<span class="o">}</span>
+nodo3 | SUCCESS <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"ansible_facts"</span>: <span class="o">{</span>
+        <span class="s2">"discovered_interpreter_python"</span>: <span class="s2">"/usr/libexec/platform-python"</span>
+    <span class="o">}</span>,
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"ping"</span>: <span class="s2">"pong"</span>
+<span class="o">}</span>
+nodo2 | UNREACHABLE! <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"msg"</span>: <span class="s2">"Failed to connect to the host via ssh: ssh: connect to host 10.0.0.12 port 22: No route to host"</span>,
+    <span class="s2">"unreachable"</span>: <span class="nb">true</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+  <li>-m: modulo de ansible</li>
+  <li>-i: inventario, recuerda que hemos especificado un inventario, por defecto sería /etc/ansible/hosts</li>
+  <li>-u: En caso de que no estuvieramos como root especificamos -u root o el usuario con el que hayamos realizado el ssh-copy-id.</li>
+  <li>Funciona con el mismo usuario en origen a no ser que se especifique bien por línea de comandos o se puede establecer en el archivo de inventario de esta forma (aunque la vamos a descartar, en la siguiente parte veremos por qué):
+    <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">all</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span>
+  <span class="na">children</span><span class="pi">:</span>
+<span class="na">micluster</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span>
+    <span class="na">nodo1</span><span class="pi">:</span>
+      <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.11</span>
+    <span class="na">nodo2</span><span class="pi">:</span>
+      <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.12</span>
+    <span class="na">nodo3</span><span class="pi">:</span>
+      <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.13</span>
+  <span class="na">vars</span><span class="pi">:</span>
+    <span class="na">ansible_user</span><span class="pi">:</span> <span class="s">root</span>
+</code></pre></div>    </div>
+    <p>Como se puede ver, la sintaxis de yame hace que según la identación, pueda establecerla para los host de <code class="language-plaintext highlighter-rouge">cluster</code>o para todos los hosts en adelante si no tenemos pensado trabajar con otro usuario que no sea root.</p>
+  </li>
+</ul>
+
+<p>En la siguiente parte vamos a ver los playbooks, roles, tags, handlers…
+Además empezaremos a trabajar con ansible-galaxy.</p>
+
+<p>¡Adiós!</p>
+
+        </div>
+
+        
+          <div class="page-share">
+  <a href="https://twitter.com/intent/tweet?text=Ansible+-+Tutorial+r%C3%A1pido+completo+1%2F2%20https%3A%2F%2Fnoobchamp.github.io%2Fansible%2Flinux%2FAnsible-configuracion-inicial-1%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--twitter btn--small"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i> <span>Tweet</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fnoobchamp.github.io%2Fansible%2Flinux%2FAnsible-configuracion-inicial-1%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--linkedin btn--small"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> <span>LinkedIn</span></a>
+  <a href="https://reddit.com/submit?title=Ansible+-+Tutorial+r%C3%A1pido+completo+1%2F2&url=https%3A%2F%2Fnoobchamp.github.io%2Fansible%2Flinux%2FAnsible-configuracion-inicial-1%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--reddit btn--small"><i class="fab fa-fw fa-reddit" aria-hidden="true"></i> <span>Reddit</span></a>
+</div>
+
+        
+
+        
+          
+  <div class="page-comments">
+    <div id="disqus_thread"></div>
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/';
+        this.page.identifier = 'https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/';
+      };
+
+      (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://noobchamp-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+
+
+        
+
+        <nav class="page-pagination" role="navigation">
+  
+    <a class="page-previous" href="/linux/oracle/SQL-plus-prompt/">
+      <h4 class="page-pagination-label">Anterior</h4>
+      <span class="page-pagination-title">
+        <i class="fas fa-arrow-left"></i> SQL*Plus - Historial en Unix-Linux
+
+      </span>
+    </a>
+  
+
+  
+    <a class="page-next" href="/ansible/linux/Ansible-configuracion-inicial-2/">
+      <h4 class="page-pagination-label">Siguiente</h4>
+      <span class="page-pagination-title">
+        Ansible - Tutorial rápido completo 2/2
+ <i class="fas fa-arrow-right"></i>
+      </span>
+    </a>
+  
+</nav>
+
+      </div>
+    </div>
+  </article>
+</main>
+
+
+    <footer id="footer" class="site-footer">
+  <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+<div class="social-icons"><a class="social-icon" href="/atom.xml"><i class="fas fa-rss-square fa-2x" title="Feed"></i></a></div><div class="copyright">
+    
+      <p>&copy; 2024 Hola, soy José Oliva. Hecho con <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/mmistakes/so-simple-theme" rel="nofollow">So Simple</a>.</p>
+    
+  </div>
+</footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+  <script src="/assets/js/custom.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+
+
+
+  </body>
+</html>

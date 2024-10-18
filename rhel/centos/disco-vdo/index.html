@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
+  <head><!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8L0LM5E7J2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8L0LM5E7J2');
+</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+
+  
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Montar un VDO o disco de deduplicación | Hola, soy José Oliva</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Montar un VDO o disco de deduplicación" />
+<meta name="author" content="Pancho" />
+<meta property="og:locale" content="es_ES" />
+<meta name="description" content="Montar un VDO o disco de deduplicación" />
+<meta property="og:description" content="Montar un VDO o disco de deduplicación" />
+<link rel="canonical" href="https://noobchamp.github.io/rhel/centos/disco-vdo/" />
+<meta property="og:url" content="https://noobchamp.github.io/rhel/centos/disco-vdo/" />
+<meta property="og:site_name" content="Hola, soy José Oliva" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-05-29T16:01:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Montar un VDO o disco de deduplicación" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Pancho" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Pancho"},"dateModified":"2024-05-29T16:01:00+00:00","datePublished":"2024-05-29T16:01:00+00:00","description":"Montar un VDO o disco de deduplicación","headline":"Montar un VDO o disco de deduplicación","mainEntityOfPage":{"@type":"WebPage","@id":"https://noobchamp.github.io/rhel/centos/disco-vdo/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://noobchamp.github.io/images/joseoliva.webp"},"name":"Pancho"},"url":"https://noobchamp.github.io/rhel/centos/disco-vdo/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  <script>
+    /* Cut the mustard */
+    if ( 'querySelector' in document && 'addEventListener' in window ) {
+      document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + 'js';
+    }
+  </script>
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/skins/default.css">
+  <!-- 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+   --><link rel="alternate" type="application/atom+xml" title="Hola, soy José Oliva" href="/atom.xml">
+<!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+<link rel="manifest" href="/images/favicon/site.webmanifest">
+<link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+</head>
+
+  <body class="layout--post  montar-un-vdo-o-disco-de-deduplicación">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Saltar enlaces</h2>
+  <ul>
+    <li><a href="#primary-nav" class="screen-reader-shortcut">Saltar a la navegación primaria</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Saltar al contenido</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Saltar al pie de página</a></li>
+  </ul>
+</nav>
+
+    
+  <div class="navigation-wrapper">
+    <a href="#menu-toggle" id="menu-toggle">Menú</a>
+    <nav id="primary-nav" class="site-nav animated drop">
+      <ul><li><a href="/">Home</a></li><li><a href="/posts/">Posts</a></li><li><a href="/categories/">Categories</a></li><li><a href="/tags/">Tags</a></li><li><a href="/search/">Search</a></li></ul>
+    </nav>
+  </div><!-- /.navigation-wrapper -->
+
+
+    <header class="masthead">
+  <div class="wrap">
+    
+      <a href="/" class="site-logo" rel="home" title="Hola, soy José Oliva">
+        <img src="/images/joseoliva.webp" class="site-logo-img animated fadeInDown" alt="Hola, soy José Oliva">
+      </a>
+    
+    
+    
+      
+        <div class="site-title animated fadeIn"><a href="/">Hola, soy José Oliva</a></div>
+      
+      <p class="site-description animated fadeIn" itemprop="description">Y este es mi blog personal</p>
+    
+  </div>
+</header><!-- /.masthead -->
+
+
+    <main id="main" class="main-content" aria-label="Content">
+  <article class="h-entry">
+    
+
+    <div class="page-wrapper">
+      <header class="page-header">
+        
+        
+          <h1 id="page-title" class="page-title p-name">Montar un VDO o disco de deduplicación
+</h1>
+        
+      </header>
+
+      <div class="page-sidebar">
+        <div class="page-author h-card p-author"><img src="/images/pancho.webp" class="author-avatar u-photo" alt="Pancho"><div class="author-info"><div class="author-name">
+        <em>por</em> <span class="p-name">Pancho</span>
+      </div><ul class="author-links"><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.linkedin.com/in/joseaoliva/"><i class="fab fa-linkedin fa-lg" title="Linkedin"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://github.com/noobchamp"><i class="fab fa-github fa-lg" title="Github"></i></a>
+          </li><li class="author-link">
+            <a class="u-url" rel="me" href="https://www.instagram.com/oliva_ja/"><i class="fab fa-instagram fa-lg" title="Instagram"></i></a>
+          </li></ul>
+
+<span class="read-time">4 minuto(s) de lectura</span>
+
+    <time class="page-date dt-published" datetime="2024-05-29T16:01:00+00:00"><a class="u-url" href="">29 de May 2024</a>
+</time>
+
+  </div>
+</div>
+
+        
+  <h3 class="page-taxonomies-title">Categorías</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a class="p-category" href="/categories/#centos" title="Páginas archivadas bajo CentOS">CentOS</a></li><li class="page-taxonomy"><a class="p-category" href="/categories/#rhel" title="Páginas archivadas bajo RHEL">RHEL</a></li>
+  </ul>
+
+
+        
+  <h3 class="page-taxonomies-title">Etiquetas</h3>
+  
+  <ul class="page-taxonomies"><li class="page-taxonomy"><a href="/tags/#centos" title="Páginas etiquetadas CentOS" rel="tag">CentOS</a></li><li class="page-taxonomy"><a href="/tags/#red-hat" title="Páginas etiquetadas Red Hat" rel="tag">Red Hat</a></li>
+  </ul>
+
+
+      </div>
+
+      <div class="page-content">
+        <div class="e-content">
+          <h2 id="montar-un-vdo-o-disco-de-deduplicación">Montar un VDO o disco de deduplicación</h2>
+
+<h3 id="qué-es">¿Qué es?</h3>
+
+<p>Virtual Data Optimizer (VDO) proporciona una reducción de datos en línea para Linux en forma de deduplicación, compresión y thin provisioning.
+<a href="https://access.redhat.com/documentation/es-es/red_hat_enterprise_linux/8/html-single/deduplicating_and_compressing_storage/index">Documentación español</a>.
+Los mejores casos para montar este tipo de dispositivo, son el almacenamiento de datos que van a contener los mismos bloques una y otra vez, o explicado de otra forma, los archivos que contienen son similares unos de otros.
+Pongamos un ejemplo simple: Todos los días realizo un backup de mysql completo que ocupa 5Gb. Las bases de datos suelen cambiar poco diariamente, por lo que si hoy ocupa 5Gb, mañana será de unos 5,2Gb (todo esto es un ejemplo).
+Por lo tanto, la mayoría de bloques serán exactamente los mismos, el sistema entenderá que hay un bloques duplicados y no los tendrá en cuenta.
+Esto no es así exactamente ni mucho menos, pero estoy intentado hacerte entender de manera muy simple como funciona para que lo entiendas.</p>
+
+<p>Con esta tecnología lo que tenemos es un ahorro de datos, que dependiendo de lo que almacenemos, será mejor o peor, pero nos va a ahorrar mucho espacio.</p>
+
+<h3 id="objetivos">Objetivos</h3>
+
+<ul>
+  <li>KVM</li>
+  <li>LVM</li>
+  <li>NFS/SAMBA o CIFS</li>
+  <li>iSCSI</li>
+</ul>
+
+<h3 id="requisitos">Requisitos</h3>
+
+<h4 id="ram">RAM</h4>
+
+<p>VDO requiere una cantidad fija de 38 MB de RAM y varias cantidades variables:</p>
+
+<ul>
+  <li>1.15 MB de RAM por cada 1 MB de tamaño de caché de mapa de bloques configurado. La caché del mapa de bloques requiere un mínimo de 150 MB de RAM.</li>
+  <li>1.6 MB de RAM por cada 1 TB de espacio lógico.</li>
+  <li>268 MB de RAM por cada 1 TB de almacenamiento físico gestionado por el volumen.</li>
+</ul>
+
+<h3 id="instalación-y-creación">Instalación y creación</h3>
+
+<p>Instalamos lo paquetes necesatios para el funcionamiento.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum <span class="nb">install </span>lvm2 vdo kmod-kvdo
+</code></pre></div></div>
+
+<p>En mi caso, voy a crear un disco para backups.
+¿En qué consiste cada parámetro?</p>
+
+<ul>
+  <li>name: Pues el nombre que quieras dar al volumen, como si le llamas “Pepe”</li>
+  <li>device: El dispositivo, o sea, el disco. En mi caso estoy destinando un disco nuevo completo (vdb). He insertado un disco de 200Gb.</li>
+  <li>vdoLogicalSize: El tamaño lógico. Y aquí viene la cuestión existencial… Resulta que mi disco es de 200Gb, según la documentación, es capaz de multiplicar x10 su tamaño lógico. Yo nunca he llegado a obtener esos ratios ni tan siquiera con archivos muy muy similares. Aún así, es muy factible tener un x5 para lo que voy a usarlo. No te preocupes si necesitas ampliar posteriormente tanto parte física como lógica. Esta vez, voy a ser cauto y le voy a proporcionar un x3, o lo que es lo mismo 600Gb. Hay documentación muy interesante hablando de esto, del tamaño de slabs y cosas así…</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Crear un volúmen</span>
+vdo create <span class="se">\</span>
+<span class="nt">--name</span><span class="o">=</span>vdo-backup <span class="se">\</span>
+<span class="nt">--device</span><span class="o">=</span>/dev/vdb <span class="se">\</span>
+<span class="nt">--vdoLogicalSize</span><span class="o">=</span>600G
+</code></pre></div></div>
+
+<p>Nos responderá algo como…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Creating VDO vdo-backup
+      The VDO volume can address 196 GB <span class="k">in </span>98 data slabs, each 2 GB.
+      It can grow to address at most 16 TB of physical storage <span class="k">in </span>8192 slabs.
+      If a larger maximum size might be needed, use bigger slabs.
+Starting VDO vdo-backup
+Starting compression on VDO vdo-backup
+VDO instance 2 volume is ready at /dev/mapper/vdo-backup
+</code></pre></div></div>
+
+<p>Voy a darle formato, lo quiero como XFS. el <code class="language-plaintext highlighter-rouge">-K</code> le indica que no intente descartar bloques (total es nuevo).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkfs.xfs <span class="nt">-K</span> /dev/mapper/vdo-backup
+udevadm settle
+<span class="c"># para ext4</span>
+<span class="c">#mkfs.xfs -E nodiscard /dev/mapper/vdo-backup</span>
+<span class="c"># el comando udevadm settle registra los cambios del sistema con espera activa</span>
+<span class="c">#Comprobamos que el dispositivo es correcto</span>
+lsblk
+</code></pre></div></div>
+
+<p>Montar el voluen manualmente, para probar:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> /backup/
+mount /dev/mapper/vdo-backup /backup
+umount /backup
+</code></pre></div></div>
+
+<p>Puesto que no devuelve ningún error lo voy a añadir al <code class="language-plaintext highlighter-rouge">fstab</code> para que arranque</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Si no usais vim, estáis perdiendo el tiempo...</span>
+vim /etc/fstab
+/dev/mapper/vdo-backup /backup  xfs  defaults,x-systemd.automount,nofail  0 2
+<span class="c"># Probamos para que no tengamos sustos en un reinicio</span>
+mount <span class="nt">-a</span>
+<span class="c"># Si ejecutas "df -h" verás que el sistema ya tiene ocupación (eso es parte de lo que toma VDO para sus índices y sus cosas)</span>
+</code></pre></div></div>
+
+<p>Ahora necesitamos tener activo <code class="language-plaintext highlighter-rouge">fstrim</code>, que descartará los bloques sin uso periódicamente un vez a la semana. Aunque si tienes mucha actividad puedes configurarlo para más frecuencia o ejecutarlo vía cron.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl <span class="nb">enable</span> <span class="nt">--now</span> fstrim.timer
+systemctl status fstrim.timer
+fstrim.timer - Discard unused blocks once a week
+   Loaded: loaded <span class="o">(</span>/usr/lib/systemd/system/fstrim.timer<span class="p">;</span> enabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+   Active: active <span class="o">(</span>waiting<span class="o">)</span> since Wed 2023-05-17 13:24:41 CEST<span class="p">;</span> 3min 15s ago
+  Trigger: Mon 2023-05-22 01:20:46 CEST<span class="p">;</span> 4 days left
+     Docs: man:fstrim
+
+May 17 13:24:41 localhost.localdomain systemd[1]: Started Discard unused blocks once a week.
+</code></pre></div></div>
+
+<p>Para el que se lo pregunte, no necesitas “discard” en el fstab.
+Puedes ver incluso, cuando fstrim.timer va a ejecutar el servicio</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl list-timers fstrim.timer
+</code></pre></div></div>
+
+<p>Ahora viene la “pena” de todo esto. Tendrás que monitorizar este sistema de archivos dos veces. Si ejecutas el comando</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vdostats <span class="nt">--human-readable</span>
+Device                    Size      Used Available Use% Space saving%
+/dev/mapper/vdo-backup    200.0G      4.1G    195.9G   2%           99%
+
+<span class="c"># Te devuelve el espacio físico del dispositivo "el real"</span>
+<span class="c"># si ejecutas un df -h, verás el tamaño que hemos indicado "lógico" y por tanto, para tu sistema operativo, ese FS tiene 600Gb.</span>
+<span class="nb">df</span> <span class="nt">-h</span> /backup 
+S.ficheros             Tamaño Usados  Disp Uso% Montado en
+/dev/mapper/vdo-backup   600G   4,3G  596G   1% /backup
+</code></pre></div></div>
+
+<p>Entonces, es posible que se llene uno u otro, eso dependerá del tamaño lógico que hemos aplciado y de claro está, ficheros que tengamos almacenados, si son o no más propensos a compresión.</p>
+
+<p>Diría que eso es todo.
+¡¡Nos vemos!!</p>
+
+        </div>
+
+        
+          <div class="page-share">
+  <a href="https://twitter.com/intent/tweet?text=Montar+un+VDO+o+disco+de+deduplicaci%C3%B3n%20https%3A%2F%2Fnoobchamp.github.io%2Frhel%2Fcentos%2Fdisco-vdo%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--twitter btn--small"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i> <span>Tweet</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fnoobchamp.github.io%2Frhel%2Fcentos%2Fdisco-vdo%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--linkedin btn--small"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> <span>LinkedIn</span></a>
+  <a href="https://reddit.com/submit?title=Montar+un+VDO+o+disco+de+deduplicaci%C3%B3n&url=https%3A%2F%2Fnoobchamp.github.io%2Frhel%2Fcentos%2Fdisco-vdo%2F" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" class="btn btn--reddit btn--small"><i class="fab fa-fw fa-reddit" aria-hidden="true"></i> <span>Reddit</span></a>
+</div>
+
+        
+
+        
+          
+  <div class="page-comments">
+    <div id="disqus_thread"></div>
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://noobchamp.github.io/rhel/centos/disco-vdo/';
+        this.page.identifier = 'https://noobchamp.github.io/rhel/centos/disco-vdo/';
+      };
+
+      (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://noobchamp-github-io.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+
+
+        
+
+        <nav class="page-pagination" role="navigation">
+  
+    <a class="page-previous" href="/oracle/rman/Recuperar-GAP-elevado/">
+      <h4 class="page-pagination-label">Anterior</h4>
+      <span class="page-pagination-title">
+        <i class="fas fa-arrow-left"></i> Oracle - Recuperar un GAP elevado ‘STANDBY’
+
+      </span>
+    </a>
+  
+
+  
+    <a class="page-next" href="/rhel/centos/Selinux/">
+      <h4 class="page-pagination-label">Siguiente</h4>
+      <span class="page-pagination-title">
+        Introducción a Selinux, breve resumen
+ <i class="fas fa-arrow-right"></i>
+      </span>
+    </a>
+  
+</nav>
+
+      </div>
+    </div>
+  </article>
+</main>
+
+
+    <footer id="footer" class="site-footer">
+  <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+<div class="social-icons"><a class="social-icon" href="/atom.xml"><i class="fas fa-rss-square fa-2x" title="Feed"></i></a></div><div class="copyright">
+    
+      <p>&copy; 2024 Hola, soy José Oliva. Hecho con <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/mmistakes/so-simple-theme" rel="nofollow">So Simple</a>.</p>
+    
+  </div>
+</footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+  <script src="/assets/js/custom.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,400i,700,700i|Lora:400,400i,700,700i">
+
+
+
+  </body>
+</html>

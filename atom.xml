@@ -1,0 +1,1387 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://noobchamp.github.io/atom.xml" rel="self" type="application/atom+xml" /><link href="https://noobchamp.github.io/" rel="alternate" type="text/html" /><updated>2024-10-18T23:48:07+00:00</updated><id>https://noobchamp.github.io/atom.xml</id><title type="html">Hola, soy José Oliva</title><subtitle>Y este es mi blog personal</subtitle><author><name>{&quot;name&quot;=&gt;nil, &quot;picture&quot;=&gt;nil, &quot;email&quot;=&gt;nil, &quot;twitter&quot;=&gt;nil, &quot;links&quot;=&gt;[{&quot;title&quot;=&gt;nil, &quot;url&quot;=&gt;nil, &quot;icon&quot;=&gt;nil}]}</name></author><entry><title type="html">Introducción a Selinux, breve resumen</title><link href="https://noobchamp.github.io/rhel/centos/Selinux/" rel="alternate" type="text/html" title="Introducción a Selinux, breve resumen" /><published>2024-10-18T19:00:00+00:00</published><updated>2024-10-18T19:00:00+00:00</updated><id>https://noobchamp.github.io/rhel/centos/Selinux</id><content type="html" xml:base="https://noobchamp.github.io/rhel/centos/Selinux/"><![CDATA[<h1 id="iniciación-con-selinux">Iniciación con SELinux</h1>
+
+<h2 id="1-introducción-a-selinux">1. Introducción a SELinux</h2>
+<ul>
+  <li><strong>SELinux (Security-Enhanced Linux)</strong>: Módulo de seguridad para controlar el acceso a recursos en un sistema Linux. Proporciona un mecanismo de control de acceso obligatorio (MAC).</li>
+  <li><strong>Objetivo</strong>: Proteger el sistema y las aplicaciones contra accesos no autorizados, asegurando que los procesos y usuarios solo realicen las acciones para las que están autorizados.</li>
+</ul>
+
+<h3 id="conceptos-clave">Conceptos Clave</h3>
+<ul>
+  <li><strong>Políticas</strong>: Conjuntos de reglas que determinan cómo se deben gestionar los accesos a los recursos del sistema. SELinux utiliza políticas predeterminadas, pero se pueden crear personalizadas.</li>
+  <li><strong>Tipos</strong>: Categorías de objetos y procesos (ej: <code class="language-plaintext highlighter-rouge">httpd_sys_content_t</code>, <code class="language-plaintext highlighter-rouge">var_lib_t</code>).</li>
+  <li><strong>Usuarios</strong>: Representan las entidades que interactúan con el sistema (ej: <code class="language-plaintext highlighter-rouge">system_u</code> para el sistema, <code class="language-plaintext highlighter-rouge">user_u</code> para usuarios normales).</li>
+</ul>
+
+<blockquote>
+  <p>[!CAUTION]
+No es recomendable activar selinux en modo “Enforcing” en producción. Primero prueba en modo “Permissive”.
+—</p>
+</blockquote>
+
+<h2 id="2-modos-de-operación">2. Modos de Operación</h2>
+<p>SELinux tiene tres modos de operación:</p>
+
+<ul>
+  <li><strong>Enforcing</strong>: Aplica políticas y bloquea accesos no permitidos. Este es el modo recomendado para entornos de producción.</li>
+  <li><strong>Permissive</strong>: Solo registra violaciones sin bloquear accesos, útil para depuración.</li>
+  <li><strong>Disabled</strong>: SELinux desactivado, no se aplican políticas.</li>
+</ul>
+
+<h3 id="comandos-útiles">Comandos Útiles</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Verificar estado de SELinux</span>
+sestatus
+
+<span class="c"># Cambiar a modo permisivo</span>
+<span class="nb">sudo </span>setenforce 0
+
+<span class="c"># Cambiar a modo enforcing</span>
+<span class="nb">sudo </span>setenforce 1
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-contextos-de-seguridad">3. Contextos de Seguridad</h2>
+<p>Los contextos de seguridad en SELinux son una combinación de cuatro partes:</p>
+
+<ul>
+  <li><strong>Usuario</strong>: Representa el usuario de SELinux (ej: <code class="language-plaintext highlighter-rouge">system_u</code>).</li>
+  <li><strong>Rol</strong>: Rol de seguridad del proceso (generalmente <code class="language-plaintext highlighter-rouge">object_r</code> para objetos).</li>
+  <li><strong>Tipo</strong>: Tipo de acceso (ej: <code class="language-plaintext highlighter-rouge">httpd_sys_content_t</code>).</li>
+  <li><strong>Nivel</strong>: (opcional) Niveles de seguridad para control de acceso multinivel.</li>
+</ul>
+
+<h3 id="visualización-de-contextos">Visualización de Contextos</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Listar contextos de archivos</span>
+<span class="nb">ls</span> <span class="nt">-Z</span> /ruta/al/directorio
+
+<span class="c"># Listar contextos de procesos</span>
+ps <span class="nt">-Z</span>
+</code></pre></div></div>
+
+<h3 id="cambiar-contextos">Cambiar Contextos</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Cambiar contexto de un archivo</span>
+<span class="nb">chcon</span> <span class="nt">-t</span> httpd_sys_content_t /ruta/al/archivo
+
+<span class="c"># Persistir cambios de contexto</span>
+semanage fcontext <span class="nt">-a</span> <span class="nt">-t</span> httpd_sys_content_t <span class="s2">"/ruta(/.*)?"</span>
+restorecon <span class="nt">-Rv</span> /ruta
+</code></pre></div></div>
+
+<h3 id="ejemplo">Ejemplo</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Cambiar el contexto de un archivo en el directorio de Apache</span>
+<span class="nb">chcon</span> <span class="nt">-t</span> httpd_sys_content_t /var/www/html/archivo.html
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4-auditoría-en-selinux">4. Auditoría en SELinux</h2>
+<p>SELinux registra eventos y violaciones de políticas en logs ubicados en <code class="language-plaintext highlighter-rouge">/var/log/audit/audit.log</code>. La auditoría es esencial para comprender por qué se producen ciertas denegaciones.</p>
+
+<h3 id="comandos-útiles-1">Comandos Útiles</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Buscar eventos de denegación</span>
+ausearch <span class="nt">-m</span> avc
+
+<span class="c"># Explicar la razón de la denegación</span>
+ausearch <span class="nt">-m</span> avc <span class="nt">-ts</span> today | audit2why
+
+<span class="c"># Generar una política a partir de eventos de denegación</span>
+ausearch <span class="nt">-m</span> avc <span class="nt">-ts</span> today | audit2allow <span class="nt">-M</span> mi_modulo
+</code></pre></div></div>
+
+<h3 id="ejemplo-1">Ejemplo</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Buscar y explicar por qué Apache no puede acceder a un archivo</span>
+ausearch <span class="nt">-m</span> avc <span class="nt">-ts</span> today | audit2why
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5-booleanos-en-selinux">5. Booleanos en SELinux</h2>
+<p>Los booleanos son configuraciones que permiten ajustar el comportamiento de las políticas en SELinux.</p>
+
+<h3 id="ejemplo-de-booleano">Ejemplo de Booleano</h3>
+<p>Habilitar el acceso de Apache a contenido en el directorio de usuarios:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Listar booleanos disponibles</span>
+getsebool <span class="nt">-a</span>
+
+<span class="c"># Activar un booleano específico</span>
+setsebool <span class="nt">-P</span> httpd_enable_homedirs on
+</code></pre></div></div>
+
+<h3 id="importante">Importante</h3>
+<ul>
+  <li>Usar la opción <code class="language-plaintext highlighter-rouge">-P</code> para hacer cambios persistentes a través de reinicios.</li>
+</ul>
+
+<hr />
+
+<h2 id="6-creación-de-políticas-personalizadas">6. Creación de Políticas Personalizadas</h2>
+<p>Crear políticas personalizadas permite ajustar SELinux a las necesidades específicas de tu entorno.</p>
+
+<h3 id="estructura-de-un-archivo-de-política">Estructura de un Archivo de Política</h3>
+<pre><code class="language-te">module mi_aplicacion 1.0;
+
+require {
+    type var_lib_t;
+    class dir { read write search open };
+}
+
+# Permitir acceso a directorios
+allow unconfined_t var_lib_t:dir { read write search open };
+</code></pre>
+
+<h3 id="pasos-para-crear-una-política">Pasos para Crear una Política</h3>
+<ol>
+  <li><strong>Escribir la política</strong> en un archivo <code class="language-plaintext highlighter-rouge">.te</code>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano mi_aplicacion.te
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Compilar</strong> el archivo:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>checkmodule <span class="nt">-M</span> <span class="nt">-m</span> <span class="nt">-o</span> mi_aplicacion.mod mi_aplicacion.te
+semodule_package <span class="nt">-o</span> mi_aplicacion.pp <span class="nt">-m</span> mi_aplicacion.mod
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Instalar</strong> la política:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>semodule <span class="nt">-i</span> mi_aplicacion.pp
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Verificar instalación</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>semodule <span class="nt">-l</span> | <span class="nb">grep </span>mi_aplicacion
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="7-diagnóstico-de-problemas">7. Diagnóstico de Problemas</h2>
+<p>Es fundamental para resolver problemas de acceso en sistemas SELinux.</p>
+
+<h3 id="verificar-políticas-cargadas">Verificar Políticas Cargadas</h3>
+<p>Para ver las políticas activas y su impacto:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>semodule <span class="nt">-l</span>
+</code></pre></div></div>
+
+<h3 id="eliminar-políticas-problemáticas">Eliminar Políticas Problemáticas</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Eliminar un módulo de política</span>
+<span class="nb">sudo </span>semodule <span class="nt">-r</span> nombre_del_modulo
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="conclusión">Conclusión</h2>
+<p>SELinux es una herramienta poderosa para la seguridad en sistemas Linux, proporcionando control de acceso granular a recursos del sistema. Comprender sus componentes y comandos básicos te permitirá gestionar y proteger mejor tus sistemas.</p>
+
+<hr />
+
+<h2 id="recursos-adicionales">Recursos Adicionales</h2>
+<ul>
+  <li><a href="https://selinuxproject.org/page/Main_Page">Documentación Oficial de SELinux</a></li>
+  <li><a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html-single/using_selinux/index">Guía de SELinux en RHEL</a></li>
+</ul>]]></content><author><name>Teemo</name></author><category term="RHEL" /><category term="CentOS" /><category term="Red Hat" /><category term="CentOS" /><summary type="html"><![CDATA[Iniciación con SELinux]]></summary></entry><entry><title type="html">Montar un VDO o disco de deduplicación</title><link href="https://noobchamp.github.io/rhel/centos/disco-vdo/" rel="alternate" type="text/html" title="Montar un VDO o disco de deduplicación" /><published>2024-05-29T16:01:00+00:00</published><updated>2024-05-29T16:01:00+00:00</updated><id>https://noobchamp.github.io/rhel/centos/disco-vdo</id><content type="html" xml:base="https://noobchamp.github.io/rhel/centos/disco-vdo/"><![CDATA[<h2 id="montar-un-vdo-o-disco-de-deduplicación">Montar un VDO o disco de deduplicación</h2>
+
+<h3 id="qué-es">¿Qué es?</h3>
+
+<p>Virtual Data Optimizer (VDO) proporciona una reducción de datos en línea para Linux en forma de deduplicación, compresión y thin provisioning.
+<a href="https://access.redhat.com/documentation/es-es/red_hat_enterprise_linux/8/html-single/deduplicating_and_compressing_storage/index">Documentación español</a>.
+Los mejores casos para montar este tipo de dispositivo, son el almacenamiento de datos que van a contener los mismos bloques una y otra vez, o explicado de otra forma, los archivos que contienen son similares unos de otros.
+Pongamos un ejemplo simple: Todos los días realizo un backup de mysql completo que ocupa 5Gb. Las bases de datos suelen cambiar poco diariamente, por lo que si hoy ocupa 5Gb, mañana será de unos 5,2Gb (todo esto es un ejemplo).
+Por lo tanto, la mayoría de bloques serán exactamente los mismos, el sistema entenderá que hay un bloques duplicados y no los tendrá en cuenta.
+Esto no es así exactamente ni mucho menos, pero estoy intentado hacerte entender de manera muy simple como funciona para que lo entiendas.</p>
+
+<p>Con esta tecnología lo que tenemos es un ahorro de datos, que dependiendo de lo que almacenemos, será mejor o peor, pero nos va a ahorrar mucho espacio.</p>
+
+<h3 id="objetivos">Objetivos</h3>
+
+<ul>
+  <li>KVM</li>
+  <li>LVM</li>
+  <li>NFS/SAMBA o CIFS</li>
+  <li>iSCSI</li>
+</ul>
+
+<h3 id="requisitos">Requisitos</h3>
+
+<h4 id="ram">RAM</h4>
+
+<p>VDO requiere una cantidad fija de 38 MB de RAM y varias cantidades variables:</p>
+
+<ul>
+  <li>1.15 MB de RAM por cada 1 MB de tamaño de caché de mapa de bloques configurado. La caché del mapa de bloques requiere un mínimo de 150 MB de RAM.</li>
+  <li>1.6 MB de RAM por cada 1 TB de espacio lógico.</li>
+  <li>268 MB de RAM por cada 1 TB de almacenamiento físico gestionado por el volumen.</li>
+</ul>
+
+<h3 id="instalación-y-creación">Instalación y creación</h3>
+
+<p>Instalamos lo paquetes necesatios para el funcionamiento.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum <span class="nb">install </span>lvm2 vdo kmod-kvdo
+</code></pre></div></div>
+
+<p>En mi caso, voy a crear un disco para backups.
+¿En qué consiste cada parámetro?</p>
+
+<ul>
+  <li>name: Pues el nombre que quieras dar al volumen, como si le llamas “Pepe”</li>
+  <li>device: El dispositivo, o sea, el disco. En mi caso estoy destinando un disco nuevo completo (vdb). He insertado un disco de 200Gb.</li>
+  <li>vdoLogicalSize: El tamaño lógico. Y aquí viene la cuestión existencial… Resulta que mi disco es de 200Gb, según la documentación, es capaz de multiplicar x10 su tamaño lógico. Yo nunca he llegado a obtener esos ratios ni tan siquiera con archivos muy muy similares. Aún así, es muy factible tener un x5 para lo que voy a usarlo. No te preocupes si necesitas ampliar posteriormente tanto parte física como lógica. Esta vez, voy a ser cauto y le voy a proporcionar un x3, o lo que es lo mismo 600Gb. Hay documentación muy interesante hablando de esto, del tamaño de slabs y cosas así…</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Crear un volúmen</span>
+vdo create <span class="se">\</span>
+<span class="nt">--name</span><span class="o">=</span>vdo-backup <span class="se">\</span>
+<span class="nt">--device</span><span class="o">=</span>/dev/vdb <span class="se">\</span>
+<span class="nt">--vdoLogicalSize</span><span class="o">=</span>600G
+</code></pre></div></div>
+
+<p>Nos responderá algo como…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Creating VDO vdo-backup
+      The VDO volume can address 196 GB <span class="k">in </span>98 data slabs, each 2 GB.
+      It can grow to address at most 16 TB of physical storage <span class="k">in </span>8192 slabs.
+      If a larger maximum size might be needed, use bigger slabs.
+Starting VDO vdo-backup
+Starting compression on VDO vdo-backup
+VDO instance 2 volume is ready at /dev/mapper/vdo-backup
+</code></pre></div></div>
+
+<p>Voy a darle formato, lo quiero como XFS. el <code class="language-plaintext highlighter-rouge">-K</code> le indica que no intente descartar bloques (total es nuevo).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkfs.xfs <span class="nt">-K</span> /dev/mapper/vdo-backup
+udevadm settle
+<span class="c"># para ext4</span>
+<span class="c">#mkfs.xfs -E nodiscard /dev/mapper/vdo-backup</span>
+<span class="c"># el comando udevadm settle registra los cambios del sistema con espera activa</span>
+<span class="c">#Comprobamos que el dispositivo es correcto</span>
+lsblk
+</code></pre></div></div>
+
+<p>Montar el voluen manualmente, para probar:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> /backup/
+mount /dev/mapper/vdo-backup /backup
+umount /backup
+</code></pre></div></div>
+
+<p>Puesto que no devuelve ningún error lo voy a añadir al <code class="language-plaintext highlighter-rouge">fstab</code> para que arranque</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Si no usais vim, estáis perdiendo el tiempo...</span>
+vim /etc/fstab
+/dev/mapper/vdo-backup /backup  xfs  defaults,x-systemd.automount,nofail  0 2
+<span class="c"># Probamos para que no tengamos sustos en un reinicio</span>
+mount <span class="nt">-a</span>
+<span class="c"># Si ejecutas "df -h" verás que el sistema ya tiene ocupación (eso es parte de lo que toma VDO para sus índices y sus cosas)</span>
+</code></pre></div></div>
+
+<p>Ahora necesitamos tener activo <code class="language-plaintext highlighter-rouge">fstrim</code>, que descartará los bloques sin uso periódicamente un vez a la semana. Aunque si tienes mucha actividad puedes configurarlo para más frecuencia o ejecutarlo vía cron.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl <span class="nb">enable</span> <span class="nt">--now</span> fstrim.timer
+systemctl status fstrim.timer
+fstrim.timer - Discard unused blocks once a week
+   Loaded: loaded <span class="o">(</span>/usr/lib/systemd/system/fstrim.timer<span class="p">;</span> enabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+   Active: active <span class="o">(</span>waiting<span class="o">)</span> since Wed 2023-05-17 13:24:41 CEST<span class="p">;</span> 3min 15s ago
+  Trigger: Mon 2023-05-22 01:20:46 CEST<span class="p">;</span> 4 days left
+     Docs: man:fstrim
+
+May 17 13:24:41 localhost.localdomain systemd[1]: Started Discard unused blocks once a week.
+</code></pre></div></div>
+
+<p>Para el que se lo pregunte, no necesitas “discard” en el fstab.
+Puedes ver incluso, cuando fstrim.timer va a ejecutar el servicio</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl list-timers fstrim.timer
+</code></pre></div></div>
+
+<p>Ahora viene la “pena” de todo esto. Tendrás que monitorizar este sistema de archivos dos veces. Si ejecutas el comando</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vdostats <span class="nt">--human-readable</span>
+Device                    Size      Used Available Use% Space saving%
+/dev/mapper/vdo-backup    200.0G      4.1G    195.9G   2%           99%
+
+<span class="c"># Te devuelve el espacio físico del dispositivo "el real"</span>
+<span class="c"># si ejecutas un df -h, verás el tamaño que hemos indicado "lógico" y por tanto, para tu sistema operativo, ese FS tiene 600Gb.</span>
+<span class="nb">df</span> <span class="nt">-h</span> /backup 
+S.ficheros             Tamaño Usados  Disp Uso% Montado en
+/dev/mapper/vdo-backup   600G   4,3G  596G   1% /backup
+</code></pre></div></div>
+
+<p>Entonces, es posible que se llene uno u otro, eso dependerá del tamaño lógico que hemos aplciado y de claro está, ficheros que tengamos almacenados, si son o no más propensos a compresión.</p>
+
+<p>Diría que eso es todo.
+¡¡Nos vemos!!</p>]]></content><author><name>Pancho</name></author><category term="RHEL" /><category term="CentOS" /><category term="Red Hat" /><category term="CentOS" /><summary type="html"><![CDATA[Montar un VDO o disco de deduplicación]]></summary></entry><entry><title type="html">Oracle - Recuperar un GAP elevado ‘STANDBY’</title><link href="https://noobchamp.github.io/oracle/rman/Recuperar-GAP-elevado/" rel="alternate" type="text/html" title="Oracle - Recuperar un GAP elevado ‘STANDBY’" /><published>2024-05-12T19:00:00+00:00</published><updated>2024-05-12T19:00:00+00:00</updated><id>https://noobchamp.github.io/oracle/rman/Recuperar-GAP-elevado</id><content type="html" xml:base="https://noobchamp.github.io/oracle/rman/Recuperar-GAP-elevado/"><![CDATA[<h2 id="recuperar-gap-elevado">Recuperar GAP elevado</h2>
+
+<p>En primer lugar, vamos a comprobar que el GAP es realmente alto como para tomar esta alternativa:
+<code class="language-plaintext highlighter-rouge">STANDBY</code></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="n">thread</span><span class="o">#</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">sequence</span><span class="o">#</span><span class="p">)</span> <span class="nv">"Last Standby Seq Received"</span> <span class="k">from</span> <span class="n">v</span><span class="err">$</span><span class="n">archived_log</span> <span class="n">val</span><span class="p">,</span> <span class="n">v</span><span class="err">$</span><span class="k">database</span> <span class="n">vdb</span> <span class="k">where</span> <span class="n">val</span><span class="p">.</span><span class="n">resetlogs_change</span><span class="o">#</span> <span class="o">=</span> <span class="n">vdb</span><span class="p">.</span><span class="n">resetlogs_change</span><span class="o">#</span> <span class="k">group</span> <span class="k">by</span> <span class="n">thread</span><span class="o">#</span> <span class="k">order</span> <span class="k">by</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">thread</span><span class="o">#</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">sequence</span><span class="o">#</span><span class="p">)</span> <span class="nv">"Last Standby Seq Applied"</span> <span class="k">from</span> <span class="n">v</span><span class="err">$</span><span class="n">archived_log</span> <span class="n">val</span><span class="p">,</span> <span class="n">v</span><span class="err">$</span><span class="k">database</span> <span class="n">vdb</span> <span class="k">where</span> <span class="n">val</span><span class="p">.</span><span class="n">resetlogs_change</span><span class="o">#</span> <span class="o">=</span> <span class="n">vdb</span><span class="p">.</span><span class="n">resetlogs_change</span><span class="o">#</span> <span class="k">and</span> <span class="n">val</span><span class="p">.</span><span class="n">applied</span> <span class="k">in</span> <span class="p">(</span><span class="s1">'YES'</span><span class="p">,</span><span class="s1">'IN-MEMORY'</span><span class="p">)</span> <span class="k">group</span> <span class="k">by</span> <span class="n">thread</span><span class="o">#</span> <span class="k">order</span> <span class="k">by</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">PROCESS</span><span class="p">,</span> <span class="n">STATUS</span><span class="p">,</span> <span class="n">THREAD</span><span class="o">#</span><span class="p">,</span> <span class="n">SEQUENCE</span><span class="o">#</span><span class="p">,</span> <span class="n">BLOCK</span><span class="o">#</span><span class="p">,</span> <span class="n">BLOCKS</span> <span class="k">from</span> <span class="n">V</span><span class="err">$</span><span class="n">MANAGED_STANDBY</span> <span class="k">where</span> <span class="n">SEQUENCE</span><span class="o">#</span> <span class="o">&gt;</span><span class="mi">0</span> <span class="k">order</span> <span class="k">by</span> <span class="n">SEQUENCE</span><span class="o">#</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Em los resultados mostrá que el último aplicado con el último recibido es muy alto, por lo que tenemos un GAP como demuestra el proceso MRP0 <strong>“MRP0 WAIT_FOR_GAP 1 XXXX  0 0”</strong>. Por tanto vamos a resolver la situación haciendo un backup desde la secuencia en la que se encuentra ahora la <em>STANDBY</em> en la <em>PRIMARIA</em> para restablecer la situación.</p>
+<blockquote>
+  <p>The system change number (SCN) is Oracle’s clock - every time we commit, the clock increments. The SCN just marks a consistent point in time in the database.</p>
+</blockquote>
+
+<p>Se comprueba el SCN que se ha quedado en la standby
+<code class="language-plaintext highlighter-rouge">STANDBY</code></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="n">to_char</span><span class="p">(</span><span class="n">current_scn</span><span class="p">)</span> <span class="k">from</span> <span class="n">v</span><span class="err">$</span><span class="k">database</span><span class="p">;</span>
+<span class="c1">-- Por ejemplo 123456789</span>
+</code></pre></div></div>
+
+<p>Para el ejercicio voy a crear un directorio específico con suficiente espacio (que tenga los permisos adecuado), por ejemplo /backup/GAP_BACKUP.
+Ahora en la primaria, hacemos un backup desde el SCN que hemos obtenido con <strong>RMAN</strong>.
+<code class="language-plaintext highlighter-rouge">PRIMARY</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RMAN&gt; run <span class="o">{</span>
+2&gt; allocate channel c1 <span class="nb">type </span>disk format <span class="s1">'/backup/GAP_BACKUP/%U.bkp'</span><span class="p">;</span>
+3&gt; backup incremental from scn 123456789 database<span class="p">;</span>
+4&gt; <span class="o">}</span>
+</code></pre></div></div>
+
+<p>También tenemos que hacer una copia del controlfile para la stadby en la primaria.
+<code class="language-plaintext highlighter-rouge">PRIMARY</code></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">database</span> <span class="k">create</span> <span class="n">standby</span> <span class="n">controlfile</span> <span class="k">as</span> <span class="s1">'/backup/GAP_BACKUP/ctl_standby.ctl'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Copiamos los ficheros al servidor de destino, previamente he creado una carpeta en el servidor de destino llamada /backup/GAP_RECOVER. Por tanto copiará el/los archivos <em>.bkp</em> y el <em>ctl_standby.ctl</em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp /backup/GAP_BACKUP/<span class="k">*</span> oracle@serverSTANDBY:/backup/GAP_RECOVER/
+</code></pre></div></div>
+
+<p>Ahora vamos realizamos las operaciones de restore en la standby.
+<code class="language-plaintext highlighter-rouge">STANDBY</code>
+Paramos la BBDD</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Localizamos el controlfile actual (o lo normal es que tengas varios)</span>
+<span class="k">SHOW</span> <span class="k">PARAMETER</span> <span class="n">control_files</span><span class="p">;</span>
+<span class="c1">-- Por ejemplo lo tenemos ubicado en /u01/oradata/control01.ctl y /u02/oradata/control02.ctl</span>
+<span class="c1">-- Para la BBDD</span>
+<span class="n">shutdown</span> <span class="k">immediate</span><span class="p">;</span>
+<span class="c1">-- Levantar sin montar</span>
+<span class="n">startup</span> <span class="n">nomount</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Ahora movemos los controlfile y copiamos con el que hemos traído desde el servidor de la <em>PRIMARIA</em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mv</span> /u01/oradata/control01.ctl /u01/oradata/control01.ctl.<span class="si">$(</span><span class="nb">date</span> +<span class="s2">"%Y-%m-%d"</span><span class="si">)</span>
+<span class="nb">mv</span> /u02/oradata/control02.ctl /u02/oradata/control02.ctl.<span class="si">$(</span><span class="nb">date</span> +<span class="s2">"%Y-%m-%d"</span><span class="si">)</span>
+<span class="nb">cp</span> /backup/GAP_RECOVER/ctl_standby.ctl /u01/oradata/control01.ctl
+<span class="nb">cp </span>backup/GAP_RECOVER/ctl_standby.ctl /u02/oradata/control02.ctl
+</code></pre></div></div>
+
+<p>Montar nuevamente</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">database</span> <span class="n">mount</span> <span class="n">standby</span> <span class="k">database</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>El próximo paso es recuperar desde <strong>RMAN</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Indicamos la ubicación</span>
+rman target /
+RMAN&gt; catalog start with <span class="s1">'/backup/GAP_RECOVER'</span><span class="p">;</span>
+<span class="c"># Iniciar el restore</span>
+RMAN&gt; recover database<span class="p">;</span>
+...
+Se ha finalizado recover a las...
+</code></pre></div></div>
+
+<p>En este punto hemos resuelto el GAP, ahora solo tenemos que volver a indicar que inicie el proceso</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">database</span> <span class="n">recover</span> <span class="n">managed</span> <span class="n">standby</span> <span class="k">database</span> <span class="k">disconnect</span> <span class="k">from</span> <span class="k">session</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Podemos comprobar si está aplicando logs desde la consulta que hicimos al principio <em>“Last Standby Seq Received” “Last Standby Seq Applied”</em>.</p>
+
+<p>También podemos probar a rotar en la <em>PRIMARIA</em> para comprobar que la secuencia continúa recibiendo/aplicando
+<code class="language-plaintext highlighter-rouge">PRIMARY</code></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">system</span> <span class="n">switch</span> <span class="n">logfile</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Y de nuevo comprobar la secuencia en <em>STANDBY</em></p>
+
+<p>¡Nos vemos!</p>]]></content><author><name>Ekko</name></author><category term="Oracle" /><category term="Rman" /><category term="Oracle" /><category term="rman" /><summary type="html"><![CDATA[Recuperar GAP elevado]]></summary></entry><entry><title type="html">Red Hat - Instalar un repositorio local</title><link href="https://noobchamp.github.io/rhel/linux/rhel-localrepo/" rel="alternate" type="text/html" title="Red Hat - Instalar un repositorio local" /><published>2023-11-11T11:45:00+00:00</published><updated>2023-11-11T11:45:00+00:00</updated><id>https://noobchamp.github.io/rhel/linux/rhel-localrepo</id><content type="html" xml:base="https://noobchamp.github.io/rhel/linux/rhel-localrepo/"><![CDATA[<p><img src="/images/redhat8.webp" alt="center-aligned-image" class="align-center" /></p>
+<h1 id="introducción">Introducción</h1>
+<p>Tener un servidor conectado a Red Hat, no siempre es posible o no queremos subscribirlo por varios motivos:</p>
+<ul>
+  <li>Nos encontramos en una red sin acceso a internet.</li>
+  <li>Se trata de una máquina virtual o pruebas.</li>
+  <li>La velocidad de red tiene poco caudal.</li>
+  <li>Nos gusta la aventura…</li>
+</ul>
+
+<p>Podemos instalar un repositorio local, o bien teniendo un servidor que <code class="language-plaintext highlighter-rouge">SI</code> esté subscrito o desde un <code class="language-plaintext highlighter-rouge">CD oficial</code>.
+¿Cuál es la diferencia? Evidentemente, teniendo un cd como repositorio, no tenemos actualizaciones de paquetes, sin embargo, no será necesario hacer un pago en Red Hat.
+El inconveniente de todo esto, será la cantidad de espacio que vamos a necestar, que dependerá de cuántas versiones querramos tener.</p>
+
+<p><cite>Desarrollado a través de <a href="https://access.redhat.com/solutions/7019225">Red Hat</a>.</cite></p>
+
+<h2 id="preparando-el-terreno">Preparando el terreno</h2>
+<h3 id="subscripción-a-red-hat">Subscripción a Red Hat</h3>
+<p>Por supuesto, tienes que tener cuenta en RHEL. No es necesario previo pago, puede obtener una licencia de pruebas o un sadbox.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Aunque la versión no tiene por qué ser la última, podríamos tener un 8.1 y descargar cualquier versión 8.X</span>
+root@repository:~#
+<span class="nb">cat</span> /etc/os-release
+<span class="nv">NAME</span><span class="o">=</span><span class="s2">"Red Hat Enterprise Linux"</span>
+<span class="nv">VERSION</span><span class="o">=</span><span class="s2">"8.8 (Ootpa)"</span>
+<span class="nv">ID</span><span class="o">=</span><span class="s2">"rhel"</span>
+<span class="nv">ID_LIKE</span><span class="o">=</span><span class="s2">"fedora"</span>
+<span class="nv">VERSION_ID</span><span class="o">=</span><span class="s2">"8.8"</span>
+<span class="nv">PLATFORM_ID</span><span class="o">=</span><span class="s2">"platform:el8"</span>
+<span class="nv">PRETTY_NAME</span><span class="o">=</span><span class="s2">"Red Hat Enterprise Linux 8.8 (Ootpa)"</span>
+<span class="nv">ANSI_COLOR</span><span class="o">=</span><span class="s2">"0;31"</span>
+<span class="nv">CPE_NAME</span><span class="o">=</span><span class="s2">"cpe:/o:redhat:enterprise_linux:8::baseos"</span>
+<span class="nv">HOME_URL</span><span class="o">=</span><span class="s2">"https://www.redhat.com/"</span>
+<span class="nv">DOCUMENTATION_URL</span><span class="o">=</span><span class="s2">"https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8"</span>
+<span class="nv">BUG_REPORT_URL</span><span class="o">=</span><span class="s2">"https://bugzilla.redhat.com/"</span>
+<span class="nv">REDHAT_BUGZILLA_PRODUCT</span><span class="o">=</span><span class="s2">"Red Hat Enterprise Linux 8"</span>
+<span class="nv">REDHAT_BUGZILLA_PRODUCT_VERSION</span><span class="o">=</span>8.8
+<span class="nv">REDHAT_SUPPORT_PRODUCT</span><span class="o">=</span><span class="s2">"Red Hat Enterprise Linux"</span>
+<span class="nv">REDHAT_SUPPORT_PRODUCT_VERSION</span><span class="o">=</span><span class="s2">"8.8"</span>
+
+<span class="c"># Registro en RHEL</span>
+root@repository:~#
+subscription-manager register
+Registering to: subscription.rhsm.redhat.com:443/subscription
+Username: oliva_rh
+Password: <span class="k">******</span>
+The system has been registered with ID: 3aa74c4f-2e84-439e-aa37-xxxxxxxxxxxx
+The registered system name is: repository
+
+<span class="c"># Aquí vemos el acceso a cualquier versión de la 8</span>
+root@repository:~#
+subscription-manager release <span class="nt">--list</span>
++-------------------------------------------+
+          Available Releases
++-------------------------------------------+
+8
+8.0
+8.1
+8.2
+8.3
+8.4
+8.5
+8.6
+8.7
+8.8
+
+<span class="c"># Por el momento no hemos definido ninguna</span>
+root@repository:~#
+subscription-manager release <span class="nt">--show</span>
+Release not <span class="nb">set</span>
+</code></pre></div></div>
+<p>Por otro lado, tampoco hemos habilitado ningún repositorio.
+Podemos listar todos los <code class="language-plaintext highlighter-rouge">repositorios</code> disponibles.
+Habilitaremos los que nos interese…
+En mi caso, pondré dos básicos:</p>
+<ul>
+  <li>rhel-8-for-x86_64-baseos-rpms</li>
+  <li>rhel-8-for-x86_64-appstream-rpms</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@repository:~#
+subscription-manager repos <span class="nt">--list</span> | more
++----------------------------------------------------------+
+    Available Repositories <span class="k">in</span> /etc/yum.repos.d/redhat.repo
++----------------------------------------------------------+
+Repo ID:   rhel-atomic-7-cdk-3.10-rpms
+Repo Name: Red Hat Container Development Kit 3.10 /<span class="o">(</span>RPMs<span class="o">)</span>
+Repo URL:  https://cdn.redhat.com/content/dist/rhel/atomic/7/7Server/<span class="nv">$basearch</span>/cdk/3.10/os
+Enabled:   0
+
+Repo ID:   rhocp-4.9-for-rhel-8-x86_64-source-rpms
+Repo Name: Red Hat OpenShift Container Platform 4.9 <span class="k">for </span>RHEL 8 x86_64 <span class="o">(</span>Source RPMs<span class="o">)</span>
+Repo URL:  https://cdn.redhat.com/content/dist/layered/rhel8/x86_64/rhocp/4.9/source/SRPMS
+Enabled:   0
+<span class="c"># Y un largo etc ...</span>
+
+root@repository:~#
+subscription-manager repos <span class="nt">--enable</span><span class="o">=</span>rhel-8-for-x86_64-baseos-rpms
+Repository <span class="s1">'rhel-8-for-x86_64-baseos-rpms'</span> is enabled <span class="k">for </span>this system.
+root@repository:~#
+subscription-manager repos <span class="nt">--enable</span><span class="o">=</span>rhel-8-for-x86_64-appstream-rpms
+Repository <span class="s1">'rhel-8-for-x86_64-appstream-rpms'</span> is enabled <span class="k">for </span>this system.
+root@repository:~#
+subscription-manager repos <span class="nt">--list</span>
+<span class="nt">--list</span>           <span class="nt">--list-disabled</span>  <span class="nt">--list-enabled</span>
+
+<span class="c"># Listar los repositorios habilitados</span>
+root@repository:~#
+subscription-manager repos <span class="nt">--list-enabled</span>
++----------------------------------------------------------+
+    Available Repositories <span class="k">in</span> /etc/yum.repos.d/redhat.repo
++----------------------------------------------------------+
+Repo ID:   rhel-8-for-x86_64-appstream-rpms
+Repo Name: Red Hat Enterprise Linux 8 <span class="k">for </span>x86_64 - AppStream <span class="o">(</span>RPMs<span class="o">)</span>
+Repo URL:  https://cdn.redhat.com/content/dist/rhel8/<span class="nv">$releasever</span>/x86_64/appstream/os
+Enabled:   1
+
+Repo ID:   rhel-8-for-x86_64-baseos-rpms
+Repo Name: Red Hat Enterprise Linux 8 <span class="k">for </span>x86_64 - BaseOS <span class="o">(</span>RPMs<span class="o">)</span>
+Repo URL:  https://cdn.redhat.com/content/dist/rhel8/<span class="nv">$releasever</span>/x86_64/baseos/os
+Enabled:   1
+</code></pre></div></div>
+
+<h3 id="servidor-httphttps">Servidor http/https</h3>
+<p>Vamos a necesitar un servidor web, en mi caso, voy a usar <code class="language-plaintext highlighter-rouge">Caddy</code>.
+Puedes usar el mítico httpd o el que te de la gana.
+Lo voy a colocar todo en la ruta <em>/var/www/repo</em>.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@repository:~#
+dnf <span class="nb">install </span>caddy
+
+<span class="c"># Habilitar y iniciar el servicio Caddy</span>
+systemctl <span class="nb">enable </span>caddy
+systemctl start caddy
+
+<span class="c"># Verificar el estado del servicio Caddy</span>
+systemctl status caddy
+
+<span class="c"># Configurar sitio</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> /var/www/repo
+<span class="nb">echo</span> <span class="s1">':8080 {
+&gt;   root  * /var/www/repo
+&gt;   file_server {
+      browse
+    }
+&gt; }'</span> <span class="o">&gt;</span> /etc/caddy/Caddyfile.d/repos.caddyfile
+systemctl reload caddy
+</code></pre></div></div>
+
+<h2 id="descarga-de-repositorios">Descarga de repositorios</h2>
+<p>Ahora simplemente vamos a establecer la versión con <code class="language-plaintext highlighter-rouge">subscription-manager</code> y descargar a nuestra ruta local <em>/var/www/repo</em>.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>subscription-manager release <span class="nt">--set</span><span class="o">=</span>8.7 <span class="o">&amp;&amp;</span> <span class="nb">rm</span> <span class="nt">-rf</span> /var/cache/dnf
+<span class="c"># Vamos a crear una carpeta para la versión 8.8 y otra para la versión 8.7</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> /var/www/repo/8.8
+<span class="nb">mkdir</span> <span class="nt">-p</span> /var/www/repo/8.7
+
+<span class="c"># Instalar reposync</span>
+yum <span class="nb">install</span> <span class="nt">-y</span> yum-utils
+<span class="c">#Empezamos a descargar para la versión 8.8</span>
+subscription-manager release <span class="nt">--set</span><span class="o">=</span>8.8 <span class="o">&amp;&amp;</span> <span class="nb">rm</span> <span class="nt">-rf</span> /var/cache/dnf 
+reposync <span class="nt">-p</span> /var/www/repo/8.8 <span class="nt">--download-metadata</span> <span class="nt">--repoid</span><span class="o">=</span>rhel-8-for-x86_64-baseos-rpms
+reposync <span class="nt">-p</span> /var/www/repo/8.8 <span class="nt">--download-metadata</span> <span class="nt">--repoid</span><span class="o">=</span>rhel-8-for-x86_64-appstream-rpms
+<span class="c"># Para la versión 8.7</span>
+subscription-manager release <span class="nt">--set</span><span class="o">=</span>8.7 <span class="o">&amp;&amp;</span> <span class="nb">rm</span> <span class="nt">-rf</span> /var/cache/dnf 
+reposync <span class="nt">-p</span> /var/www/repo/8.7 <span class="nt">--download-metadata</span> <span class="nt">--repoid</span><span class="o">=</span>rhel-8-for-x86_64-baseos-rpms
+reposync <span class="nt">-p</span> /var/www/repo/8.7 <span class="nt">--download-metadata</span> <span class="nt">--repoid</span><span class="o">=</span>rhel-8-for-x86_64-appstream-rpms
+</code></pre></div></div>
+<p>Entonces nos quedará algo así
+<img src="/images/repo.webp" alt="center-aligned-image" class="align-center" /></p>
+
+<h2 id="clientes">CLientes</h2>
+<p>A la hora de configurar otros servidores para que puedan descargar paquetes desde este repositorio, crearemos el archivo _/etc/yum.repos.d/mi_repositorio.repo</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>repo-id]
+<span class="nv">baseurl</span><span class="o">=</span>http://X.X.X.X/version
+<span class="nv">gpgcheck</span><span class="o">=</span>0
+<span class="nv">enabled</span><span class="o">=</span>1
+<span class="c"># Example</span>
+<span class="o">[</span>rhel-8-for-x86_64-baseos-rpms]
+<span class="nv">baseurl</span><span class="o">=</span>http://192.168.1.2/8.8
+<span class="nv">gpgcheck</span><span class="o">=</span>0
+<span class="nv">enabled</span><span class="o">=</span>1
+<span class="c"># etc...</span>
+</code></pre></div></div>
+<h1 id="automatización">Automatización</h1>
+<p>La forma más sencilla, es tener una tarea en cron que lo haga cada cierto periodo.
+Simplemente es agregar a tu cron, los comandos que hemos visto anteriormente.</p>
+
+<p>¡Adiós!</p>]]></content><author><name>Teemo</name></author><category term="RHEL" /><category term="Linux" /><category term="Red Hat" /><summary type="html"><![CDATA[Introducción Tener un servidor conectado a Red Hat, no siempre es posible o no queremos subscribirlo por varios motivos: Nos encontramos en una red sin acceso a internet. Se trata de una máquina virtual o pruebas. La velocidad de red tiene poco caudal. Nos gusta la aventura…]]></summary></entry><entry><title type="html">Ansible - Tutorial rápido completo 2/2</title><link href="https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-2/" rel="alternate" type="text/html" title="Ansible - Tutorial rápido completo 2/2" /><published>2022-09-24T11:45:00+00:00</published><updated>2022-09-24T11:45:00+00:00</updated><id>https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-2</id><content type="html" xml:base="https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-2/"><![CDATA[<p><img src="/images/ansible.webp" alt="center-aligned-image" class="align-center" /></p>
+
+<h2 id="introducción">Introducción</h2>
+
+<p>En el <a href="https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/">anterior post</a> vimos lo básico de <code class="language-plaintext highlighter-rouge">Ansible</code>. Aunque con nuestro inventario podemos lanzar prácticamente cualquier módulo por línea de comandos, lo ideal es hacer una estructura y usar todo lo disponible a nuestro alcance.</p>
+
+<p>Ahora vamos a ver playbooks, handlers, tags, collections, vault, roles y ansible-galaxy. Estas cosas son las que hacen que <code class="language-plaintext highlighter-rouge">ansible</code> sea tan útil.
+Vamos a ver cada uno y entremedias veremos otras cosillas como el vault, al final va a ser un revuelto pero la cosa es ver cómo trabajan juntos puesto que por separado no es eficiente.</p>
+
+<blockquote>
+  <p>Las opciones de los comandos se han explicado en el anterior post.
+Recuerda que la opción <code class="language-plaintext highlighter-rouge">-C</code> va a simular la ejecución pero no la llevará a cabo.</p>
+</blockquote>
+
+<h2 id="playbook">Playbook</h2>
+
+<p>Un playbook nos sirver para ejecutar específicas tareas sobre específicos servidores. Por supuesto tiene sintaxis yamel.</p>
+
+<p>Mejor vamos a explicar con un ejemplo, vamos a crear el primer playbook. Como vimos anteriormente todo lo hacemos como root pero vamos a crear el usuario ansible y copiar la <em>rsa</em> a cada máquina.</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">micluster</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Crear el usuario ansible</span>
+      <span class="na">user</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">ansible</span>
+        <span class="na">shell</span><span class="pi">:</span> <span class="s">/bin/bash</span>
+        <span class="c1">#password:</span>
+        <span class="na">generate_ssh_key</span><span class="pi">:</span> <span class="s">yes</span>
+        <span class="na">ssh_key_bits</span><span class="pi">:</span> <span class="m">2048</span>
+        <span class="na">ssh_key_file</span><span class="pi">:</span> <span class="s">.ssh/id_rsa</span>
+</code></pre></div></div>
+
+<p>Y comprobamos que pasaría (lanzamos a un solo nodo):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible miansible]# ansible-playbook crearusuario.yml <span class="nt">-i</span> inventory.yml <span class="nt">-l</span> nodo1 <span class="nt">-C</span>
+
+PLAY <span class="o">[</span>micluster] <span class="k">*******************************************************************************************************************************************************************************</span>
+
+TASK <span class="o">[</span>Gathering Facts] <span class="k">*************************************************************************************************************************************************************************</span>
+ok: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>Crear el usuario ansible] <span class="k">****************************************************************************************************************************************************************</span>
+changed: <span class="o">[</span>nodo1]
+
+PLAY RECAP <span class="k">*************************************************************************************************************************************************************************************</span>
+nodo1                      : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0    <span class="nv">skipped</span><span class="o">=</span>0    <span class="nv">rescued</span><span class="o">=</span>0    <span class="nv">ignored</span><span class="o">=</span>0   
+</code></pre></div></div>
+
+<p>Como vemos en el playbook, no tenemos clave para este usuario, en Linux se puede crear el usuario pero no proporcionar contraseña.
+Esa es la línea que tenemos comentada, pero como no queremos pasar contraseñas en texto plano vamos a la siguiente cuestión.</p>
+
+<h2 id="vault">Vault</h2>
+
+<p>No es más que un gestor de contraseñas (por así llamarlo). Se usa para cifrar las claves y no enviarlas en texto plano. Además te permite poder subir tu proyecto incluida las contraseñas puesto que usa una <em>contraseña maestra</em>.</p>
+
+<p>Primero vamos a crear el archivo</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible miansible]# ansible-vault create vault.yml
+New Vault password: 
+Confirm New Vault password: 
+<span class="c"># En mi caso he puesto secreto123, sera la contraseña maestra</span>
+</code></pre></div></div>
+
+<p>Directamente entra en el editor vi (puedes cambiarlo), si no sabes salir pulsa <em>esc</em> y <em>:wq</em>.<br />
+He agregado la entrada:</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">ansible_usuario</span><span class="pi">:</span> <span class="s">ans1bl3_p4ss</span>
+</code></pre></div></div>
+
+<p>Comprobamos que ahora está encriptado</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible miansible]# <span class="nb">cat </span>vault.yml 
+<span class="nv">$ANSIBLE_VAULT</span><span class="p">;</span>1.1<span class="p">;</span>AES256
+34646139623266333865396234626265666437383332616538363665356539373636376630303032
+3235656132326633333831356463613837386635353736340a356331646439373139366438316539
+35613964643632373562343032386136313631366634353666306565663163613935313435346166
+3163366363313865350a633634633464353637643233353237366164363033386537356137653466
+35356530636132356431626239393663613461346165396530343666626431336632
+</code></pre></div></div>
+
+<p>Ahora si podemos añadir una contraseña, por ejemplo</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">micluster</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Crear el usuario ansible</span>
+      <span class="na">user</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">ansible</span>
+        <span class="na">shell</span><span class="pi">:</span> <span class="s">/bin/bash</span>
+        <span class="na">password</span><span class="pi">:</span> <span class="s">micomtraseña</span>
+        <span class="na">generate_ssh_key</span><span class="pi">:</span> <span class="s">yes</span>
+        <span class="na">ssh_key_bits</span><span class="pi">:</span> <span class="m">2048</span>
+        <span class="na">ssh_key_file</span><span class="pi">:</span> <span class="s">.ssh/id_rsa</span>
+</code></pre></div></div>
+
+<p>Esto nos va a reportar un problema</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible miansible]# ansible-playbook crearusuario.yml <span class="nt">-i</span> inventory.yml <span class="nt">-l</span> nodo1 <span class="nt">-C</span>
+
+PLAY <span class="o">[</span>micluster] <span class="k">*******************************************************************************************************************************************************************************</span>
+
+TASK <span class="o">[</span>Gathering Facts] <span class="k">*************************************************************************************************************************************************************************</span>
+ok: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>Crear el usuario ansible] <span class="k">****************************************************************************************************************************************************************</span>
+<span class="o">[</span>WARNING]: The input password appears not to have been hashed. The <span class="s1">'password'</span> argument must be encrypted <span class="k">for </span>this module to work properly.
+changed: <span class="o">[</span>nodo1]
+
+PLAY RECAP <span class="k">*************************************************************************************************************************************************************************************</span>
+nodo1                      : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0    <span class="nv">skipped</span><span class="o">=</span>0    <span class="nv">rescued</span><span class="o">=</span>0    <span class="nv">ignored</span><span class="o">=</span>0   
+</code></pre></div></div>
+
+<p>Hay varias soluciones, la más simple que sería usar <em>mkpasswd</em> o <em>openssl</em> para generar una clave SHA-512.
+El propósito del <code class="language-plaintext highlighter-rouge">vault</code> era no depender de estas cosas, por tanto hay que modificar el playbook para indicarle que vamos a usar el playbook y que la contraseña será una variable</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">micluster</span>
+  <span class="na">vars_files</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">vault.yml</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Crear el usuario ansible</span>
+      <span class="na">user</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">ansible</span>
+        <span class="na">shell</span><span class="pi">:</span> <span class="s">/bin/bash</span>
+        <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ansible_usuario</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">password_hash('sha512')</span><span class="nv"> </span><span class="s">}}"</span>
+        <span class="na">generate_ssh_key</span><span class="pi">:</span> <span class="s">yes</span>
+        <span class="na">ssh_key_bits</span><span class="pi">:</span> <span class="m">2048</span>
+        <span class="na">ssh_key_file</span><span class="pi">:</span> <span class="s">.ssh/id_rsa</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Como se aprecia, mediante una tubería hemos cifrado a SHA-512 el texto plano que teníamos en el vault.</p>
+</blockquote>
+
+<p>Puesto que vamos a usar el vault ahora el comando es distinto, puesto que tenemos que indicar que la contraseña maestra para abrirlo</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible miansible]# ansible-playbook crearusuario.yml <span class="nt">-i</span> inventory.yml <span class="nt">-l</span> nodo1 <span class="nt">-C</span> <span class="nt">--ask-vault-pass</span>
+Vault password: 
+
+PLAY <span class="o">[</span>micluster] 
+...
+...
+nodo1                      : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0    <span class="nv">skipped</span><span class="o">=</span>0    <span class="nv">rescued</span><span class="o">=</span>0    <span class="nv">ignored</span><span class="o">=</span>0   
+</code></pre></div></div>
+
+<p>Dirás que es un peñazo tener que poner la contraseña o que hace que lanzar una tarea automática sea imposible puesto que un prompt nos va a pedir la contraseña. Explora la opción <code class="language-plaintext highlighter-rouge">--vault-password-file ~/.vault_pass.txt</code> en la que podemos tener un archivo con los permisos correctos en el sitio correcto para que sea accesible por quien queremos.</p>
+
+<h2 id="roles">Roles</h2>
+
+<p>En estos momentos nos planteamos ciertas preguntas.
+¿Para cada cierto tipo de acción necesitamos un playbook?
+¿Qué ocurre si no quiero ejecutar un playbook completo, solo una parte?
+¿Voy a juntar un montón de playbooks?</p>
+
+<p>La respuesta es crear roles. A modo de hacer nuestro Ansible <em>modular</em>.
+Vemos que estamos creando un cluster y vamos a tener que añadir tareas relativas a ellos. Pero la cuestión, no todo van a ser las mismas tareas, los mismos SO, los mismos elementos en general…</p>
+
+<p>Lo ideal es hacer <code class="language-plaintext highlighter-rouge">roles</code> que realicen tareas generales que puedan valer para cualquier servidor. Por ejemplo: En nuestro caso haremos un rol para englobar las tareas relacionadas con SSH. Posteriormente podríamos crear otro rol para crear clúster Pacemaker, otro para servidores web…</p>
+
+<p>Vamos a crear el primer rol, se puede hacer manualmente o mediante el comando <code class="language-plaintext highlighter-rouge">ansible-galaxy</code></p>
+
+<h2 id="ansible-galaxy">Ansible Galaxy</h2>
+
+<p>Etiquetado para compartir con la comunidad roles y colecciones entre otros pero además nos va a permitir crear nuestras estructuras.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>oliva@ansible miansible]<span class="nv">$ </span>ansible-galaxy init ssh
+- Role ssh was created successfully
+<span class="o">[</span>oliva@ansible miansible]<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-la</span> ssh
+total 8
+drwxrwxr-x. 10 oliva oliva  154 Sep 22 20:51 <span class="nb">.</span>
+drwxrwxr-x.  3 oliva oliva   79 Sep 22 20:51 ..
+drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 defaults
+drwxrwxr-x.  2 oliva oliva    6 Sep 22 20:51 files
+drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 handlers
+drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 meta
+<span class="nt">-rw-rw-r--</span><span class="nb">.</span>  1 oliva oliva 1328 Sep 22 20:51 README.md
+drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 tasks
+drwxrwxr-x.  2 oliva oliva    6 Sep 22 20:51 templates
+drwxrwxr-x.  2 oliva oliva   39 Sep 22 20:51 tests
+<span class="nt">-rw-rw-r--</span><span class="nb">.</span>  1 oliva oliva  539 Sep 22 20:51 .travis.yml
+drwxrwxr-x.  2 oliva oliva   22 Sep 22 20:51 vars
+</code></pre></div></div>
+
+<blockquote>
+  <p>Aqui vemos el árbol creado en la carpeta <em>ssh</em> el cual es nuestro rol para tareas de SSH.</p>
+</blockquote>
+
+<p>¿Te suena <em>tasks</em>? Son las tareas que ejecutamos en el playbook, ahora van en este archivo. Por tanto vamos a copiar el contenido del playbook, en la sección <em>tasks</em> aquí</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># tasks file for ssh</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Crear el usuario ansible</span>
+  <span class="na">user</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">ansible</span>
+    <span class="na">shell</span><span class="pi">:</span> <span class="s">/bin/bash</span>
+    <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ansible_usuario</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">password_hash('sha512')</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">generate_ssh_key</span><span class="pi">:</span> <span class="s">yes</span>
+    <span class="na">ssh_key_bits</span><span class="pi">:</span> <span class="m">2048</span>
+    <span class="na">ssh_key_file</span><span class="pi">:</span> <span class="s">.ssh/id_rsa</span>
+</code></pre></div></div>
+
+<p>Mientras que el playbook <em>crearusuario.yml</em> quedará asi</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">micluster</span>
+  <span class="na">vars_files</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">vault.yml</span>
+  <span class="na">roles</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">ssh</span>
+</code></pre></div></div>
+
+<p>Ejecutamos de nuevo</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible miansible]# ansible-playbook crearusuario.yml <span class="nt">-i</span> inventory.yml <span class="nt">-l</span> nodo1 <span class="nt">-C</span> <span class="nt">--ask-vault-pass</span> 
+</code></pre></div></div>
+
+<h3 id="y-vemos-que-se-completa-correctamente-ya-estamos-trabajando-con-nuestro-primer-rol">Y vemos que se completa correctamente. ¡Ya estamos trabajando con nuestro primer rol</h3>
+
+<h2 id="tags">TAGS</h2>
+
+<p>Necesitamos al menos agregar una segunda tarea para entender los tags.</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="c1"># tasks file for ssh</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Instalar la última versión de ssh</span>
+  <span class="na">yum</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">openssh-server, openssh-clients</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">latest</span>
+  <span class="na">tags</span><span class="pi">:</span> <span class="s">instalar</span>
+    
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Crear el usuario ansible</span>
+  <span class="na">user</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">ansible</span>
+    <span class="na">shell</span><span class="pi">:</span> <span class="s">/bin/bash</span>
+    <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ansible_usuario</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">password_hash('sha512')</span><span class="nv"> </span><span class="s">}}"</span>
+    <span class="na">generate_ssh_key</span><span class="pi">:</span> <span class="s">yes</span>
+    <span class="na">ssh_key_bits</span><span class="pi">:</span> <span class="m">2048</span>
+    <span class="na">ssh_key_file</span><span class="pi">:</span> <span class="s">.ssh/id_rsa</span>
+  <span class="na">tags</span><span class="pi">:</span> <span class="s">usuarios</span>
+</code></pre></div></div>
+
+<p>Si volvemos a ejecutar, vamos a ver que se ejecutaran naturalmente ambas tareas.
+Podemos especificar dentro del rol que tareas queremos especificar. Como sabemos que ya está instalado SSH vamos a decirle que ejecute solamente la tarea de crear el usuario ansible.
+Usa el parámetro <em>-t</em> para indicar los tags.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible miansible]# ansible-playbook <span class="nt">-v</span> crearusuario.yml <span class="nt">-i</span> inventory.yml <span class="nt">-l</span> nodo1 <span class="nt">-C</span> <span class="nt">-t</span> usuarios <span class="nt">--ask-vault-pass</span> 
+No config file found<span class="p">;</span> using defaults
+Vault password: 
+
+PLAY <span class="o">[</span>micluster] <span class="k">************************************************************************************************************************************************************************************************************</span>
+
+TASK <span class="o">[</span>Gathering Facts] <span class="k">******************************************************************************************************************************************************************************************************</span>
+ok: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>ssh : Crear el usuario ansible] <span class="k">***************************************************************************************************************************************************************************************</span>
+changed: <span class="o">[</span>nodo1] <span class="o">=&gt;</span> <span class="o">{</span><span class="s2">"changed"</span>: <span class="nb">true</span><span class="o">}</span>
+
+PLAY RECAP <span class="k">******************************************************************************************************************************************************************************************************************</span>
+nodo1                      : <span class="nv">ok</span><span class="o">=</span>2    <span class="nv">changed</span><span class="o">=</span>1    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0    <span class="nv">skipped</span><span class="o">=</span>0    <span class="nv">rescued</span><span class="o">=</span>0    <span class="nv">ignored</span><span class="o">=</span>0   
+</code></pre></div></div>
+
+<blockquote>
+  <p>También puedes hacer el efecto contrario <em>–skip-tags</em></p>
+</blockquote>
+
+<p>No hay manera fácil, por así decirlo, de incluirlo en el playbook. Hay formas pero son más complejas.
+Esto es una de las cosas, bajo mi punto de vista, están un poco verdes.</p>
+
+<h2 id="collections">Collections</h2>
+
+<p>Las coleciones son contenidos que pueden ser playbooks, roles, módulos y plugins.
+Básicamente se ha creado una comunidad para ahorrarte tareas como las que hasta ahora estamos haciendo (muy normales, nada específico).
+Toda la info se encuentra en la <a href="https://galaxy.ansible.com">página oficial de Ansible</a>.</p>
+
+<p>Vamos a hacer una pequeña prueba, vamos a instalar un motd de <a href="https://galaxy.ansible.com/gokev/motd-splash">GoKEV</a></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible miansible]# ansible-galaxy <span class="nb">install </span>gokev.motd-splash <span class="nt">-p</span> /home/oliva/miansible/
+Starting galaxy role <span class="nb">install </span>process
+- downloading role <span class="s1">'motd-splash'</span>, owned by gokev
+- downloading role from https://github.com/GoKEV/motd-splash/archive/master.tar.gz
+- extracting gokev.motd-splash to /home/oliva/miansible/gokev.motd-splash
+- gokev.motd-splash <span class="o">(</span>master<span class="o">)</span> was installed successfully
+<span class="o">[</span>root@ansible miansible]# ll gokev.motd-splash/
+total 4
+drwxr-xr-x.  2 root root   22 Sep 23 21:00 defaults
+drwxr-xr-x.  2 root root  163 Sep 23 21:00 files
+drwxr-xr-x.  2 root root   22 Sep 23 21:00 handlers
+drwxr-xr-x.  2 root root   50 Sep 23 21:00 meta
+drwxr-xr-x. 10 root root  135 Sep 23 21:00 motd-splash
+drwxr-xr-x.  9 root root  118 Sep 23 21:00 prep-new-vm
+<span class="nt">-rw-rw-r--</span><span class="nb">.</span>  1 root root 2793 May  3 19:37 README.md
+drwxr-xr-x.  2 root root   22 Sep 23 21:00 tasks
+drwxr-xr-x.  2 root root  152 Sep 23 21:00 templates
+drwxr-xr-x.  2 root root   39 Sep 23 21:00 tests
+drwxr-xr-x.  2 root root   22 Sep 23 21:00 vars
+drwxr-xr-x.  8 root root  105 Sep 23 21:00 vm-reboot
+drwxr-xr-x.  8 root root  120 Sep 23 21:00 vmware-provision
+</code></pre></div></div>
+
+<p>En el <em>readme</em> indica que puedes incluiir el rol <code class="language-plaintext highlighter-rouge">gokev.motd-splash</code> en un playbook.
+Añadimos a nuestro playbook</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">micluster</span>
+  <span class="na">vars_files</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">vault.yml</span>
+  <span class="na">roles</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">ssh</span>
+    <span class="pi">-</span> <span class="s">gokev.motd-splash</span>
+  <span class="na">vars</span><span class="pi">:</span>
+    <span class="na">motd_template_file</span><span class="pi">:</span> <span class="s">templates/motd_redhat</span>
+</code></pre></div></div>
+
+<p>Y ejecutamos con –diff para contemplar las diferencias de las plantillas</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible miansible]# ansible-playbook crearusuario.yml <span class="nt">-i</span> inventory.yml <span class="nt">-l</span> nodo1 <span class="nt">-C</span> <span class="nt">--diff</span> <span class="nt">--ask-vault-pass</span> 
+Vault password: 
+
+PLAY <span class="o">[</span>micluster] <span class="k">****************************************************************************************************************************************************************************************</span>
+
+TASK <span class="o">[</span>Gathering Facts] <span class="k">**********************************************************************************************************************************************************************************</span>
+ok: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>ssh : Instalar la última versión de ssh] <span class="k">**********************************************************************************************************************************************************</span>
+ok: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>ssh : Crear el usuario ansible] <span class="k">*******************************************************************************************************************************************************************</span>
+changed: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>gokev.motd-splash : Define the custom MOTD file <span class="k">if </span>this is a CentOS system] <span class="k">***********************************************************************************************************************</span>
+skipping: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>gokev.motd-splash : Define the custom MOTD file <span class="k">if </span>this is a RHEL system] <span class="k">*************************************************************************************************************************</span>
+skipping: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>gokev.motd-splash : Define the MOTD file <span class="k">for </span>any non-RHEL and non-CENT machine] <span class="k">*******************************************************************************************************************</span>
+skipping: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>gokev.motd-splash : motd template] <span class="k">****************************************************************************************************************************************************************</span>
+<span class="nt">---</span> before: /etc/motd
++++ after: /root/.ansible/tmp/ansible-local-4924bw_vip6k/tmpvwnd3yzd/motd_redhat
+@@ <span class="nt">-0</span>,0 +1,27 @@
++@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
++@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
++@@@@@@@@@@@###########%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
++@@@@@@@@@@###############%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
++@@@@@@@@@#################@@@@@@@@@@@@       @@@@@@@@@@@@@@@@@@@@  @@@@   @@@@@   @@@@@@@@@@@@@@@@@@@@
++@@@@@@@@@##################@@@@@@@@@@@   @@@   <span class="c">#@@@@@@@@@@@@@@@@@  @@@@   @@@@@   @@@@@@@@@@@   @@@@@@</span>
++@@@#####   &amp;###############@@@@@@@@@@@   @@@@   @       @@@        @@@@   @@@@@   @       &amp;@       @@@
++@@#######      <span class="c">############@@@@@@@@@@@         @   @@@   @   @@@@  @@@@           @@@@@@   @@   @@@@@@</span>
++@@@#########                <span class="c">###@@@@@@@   @@   @@     ,,,,@   @@@@  @@@@   @@@@@   @   **   @@   @@@@@@</span>
++@@@@@###########%         <span class="c">######@@@@@@   @@@   @@       @@@        @@@@   @@@@@   @        @@&amp;    *@@@</span>
++@@@@@@@#########################@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
++@@@@@@@@@@@####################&amp;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
++@@@@@@@@@@@@@@@@#############@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
++@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
++@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
++
++                              HOSTNAME  <span class="o">===&gt;</span>  centos 
++                             IP ADDRESS <span class="o">===&gt;</span>  10.0.0.11 
++               <span class="nt">--------------------------------------------------------------------</span>
++
++               KERNEL          4.18.0-348.7.1.el8_5.x86_64
++               ARCH            x86_64
++               MACHINE         innotek GmbH :: 1.2
++               COREs           2
++
++               <span class="nt">--------------------------------------------------------------------</span>
++
+
+changed: <span class="o">[</span>nodo1]
+
+TASK <span class="o">[</span>gokev.motd-splash : issue template] <span class="k">***************************************************************************************************************************************************************</span>
+<span class="nt">---</span> before: /etc/issue
++++ after: /root/.ansible/tmp/ansible-local-4924bw_vip6k/tmpytb0z_ud/issue
+@@ <span class="nt">-1</span>,3 +1,12 @@
+-<span class="se">\S</span>
+<span class="nt">-Kernel</span> <span class="se">\r</span> on an <span class="se">\m</span>
++  <span class="c">###########################   WARNING!   ###########################</span>
+ 
++              YOU ARE ABOUT TO CONNECT TO centos!!
++
++The computer you are about to use is company owned and is intended to be used
++for official company business. As such, the company reserves the right to
++monitor all activity on all company provided equipment and services. All use
++of this machine must comply with company IT policies,  available from HR.
++
++             ALL ACTIVITIES IN THIS SYSTEM ARE MONITORED!
++
++  <span class="c">###########################   WARNING!   ###########################</span>
+
+changed: <span class="o">[</span>nodo1]
+
+PLAY RECAP <span class="k">**********************************************************************************************************************************************************************************************</span>
+nodo1                      : <span class="nv">ok</span><span class="o">=</span>5    <span class="nv">changed</span><span class="o">=</span>3    <span class="nv">unreachable</span><span class="o">=</span>0    <span class="nv">failed</span><span class="o">=</span>0    <span class="nv">skipped</span><span class="o">=</span>3    <span class="nv">rescued</span><span class="o">=</span>0    <span class="nv">ignored</span><span class="o">=</span>0   
+</code></pre></div></div>
+
+<h2 id="handlers">Handlers</h2>
+
+<p>Te va a permitir realizar una acción en cadena, es decir, si algo ha cambiado, se reinicia el servicio, pero no lo hará si no hay un cambio.</p>
+
+<p>Si cambiamos el archivo de configuración de SSH necesitaremos reiniciar el servicio para que los cambios sean efectivos. Por tanto, es necesario reiniciar.</p>
+
+<p>En la <a href="https://docs.ansible.com/ansible/latest/user_guide/playbooks_handlers.html">página oficial</a> podemos ver un ejemplo muy claro.</p>
+
+<p>¡Adiós!</p>]]></content><author><name>Teemo</name></author><category term="Ansible" /><category term="Linux" /><category term="Red Hat" /><category term="CentOS" /><category term="Ansible" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Ansible - Tutorial rápido completo 1/2</title><link href="https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/" rel="alternate" type="text/html" title="Ansible - Tutorial rápido completo 1/2" /><published>2022-08-28T09:00:00+00:00</published><updated>2022-08-28T09:00:00+00:00</updated><id>https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1</id><content type="html" xml:base="https://noobchamp.github.io/ansible/linux/Ansible-configuracion-inicial-1/"><![CDATA[<p><img src="/images/ansible.webp" alt="center-aligned-image" class="align-center" /></p>
+<h1 id="introducción">Introducción</h1>
+<p><code class="language-plaintext highlighter-rouge">Ansible</code> es un herramienta de automatización. No me extenderé en explicar lo que es pero si diré que es muy útil y cada vez es mas usado por administradores sobre todo para automatizar tareas repetitivas o hacer inspección de todos los servidores.</p>
+
+<p>En mis inicios de la informática, cada vez que instalabamos un servidor, inmediatamente pasábamos un script (con variables) para definir el hostname, la red, instalar los servicios básicos o los habituales de la organización, etc.. 
+Posteriormente incluso otros para la monitorización, u otros elementos que no eran comunes, como por ejemplo si se trataba de un servidor de aplicaciones.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Ansible</code> nos facilita estas tareas mediante plantillas y además nos permite controlar la ejecución, ya sea por fallos, entender qué va a ocurrir u otros factores donde antes “te la jugabas”.</p>
+
+<p>Está basado en <code class="language-plaintext highlighter-rouge">python</code> :heart: y en este tutorial descubrirás que además de poder personalizar cada tarea hasta el más mínimo detalle, vas a poder simplemente instalar otros “módulos” que van a evitar que tengas que picar todo el código tú solo.</p>
+
+<h2 id="escenario">Escenario</h2>
+<p>Por el momento, como somos <em>gente molona</em> vamos a trabajar como root. Luego ya veremos…</p>
+
+<ul>
+  <li>VirtualBox</li>
+  <li>Máquina virtual Ansible: Centos 8.5.2 (puedes usar Red Hat ya que Centos a muerto :disappointed:)</li>
+  <li>IP Ansible 10.0.0.5: He creado una red interna nat. En un capítulo siguiente veremos para qué pero puedes usar el puente o el nat normal para tener acceso a internet.</li>
+  <li>Máquina virtual nodo1, nodo2, nodo3: Centos 8.5.2 Clonadas desde una plantilla</li>
+  <li>IP nodoX: 10.0.0.1X</li>
+  <li>No olvides tener todo actualizado
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum clean all <span class="o">&amp;&amp;</span> yum update <span class="nt">-y</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="instalar-ansible">Instalar ansible</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible ~]# yum <span class="nb">install </span>python39
+<span class="o">[</span>root@ansible ~]# pip3 <span class="nb">install </span>ansible
+<span class="o">[</span>root@ansible ~]# pip3 <span class="nb">install </span>argcomplete
+<span class="c"># Vamos a generar ya la clave ssh para copiarla a otro servidor, cuando proceda.</span>
+<span class="c"># Le das a INTRO (todo por defecto)</span>
+<span class="o">[</span>root@ansible ~]# ssh-keygen <span class="nt">-t</span> rsa <span class="nt">-b</span> 4096
+</code></pre></div></div>
+
+<h1 id="ansible">Ansible</h1>
+<p>¡Ahora si! 
+Ansible por defecto te indica que el archivo de inventario es en /etc/ansible/hosts.
+Vamos a pasar de esto y hacer nuestro propio ansible, nuestro propio inventario en yamel.
+Para resumir, me he creado mi usuario <em>oliva</em> y he craeado /home/oliva/miansible.yml (aun seguimos como root):</p>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">all</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span>
+  <span class="na">children</span><span class="pi">:</span>
+    <span class="na">micluster</span><span class="pi">:</span>
+      <span class="na">hosts</span><span class="pi">:</span>
+        <span class="na">nodo1</span><span class="pi">:</span>
+          <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.11</span>
+        <span class="na">nodo2</span><span class="pi">:</span>
+          <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.12</span>
+        <span class="na">nodo3</span><span class="pi">:</span>
+          <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.13</span>
+</code></pre></div></div>
+<p>Estas entradas como se puede ver, es para crear un cluster de 3 nodos, al que invocaremos con el nombre <code class="language-plaintext highlighter-rouge">cluster</code>. Posteriormente seguiremos aumentando este inventario.</p>
+
+<p>Por tanto debemos tener las entradas correspondientes en /etc/hosts:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1   localhost localhost.localdomain ansible
+10.0.0.11   nodo1.micluster nodo1
+10.0.0.12   nodo2.micluster nodo2
+10.0.0.13   nodo3.micluster nodo3
+</code></pre></div></div>
+<h3 id="vamos-a-hacernos-amigos-de-los-nodos-copiamos-la-clave-ssh-para-que-no-pida-contraseña">Vamos a hacernos <em>amigos</em> de los nodos, copiamos la clave ssh para que no pida contraseña</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible ~]# ssh-copy-id root@nodo2
+/usr/bin/ssh-copy-id: INFO: Source of key<span class="o">(</span>s<span class="o">)</span> to be installed: <span class="s2">"/root/.ssh/id_rsa.pub"</span>
+The authenticity of host <span class="s1">'nodo2 (10.0.0.12)'</span> can<span class="s1">'t be established.
+ECDSA key fingerprint is SHA256:VZ5ZJ4xh0PEgUe1twpgZEU0dsjtTSzWey5tVajSx1nA.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@nodo2'</span>s password:
+
+Number of key<span class="o">(</span>s<span class="o">)</span> added: 1
+
+Now try logging into the machine, with:   <span class="s2">"ssh 'root@nodo2'"</span>
+and check to make sure that only the key<span class="o">(</span>s<span class="o">)</span> you wanted were added.
+</code></pre></div></div>
+<p>Esto para los 3 nodos evidentemente…</p>
+
+<p>Y ahora vamos a hacer la primera prueba, un ping a todos. He apagado el nodo2 para probar:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@ansible ~]# ansible all <span class="nt">-m</span> ping <span class="nt">-i</span> /home/oliva/miansible/inventory.yml
+nodo1 | SUCCESS <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"ansible_facts"</span>: <span class="o">{</span>
+        <span class="s2">"discovered_interpreter_python"</span>: <span class="s2">"/usr/libexec/platform-python"</span>
+    <span class="o">}</span>,
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"ping"</span>: <span class="s2">"pong"</span>
+<span class="o">}</span>
+nodo3 | SUCCESS <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"ansible_facts"</span>: <span class="o">{</span>
+        <span class="s2">"discovered_interpreter_python"</span>: <span class="s2">"/usr/libexec/platform-python"</span>
+    <span class="o">}</span>,
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"ping"</span>: <span class="s2">"pong"</span>
+<span class="o">}</span>
+nodo2 | UNREACHABLE! <span class="o">=&gt;</span> <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"msg"</span>: <span class="s2">"Failed to connect to the host via ssh: ssh: connect to host 10.0.0.12 port 22: No route to host"</span>,
+    <span class="s2">"unreachable"</span>: <span class="nb">true</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+  <li>-m: modulo de ansible</li>
+  <li>-i: inventario, recuerda que hemos especificado un inventario, por defecto sería /etc/ansible/hosts</li>
+  <li>-u: En caso de que no estuvieramos como root especificamos -u root o el usuario con el que hayamos realizado el ssh-copy-id.</li>
+  <li>Funciona con el mismo usuario en origen a no ser que se especifique bien por línea de comandos o se puede establecer en el archivo de inventario de esta forma (aunque la vamos a descartar, en la siguiente parte veremos por qué):
+    <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">all</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span>
+  <span class="na">children</span><span class="pi">:</span>
+<span class="na">micluster</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span>
+    <span class="na">nodo1</span><span class="pi">:</span>
+      <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.11</span>
+    <span class="na">nodo2</span><span class="pi">:</span>
+      <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.12</span>
+    <span class="na">nodo3</span><span class="pi">:</span>
+      <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">10.0.0.13</span>
+  <span class="na">vars</span><span class="pi">:</span>
+    <span class="na">ansible_user</span><span class="pi">:</span> <span class="s">root</span>
+</code></pre></div>    </div>
+    <p>Como se puede ver, la sintaxis de yame hace que según la identación, pueda establecerla para los host de <code class="language-plaintext highlighter-rouge">cluster</code>o para todos los hosts en adelante si no tenemos pensado trabajar con otro usuario que no sea root.</p>
+  </li>
+</ul>
+
+<p>En la siguiente parte vamos a ver los playbooks, roles, tags, handlers…
+Además empezaremos a trabajar con ansible-galaxy.</p>
+
+<p>¡Adiós!</p>]]></content><author><name>Teemo</name></author><category term="Ansible" /><category term="Linux" /><category term="Red Hat" /><category term="CentOS" /><category term="Ansible" /><summary type="html"><![CDATA[Introducción Ansible es un herramienta de automatización. No me extenderé en explicar lo que es pero si diré que es muy útil y cada vez es mas usado por administradores sobre todo para automatizar tareas repetitivas o hacer inspección de todos los servidores.]]></summary></entry><entry><title type="html">SQL*Plus - Historial en Unix-Linux</title><link href="https://noobchamp.github.io/linux/oracle/SQL-plus-prompt/" rel="alternate" type="text/html" title="SQL*Plus - Historial en Unix-Linux" /><published>2021-07-19T19:00:00+00:00</published><updated>2021-07-19T19:00:00+00:00</updated><id>https://noobchamp.github.io/linux/oracle/SQL-plus-prompt</id><content type="html" xml:base="https://noobchamp.github.io/linux/oracle/SQL-plus-prompt/"><![CDATA[<p><img src="/images/sqlplus.webp" alt="center-aligned-image" class="align-center" /></p>
+<h1 id="introducción">Introducción</h1>
+<p>Has instalado recientemente Oracle y al usar SQL*Plus no funciona el historial?<br />
+El prompt de SQL*Plus en Unix y Linux por defecto no tiene historial ni es posible usar las flechas de dirección para moverte hacia delante y atrás además de no poder navegar por el historial como indicábamos.</p>
+
+<h2 id="sqlplus---habilitar-las-fechas-de-dirección">SQL*Plus - Habilitar las fechas de dirección</h2>
+<p>Vamos a instalar <code class="language-plaintext highlighter-rouge">rlwrap</code> para solucionar nuestro problema.</p>
+
+<h3 id="requisitos">Requisitos</h3>
+<p>Necesitamos instalar gcc,wget y GNU readline:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum update <span class="nt">-y</span>
+yum <span class="nb">install </span>gcc readline-devel <span class="nt">-y</span>
+</code></pre></div></div>
+<p>Descarga e instalación</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /tmp/
+wget https://github.com/hanslub42/rlwrap/archive/refs/heads/master.zip
+unzip master.zip
+<span class="nb">cd </span>rlwrap-master/
+autoreconf <span class="nt">--install</span>
+./configure
+make
+make <span class="nb">test
+</span>make <span class="nb">install</span>
+</code></pre></div></div>
+
+<h2 id="añadir-un-alias">Añadir un alias</h2>
+<p>Vamos a añadir el alias al usuario oracle para que cada vez que usemos SQL*Plus sea junto a rlwrap.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh"> &gt;&gt; /home/oracle/.bashrc
+alias sqlplus='rlwrap sqlplus'
+alias rman='rlwrap rman'
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<h2 id="prueba-ahora">¡Prueba ahora!</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>su - oracle
+sqlplus sys / as sysdba
+</code></pre></div></div>
+
+<p>¡Nos vemos!</p>]]></content><author><name>Yoko</name></author><category term="Linux" /><category term="Oracle" /><category term="Red Hat" /><category term="CentOS" /><category term="Oracle" /><category term="Sqlplus" /><summary type="html"><![CDATA[Introducción Has instalado recientemente Oracle y al usar SQL*Plus no funciona el historial? El prompt de SQL*Plus en Unix y Linux por defecto no tiene historial ni es posible usar las flechas de dirección para moverte hacia delante y atrás además de no poder navegar por el historial como indicábamos.]]></summary></entry><entry><title type="html">VirtualBox Guest Addittions en Red Hat 8 y CentOS 8</title><link href="https://noobchamp.github.io/rhel/centos/RedHat8-VirtualBox/" rel="alternate" type="text/html" title="VirtualBox Guest Addittions en Red Hat 8 y CentOS 8" /><published>2021-06-18T18:30:40+00:00</published><updated>2021-06-18T18:30:40+00:00</updated><id>https://noobchamp.github.io/rhel/centos/RedHat8-VirtualBox</id><content type="html" xml:base="https://noobchamp.github.io/rhel/centos/RedHat8-VirtualBox/"><![CDATA[<p><img src="/images/vbox.webp" alt="center-aligned-image" class="align-center" /></p>
+
+<h2 id="introducción">Introducción</h2>
+
+<p>Cuando instalamos Red Hat 8 y/o CentOS 8 en VirtualBox siempre tenemos el inconveniente de que la vista no se ajusta a la ventana.<br />
+El propósito de este mini tutorial es instalar rápidamente Guest Addiction en RHEL 8 rápidamente.</p>
+
+<h2 id="comandos">Comandos</h2>
+
+<p>Antes de ejecutar nada, la máquina debe tener <code class="language-plaintext highlighter-rouge">SELINUX</code> en modo <em>permissive</em> o <em>disabled</em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum groupinstall <span class="s2">"Development Tools"</span>
+yum <span class="nb">install</span> <span class="nt">-y</span> kernel-devel elfutils-libelf elfutils-libelf-devel
+</code></pre></div></div>
+
+<h2 id="instalar-guest-additions">Instalar Guest Additions</h2>
+
+<p>Simplemente, en la ventana de VirtualBox de la máquina te vas a la pestaña <code class="language-plaintext highlighter-rouge">Dispositivos</code> y luego presiona <code class="language-plaintext highlighter-rouge">Insertar imagen de CD de las "Guest Additions"</code>.<br />
+Saldrá un diálogo en la máquina, presiona <code class="language-plaintext highlighter-rouge">run</code>.
+Si el diálogo no te aparece puedes buscarlo en el directorio o si el caso es que no instalaste entorno gráfico “<em>bravo</em>”, tienes que buscar el punto de montaje del cd y lanzar el script <code class="language-plaintext highlighter-rouge">VBoxLinuxAdditions.run</code>.</p>
+
+<h3 id="reinicia-la-máquina-y-ya-está">Reinicia la máquina… y ya está</h3>
+
+<p>¡Nos vemos!</p>]]></content><author><name>Pancho</name></author><category term="RHEL" /><category term="CentOS" /><category term="Red Hat" /><category term="CentOS" /><category term="VirtualBox" /><category term="Guest Additions" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">FreeSwitch: Variables</title><link href="https://noobchamp.github.io/freeswitch/variables-freeswitch/" rel="alternate" type="text/html" title="FreeSwitch: Variables" /><published>2021-04-28T17:00:40+00:00</published><updated>2021-04-28T17:00:40+00:00</updated><id>https://noobchamp.github.io/freeswitch/variables-freeswitch</id><content type="html" xml:base="https://noobchamp.github.io/freeswitch/variables-freeswitch/"><![CDATA[<h1 id="introducción">Introducción</h1>
+<p>Como en cualquier otro software, las variables proporcionan poder acceder a un valor cuando se solicita sin tener asignarla contínuamente.<br />
+Lo más importante aquí es saber que FreeSwitch carga las variables en memoria, por tanto, cuando accedes a esta variable lo estás haciendo en la memoria del sistema.</p>
+
+<h2 id="tipos">Tipos</h2>
+<p>Básicamente son dos tipos de variables: variable <code class="language-plaintext highlighter-rouge">GLOBAL</code> (Global variables) y variable de <code class="language-plaintext highlighter-rouge">CANAL</code> (Channel variable).
+En el primer caso <code class="language-plaintext highlighter-rouge">GLOBAL</code>, la variable es accesible para todos lo canales mientras en el segundo caso <code class="language-plaintext highlighter-rouge">CANAL</code> la variable es solo accesible en el contexto del canal.</p>
+
+<p>Por ejemplo, una variable global sería la IP que usa el sistema <code class="language-plaintext highlighter-rouge">local_ip_v4</code>, siempre vamos a poder acceder a ella en cualquier parte.<br />
+Como ejemplo de una variable de canal sería por ejemplo una asignada para el número de destino al que se está llamando <em>destination_number</em>, asignada para manejar la llamada en el <em>dialplan</em>. Esta variable será reasignada en cada llamada, en cada canal, porque no va a obtener un valor fijo, eso lo tenemos claro en este punto.</p>
+
+<h2 id="acceder-a-las-variables">Acceder a las variables</h2>
+<p>Se accedes a las variables con formato <code class="language-plaintext highlighter-rouge">${variable}</code>. Como en el ejemplo anterior, vamos a comprobar nuestra variable <code class="language-plaintext highlighter-rouge">local_ip_v4</code>, podemos hacerlo de dos formas:<br />
+Desde la consola de FreeSwitch con el comando <code class="language-plaintext highlighter-rouge">eval</code> + <code class="language-plaintext highlighter-rouge">${variable}</code> (ejecutando fs_cli):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>freeswitch@debian&gt; eval ${local_ip_v4}
+192.168.0.15
+</code></pre></div></div>
+
+<p>O desde la misma shell, con <code class="language-plaintext highlighter-rouge">fs_cli -x</code> + <code class="language-plaintext highlighter-rouge">eval ${variable}</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@debian:/home/oliva# fs_cli -x 'eval ${local_ip_v4}'
+192.168.0.15
+</code></pre></div></div>
+<p><cite>¡Ojo! Debes usar las comillas simple y no doble para que no sea interpretado por bash</cite></p>
+
+<h2 id="asignación-y-re-asignación">Asignación y re-asignación</h2>
+<p>En los archivos de configuración será referidas con un doble $ <code class="language-plaintext highlighter-rouge">$${variable}</code>, sólo en los archivos de configuración para <em>sólo variables globales</em>.<br />
+Para el resto como hemos visto anteriormente nos referimos con un sólo $ <code class="language-plaintext highlighter-rouge">${variable}</code>. Podemos referirnos tanto a variables globales como variables de canal.<br />
+Entonces…¿Es posible re-asignar una variable global? Rotundamente sí.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>freeswitch@debian&gt; global_getvar local_ip_v4
+192.168.0.15
+freeswitch@debian&gt; global_setvar local_ip_v4=1.1.1.1
++OK
+freeswitch@debian&gt; global_getvar local_ip_v4
+1.1.1.1
+freeswitch@debian&gt;
+</code></pre></div></div>
+
+<p>Esta variable global <code class="language-plaintext highlighter-rouge">local_ip_v4</code> se encuentra definida en el archivo vars.xml (en realidad no es así del todo pero luego se aclara). Le hemos dicho a FreeSwitch que su IP local es 1.1.1.1. Las consecuencias son catastróficas, nuestro teléfono ha dejado de registrar, en el anterior capítulo tienes como comprobar o simplemente el teléfono te va a devolver un error 403 - Forbidden.</p>
+
+<p>Algo interesante, si hacemos <em>reloadxml</em> recargará la configuración de FreeSwitch pero la variable seguirá definida como 1.1.1.1. El comando debería recargar los archivos XML como el <em>dialplan</em>, además de <em>vars.xml</em> pero no es así en caso de variables <em>pre-processor</em>. Vamos a comprobar varias cosas:</p>
+
+<ul>
+  <li>Abrimos el archivo <em>/etc/freeswitch/vars.xml</em> -&gt; Aquí vamos a ver las variables como PRE-PROCCESS, un ejemplo que vas a recordar.</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;X-PRE-PROCESS</span> <span class="na">cmd=</span><span class="s">"set"</span> <span class="na">data=</span><span class="s">"default_password=1234"</span><span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Visualiza el contenido de <em>/var/log/freeswitch/freeswitch.xml.fsxml</em>. Este archivo son todas las variables que se han cargado al iniciar FreeSwitch.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">global_setvar</code> ha modificado una variable “pre-cargada” por el sistema que no puede ser recargada. Ahora solo tenemos dos caminos para que nuestro FreeSwitch funcione correctamente de nuevo permitiendo registrar los dispositivos: O bien volvemos a lanzar el comando con el parámetro correcto o bien reiniciamos el servicio. Debes de tener en cuenta que en producción el reinicio va a provocar la <strong>caída de todas las llamadas</strong> en curso. Estamos en un desarrollo así que….alegría.</p>
+
+<p><cite>–La consola de FreeSwitch estará devolviendo un warning por este problema que hemos provocado–</cite></p>
+
+<p>Ahora vamos a darle una vuelta más. En el archivo <em>vars.xml</em> no aparece definida</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;X-PRE-PROCESS</span> <span class="na">cmd=</span><span class="s">"set"</span> <span class="na">data=</span><span class="s">"local_ip_v4=192.168.0.15"</span><span class="nt">/&gt;</span>
+</code></pre></div></div>
+<p>Si en algún momento te paraste a leer, habrás visto que indica expresamente que una serie de variables, entre ellas <em>local_ip_v4</em> han sido calculadas por FreeSwitch dinámicamente y definidas como variables globales.</p>
+
+<blockquote>
+  <p>Repite los pasos anteriormente pero en vez de cambiar la variable <em>local_ip_v4</em>, cambia la variable <em>default_password</em>.
+Luego recarga configuración XML <code class="language-plaintext highlighter-rouge">reloadxml</code> y comprueba de nuevo el valor de la variable.
+¡Sí! En este caso la variable ha sido cargada nuevamente y ahora devuelve nuevamente <em>1234</em> sin tener que recargar FreeSwitch</p>
+</blockquote>
+
+<blockquote>
+  <p>Puede que la pregunta que te ronda ahora es para qué tanto follón y lío con esto de las variables. Bueno, según como vayas a montar tu sistema, vas a necesitar conocer si es necesario definir ciertas variables del sistema como la ip local. Puedes enrutar tanto por IP o puede que tu IP sea dinámica y vayas a registrar tus terminales mediante DNS y así no es necesario asignar un IP fija local.</p>
+</blockquote>
+
+<p>En fin, por una parte me va a obligar a indicar una IP fija en mi DNS en la interfaz local de mi FreeSwitch o bien por otra a configurar un nombre de dominio y tener la libertad de tener una ip dinámica. Cada cual tiene sus ventajas e inconvenientes y cuando se trata de interfaz local pues no es verdaderamente útil que digamos pero piensa en lo siguiente:</p>
+
+<p>Estamos en un entorno local de desarrollo pero la idea es tener a usuarios en cualquier parte del mundo. ¿Es más factible que registren contra una IP pública o contra un dominio típico como voip.empresa.com</p>
+
+<p>Esto abre un mundo de posibilidades ya que tener un nuevo cliente en cualquier parte y si tuvieras algún problema con la IP no te va a importar ya que no necesitarás re-configurar los terminales. También ahorramos un pequeño coste por pagar IP fija en algunos casos.</p>
+
+<p>En el siguiente post habrá un poco de teoría sobre FreeSwitch para entender el funcionamiento un poquito mejor.</p>
+
+<p>¡Nos vemos!</p>]]></content><author><name>Yoko</name></author><category term="FreeSwitch" /><category term="FreeSwitch" /><category term="PBX" /><category term="VoIP" /><category term="SIP" /><category term="Variables" /><summary type="html"><![CDATA[Introducción Como en cualquier otro software, las variables proporcionan poder acceder a un valor cuando se solicita sin tener asignarla contínuamente. Lo más importante aquí es saber que FreeSwitch carga las variables en memoria, por tanto, cuando accedes a esta variable lo estás haciendo en la memoria del sistema.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://noobchamp.github.io/images/freeswitch/freeswitch.webp" /><media:content medium="image" url="https://noobchamp.github.io/images/freeswitch/freeswitch.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">FreeSwitch: Instalación sobre Debian 10 Buster</title><link href="https://noobchamp.github.io/freeswitch/Freeswitch-produccion-pbx/" rel="alternate" type="text/html" title="FreeSwitch: Instalación sobre Debian 10 Buster" /><published>2021-04-26T18:00:40+00:00</published><updated>2021-04-26T18:00:40+00:00</updated><id>https://noobchamp.github.io/freeswitch/Freeswitch-produccion-pbx</id><content type="html" xml:base="https://noobchamp.github.io/freeswitch/Freeswitch-produccion-pbx/"><![CDATA[<h1 id="introducción">Introducción</h1>
+
+<p>FreeSwitch es una plataforma de telefonía de código abierto.<br />
+Es realmente flexible gracias a su buen rendimiento. Se puede usar como <abbr title="Private Branch Exchange">PBX</abbr>, como un soft-switch. 
+Podríamos usarla para distintos propósitos como por ejemplo un <abbr title="Session Border Controller">SBC</abbr> entre otras centralitas físicas o virtuales como Alcatel, Panasonic, Avaya, Asterisk, etc. Podríamos instalar una GUI para usar como <abbr title="Private Branch Exchange">PBX</abbr>. Podríamos usarlo para control de facturación entre distintos clientes y proveedores, es decir, balancear nuestras llamadas por coste de todos nuestros clientes además de muchas más cosas.</p>
+
+<p>FreeSwitch es muy versátil. Es posible instalar FreeSwitch desde una Raspberry hasta un buen servidor físico, va a depender de la carga. Lo mejor de todo es que es <em>escalable</em>, por lo que podríamos ampliar en cualquier momento.</p>
+
+<h1 id="objetivos-del-aprendizaje">Objetivos del aprendizaje</h1>
+<p>No vamos a entrar en profundidad en definiciones o aspectos técnicos sobre VoIP. En <em>internet</em> se puede encontrar numerosos sitios donde explican conceptos de telefonía como:</p>
+<ul>
+  <li>Protocolo SIP</li>
+  <li>Códecs</li>
+  <li>Wireshark</li>
+  <li>TCPdump</li>
+  <li>Aplicaciones de <abbr title="Private Branch Exchange">PBX</abbr></li>
+  <li>Softphone</li>
+  <li>LUA</li>
+  <li>XML</li>
+  <li>Otras cosas</li>
+</ul>
+
+<p>Vamos a instalar FreeSwitch y empezar a “trastearlo” todo para entender como funciona y que ventajas nos puede ofrecer. Así pues…¡Vamos al lío!</p>
+
+<h1 id="instalación-de-freeswitch">Instalación de FreeSwitch</h1>
+<p>En nuestro ejemplo vamos a instalar FreeSwitch sobre <a href="https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.9.0-amd64-netinst.iso" class="link">Debian 10 Buster</a>, de forma local a través de una máquina virtual en red interna. 
+Ya te voy avisando que si usas arquitectura i386 no te va a funcionar. Tienes el enlace a la versión 10.9 amd64.</p>
+<h5 id="máquina-virtual">Máquina virtual:</h5>
+<ul>
+  <li>4Gb Ram</li>
+  <li>16Gb Almacenamiento</li>
+  <li>2 Procesadores</li>
+  <li>Adaptador puente <em>IP 192.168.0.15</em></li>
+  <li>Sin escritorio</li>
+  <li>SSH Server</li>
+</ul>
+
+<p>Con eso vamos a tirar de momento. Más adelante vamos a ver como podemos mover a producción este servidor local. Una vez iniciado Debian 10 actualizamos el sistemas, agregamos el repositorio e instalamos FreeSwitch.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get update <span class="o">&amp;&amp;</span> apt-get <span class="nb">install</span> <span class="nt">-y</span> gnupg2 wget lsb-release
+wget <span class="nt">-O</span> - https://files.freeswitch.org/repo/deb/debian-release/fsstretch-archive-keyring.asc | apt-key add -
+<span class="nb">echo</span> <span class="s2">"deb http://files.freeswitch.org/repo/deb/debian-release/ </span><span class="sb">`</span>lsb_release <span class="nt">-sc</span><span class="sb">`</span><span class="s2"> main"</span> <span class="o">&gt;</span> /etc/apt/sources.list.d/freeswitch.list
+<span class="nb">echo</span> <span class="s2">"deb-src http://files.freeswitch.org/repo/deb/debian-release/ </span><span class="sb">`</span>lsb_release <span class="nt">-sc</span><span class="sb">`</span><span class="s2"> main"</span> <span class="o">&gt;&gt;</span> /etc/apt/sources.list.d/freeswitch.list
+apt-get update <span class="o">&amp;&amp;</span> apt-get <span class="nb">install</span> <span class="nt">-y</span> freeswitch-meta-all
+</code></pre></div></div>
+<p>Luego levantamos FreeSwitch y ya que estamos habilitamos el servicio en el arranque y comprobamos que funciona correctamente:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl start freeswitch
+systemctl <span class="nb">enable </span>freeswitch.service
+fs_cli
+</code></pre></div></div>
+<p><cite>Evidentemente tenemos que ser root o lanzar como “sudo”</cite></p>
+
+<p>Si todo es correcto veremos lo siguiente:
+<img src="/images/freeswitch/fs-cli.webp" alt="center-aligned-image" class="align-center" /></p>
+
+<h2 id="configuración-y-primera-llamada">Configuración y primera llamada</h2>
+<p>Ya es posible realizar nuestra primera llamada. Es necesario tener instalado algún dispositivo SIP.<br />
+Yo voy a usar Zoiper, además en su versión 3, que me gusta más que la 5 de momento. Os dejo un enlace por si queréis descargar la misma versión <a href="https://www.zoiper.com/en/voip-softphone/download/zoiper3/for/windows" class="link">ZOIPER</a>.<br />
+Primero vamos a comprobar que en FreeSwitch no existe ningún registro:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>freeswitch@debian&gt; show registrations
+</code></pre></div></div>
+<p><cite>Devolverá 0 total</cite></p>
+
+<p>Posteriormente vamos a registrar nuestra primera extensión “1000”. Así que tenemos que crear en Zoiper una <code class="language-plaintext highlighter-rouge">nueva cuenta SIP</code>:</p>
+<ul>
+  <li><em>Usuario:</em> 1000</li>
+  <li><em>Contraseña:</em> 1234</li>
+  <li><em>Domain:</em> 192.168.0.15 (tendrás que poner la IP asignada a tu Sistema)</li>
+</ul>
+
+<p>Si tienes éxito podemos volver a lanzar el comando <code class="language-plaintext highlighter-rouge">show registrations</code> y veremos que nos muestra datos de nuestra extensión recién registrada además de <em>1 total.</em>
+Ahora podrías añadir por ejemplo otra extensión como la 1001 o simplemente podemos comprobar que todo funciona llamando a algunas extensiones que FreeSwitch ha creado y enrutado de manera predeterminada.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Header1</th>
+      <th style="text-align: center">Header2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">5000</td>
+      <td style="text-align: center">IVR</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4000</td>
+      <td style="text-align: center">Voicemail</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">9196</td>
+      <td style="text-align: center">Eco test</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">9195</td>
+      <td style="text-align: center">Eco test con 5 segundos de retardo</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">9197</td>
+      <td style="text-align: center">Un pitido terrible</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">9198</td>
+      <td style="text-align: center">Tetris (wav)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">9664</td>
+      <td style="text-align: center">Música de espera (MOH)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Hay muchos más números pero de momento si todo esto funciona correctamente podemos estar satisfechos.</p>
+
+<h2 id="conclusión">Conclusión</h2>
+<p>Bueno, pues aunque parezca que ya que podemos llamar tenemos un 70% del trabajo realizado, creo que con esto no llegamos ni la 1%.<br />
+La configuración es realmente compleja y vamos a ir aprendiendo como usarlo. 
+En un principio no vamos a instalar ningún programa adicional para manejar la configuración sino que todo lo vamos a realizar a mano. Ya sabes, a base de golpes se aprende.</p>
+
+<p>Si lo que quieres es tener una <abbr title="Private Branch Exchange">PBX</abbr> simple pequeña te recomiendo que busques FreePBX u otro tipo de solución. Para dar servicio de telefonía a un pequeño negocio no necesitas FreeSwitch, sino otro tipo de <abbr title="Private Branch Exchange">PBX</abbr> con una buena interfaz, fácil de usar y más completa en lo referente a servicios para el usuario.</p>
+
+<p>Nosotros más adelante si vamos a conectarle otra <abbr title="Private Branch Exchange">PBX</abbr> como FreePBX, vamos a crear proveedores, posiblemente instalemos Pyfreebilling, instalaremos un servidor de trazas como <em>Homer</em> y realizar test de carga y comparativas.</p>
+
+<p>¡Nos vemos en el siguiente post!</p>]]></content><author><name>Yoko</name></author><category term="FreeSwitch" /><category term="FreeSwitch" /><category term="PBX" /><category term="VoIP" /><category term="SIP" /><summary type="html"><![CDATA[Introducción]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://noobchamp.github.io/images/freeswitch/freeswitch.webp" /><media:content medium="image" url="https://noobchamp.github.io/images/freeswitch/freeswitch.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
