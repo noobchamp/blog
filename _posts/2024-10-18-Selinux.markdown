@@ -1,0 +1,189 @@
+---
+title:  "Introducción a Selinux, breve resumen"
+author: teemo
+categories: 
+  - RHEL
+  - CentOS
+show_excerpts: true
+tags: 
+  - Red Hat
+  - CentOS
+date: 2024-10-18 19:00:00 +0000
+---
+
+# Iniciación con SELinux
+
+## 1. Introducción a SELinux
+- **SELinux (Security-Enhanced Linux)**: Módulo de seguridad para controlar el acceso a recursos en un sistema Linux. Proporciona un mecanismo de control de acceso obligatorio (MAC).
+- **Objetivo**: Proteger el sistema y las aplicaciones contra accesos no autorizados, asegurando que los procesos y usuarios solo realicen las acciones para las que están autorizados.
+
+### Conceptos Clave
+- **Políticas**: Conjuntos de reglas que determinan cómo se deben gestionar los accesos a los recursos del sistema. SELinux utiliza políticas predeterminadas, pero se pueden crear personalizadas.
+- **Tipos**: Categorías de objetos y procesos (ej: `httpd_sys_content_t`, `var_lib_t`).
+- **Usuarios**: Representan las entidades que interactúan con el sistema (ej: `system_u` para el sistema, `user_u` para usuarios normales).
+
+---
+
+## 2. Modos de Operación
+SELinux tiene tres modos de operación:
+
+- **Enforcing**: Aplica políticas y bloquea accesos no permitidos. Este es el modo recomendado para entornos de producción.
+- **Permissive**: Solo registra violaciones sin bloquear accesos, útil para depuración.
+- **Disabled**: SELinux desactivado, no se aplican políticas.
+
+### Comandos Útiles
+```bash
+# Verificar estado de SELinux
+sestatus
+
+# Cambiar a modo permisivo
+sudo setenforce 0
+
+# Cambiar a modo enforcing
+sudo setenforce 1
+```
+
+---
+
+## 3. Contextos de Seguridad
+Los contextos de seguridad en SELinux son una combinación de cuatro partes:
+
+- **Usuario**: Representa el usuario de SELinux (ej: `system_u`).
+- **Rol**: Rol de seguridad del proceso (generalmente `object_r` para objetos).
+- **Tipo**: Tipo de acceso (ej: `httpd_sys_content_t`).
+- **Nivel**: (opcional) Niveles de seguridad para control de acceso multinivel.
+
+### Visualización de Contextos
+```bash
+# Listar contextos de archivos
+ls -Z /ruta/al/directorio
+
+# Listar contextos de procesos
+ps -Z
+```
+
+### Cambiar Contextos
+```bash
+# Cambiar contexto de un archivo
+chcon -t httpd_sys_content_t /ruta/al/archivo
+
+# Persistir cambios de contexto
+semanage fcontext -a -t httpd_sys_content_t "/ruta(/.*)?"
+restorecon -Rv /ruta
+```
+
+### Ejemplo
+```bash
+# Cambiar el contexto de un archivo en el directorio de Apache
+chcon -t httpd_sys_content_t /var/www/html/archivo.html
+```
+
+---
+
+## 4. Auditoría en SELinux
+SELinux registra eventos y violaciones de políticas en logs ubicados en `/var/log/audit/audit.log`. La auditoría es esencial para comprender por qué se producen ciertas denegaciones.
+
+### Comandos Útiles
+```bash
+# Buscar eventos de denegación
+ausearch -m avc
+
+# Explicar la razón de la denegación
+ausearch -m avc -ts today | audit2why
+
+# Generar una política a partir de eventos de denegación
+ausearch -m avc -ts today | audit2allow -M mi_modulo
+```
+
+### Ejemplo
+```bash
+# Buscar y explicar por qué Apache no puede acceder a un archivo
+ausearch -m avc -ts today | audit2why
+```
+
+---
+
+## 5. Booleanos en SELinux
+Los booleanos son configuraciones que permiten ajustar el comportamiento de las políticas en SELinux.
+
+### Ejemplo de Booleano
+Habilitar el acceso de Apache a contenido en el directorio de usuarios:
+
+```bash
+# Listar booleanos disponibles
+getsebool -a
+
+# Activar un booleano específico
+setsebool -P httpd_enable_homedirs on
+```
+
+### Importante
+- Usar la opción `-P` para hacer cambios persistentes a través de reinicios.
+
+---
+
+## 6. Creación de Políticas Personalizadas
+Crear políticas personalizadas permite ajustar SELinux a las necesidades específicas de tu entorno.
+
+### Estructura de un Archivo de Política
+```te
+module mi_aplicacion 1.0;
+
+require {
+    type var_lib_t;
+    class dir { read write search open };
+}
+
+# Permitir acceso a directorios
+allow unconfined_t var_lib_t:dir { read write search open };
+```
+
+### Pasos para Crear una Política
+1. **Escribir la política** en un archivo `.te`:
+```bash
+nano mi_aplicacion.te
+```
+
+2. **Compilar** el archivo:
+```bash
+checkmodule -M -m -o mi_aplicacion.mod mi_aplicacion.te
+semodule_package -o mi_aplicacion.pp -m mi_aplicacion.mod
+```
+
+3. **Instalar** la política:
+```bash
+sudo semodule -i mi_aplicacion.pp
+```
+
+4. **Verificar instalación**:
+```bash
+semodule -l | grep mi_aplicacion
+```
+
+---
+
+## 7. Diagnóstico de Problemas
+Es fundamental para resolver problemas de acceso en sistemas SELinux.
+
+### Verificar Políticas Cargadas
+Para ver las políticas activas y su impacto:
+```bash
+semodule -l
+```
+
+### Eliminar Políticas Problemáticas
+```bash
+# Eliminar un módulo de política
+sudo semodule -r nombre_del_modulo
+```
+
+---
+
+## Conclusión
+SELinux es una herramienta poderosa para la seguridad en sistemas Linux, proporcionando control de acceso granular a recursos del sistema. Comprender sus componentes y comandos básicos te permitirá gestionar y proteger mejor tus sistemas.
+
+---
+
+## Recursos Adicionales
+- [Documentación Oficial de SELinux](https://selinuxproject.org/page/Main_Page)
+- [Guía de SELinux en RHEL](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/understanding_and_using_selinux/index)
